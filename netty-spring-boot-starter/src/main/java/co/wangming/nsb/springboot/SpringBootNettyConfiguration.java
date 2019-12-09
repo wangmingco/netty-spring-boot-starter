@@ -2,8 +2,9 @@ package co.wangming.nsb.springboot;
 
 import co.wangming.nsb.netty.NettyServer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -41,22 +42,38 @@ public class SpringBootNettyConfiguration {
     }
 
     @Component
-    public class NettyStarter implements CommandLineRunner {
+    public static class NettyStarter implements InitializingBean, DisposableBean {
 
         @Resource
         private SpringBootNettyProperties springBootNettyProperties;
 
-        @Override
-        public void run(String... args) throws Exception {
+        private NettyServer nettyServer;
 
-            log.debug("Start The Netty Server");
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            log.info("Starting The Netty Server");
 
             NettyServer nettyServer = NettyServer.builder()
                     .port(springBootNettyProperties.getPort())
                     .build();
 
             nettyServer.start();
+
+            this.nettyServer = nettyServer;
+
+            log.info("Started The Netty Server");
         }
 
+        @Override
+        public void destroy() throws Exception {
+            log.info("Stopping The Netty Server");
+
+            nettyServer.stop();
+
+            log.info("Stopped The Netty Server");
+        }
+
+
     }
+
 }

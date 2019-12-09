@@ -1,7 +1,10 @@
 package co.wangming.nsb.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -44,14 +47,13 @@ public class NettyServer {
                         }
                     });
 
-            ChannelFuture f = b.bind("localhost", port).sync();
+            b.bind("localhost", port).sync();
 
             log.info("Netty Server listening at:{}", port);
 
             this.bossGroup = bossGroup;
             this.workerGroup = workerGroup;
 
-//            f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("", e);
             stop();

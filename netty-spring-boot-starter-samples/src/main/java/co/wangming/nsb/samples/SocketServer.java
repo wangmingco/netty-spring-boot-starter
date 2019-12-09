@@ -1,6 +1,7 @@
 package co.wangming.nsb.samples;
 
 import co.wangming.nsb.springboot.CommandScan;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -10,20 +11,26 @@ import org.springframework.context.ConfigurableApplicationContext;
  **/
 @SpringBootApplication
 @CommandScan(basePackage = "co.wangming.nsb.samples")
+@Slf4j
 public class SocketServer {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(SocketServer.class);
 
-        System.out.println("********************************************************************");
+        log.info("********************************************************************");
         for (String beanDefinitionName : context.getBeanDefinitionNames()) {
 
             Object bean = context.getBean(beanDefinitionName);
-            if (!bean.getClass().getCanonicalName().contains("wangming")) {
+            String name = bean.getClass().getCanonicalName();
+            if (name == null) {
+                log.error("找不到类名:{}", beanDefinitionName);
                 continue;
             }
-            System.out.println("Find  --> " + beanDefinitionName + " ---  " + bean);
+            if (!name.contains("wangming")) {
+                continue;
+            }
+            log.info("Find  --> " + beanDefinitionName + " ---  " + bean);
         }
-        System.out.println("********************************************************************");
+        log.info("********************************************************************");
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Created By WangMing On 2019-12-06
  **/
-@ConfigurationProperties(prefix = "springboot.netty")
+@ConfigurationProperties(prefix = "spring.boot.netty")
 public class SpringBootNettyProperties {
 
     private int port;
