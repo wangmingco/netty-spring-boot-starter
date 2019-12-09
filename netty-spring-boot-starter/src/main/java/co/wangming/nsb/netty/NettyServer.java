@@ -2,7 +2,6 @@ package co.wangming.nsb.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -22,8 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyServer {
 
-    private int port;
-
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
@@ -37,7 +34,6 @@ public class NettyServer {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 100)
                     .handler(new LoggingHandler(LogLevel.DEBUG))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
@@ -46,6 +42,13 @@ public class NettyServer {
                             p.addLast(new NettyServerHandler());
                         }
                     });
+
+            setOption(b);
+
+            int port = 8081;
+            if (NettyConfig.getPORT() != null) {
+                port = NettyConfig.getPORT().getValue();
+            }
 
             b.bind("localhost", port).sync();
 
@@ -57,6 +60,40 @@ public class NettyServer {
         } catch (InterruptedException e) {
             log.error("", e);
             stop();
+        }
+    }
+
+    private void setOption(ServerBootstrap b) {
+        setOption(b, NettyConfig.getALLOCATOR());
+        setOption(b, NettyConfig.getRcvbufAllocator());
+        setOption(b, NettyConfig.getMessageSizeEstimator());
+        setOption(b, NettyConfig.getConnectTimeoutMillis());
+        setOption(b, NettyConfig.getMaxMessagesPerRead());
+        setOption(b, NettyConfig.getWriteSpinCount());
+        setOption(b, NettyConfig.getWriteBufferHighWaterMark());
+        setOption(b, NettyConfig.getWriteBufferLowWaterMark());
+        setOption(b, NettyConfig.getAllowHalfClosure());
+        setOption(b, NettyConfig.getAutoRead());
+        setOption(b, NettyConfig.getSoBroadcast());
+        setOption(b, NettyConfig.getSoKeepalive());
+        setOption(b, NettyConfig.getSoSndbuf());
+        setOption(b, NettyConfig.getSoRcvbuf());
+        setOption(b, NettyConfig.getSoReuseaddr());
+        setOption(b, NettyConfig.getSoBacklog());
+        setOption(b, NettyConfig.getIpTos());
+        setOption(b, NettyConfig.getIpMulticastAddr());
+        setOption(b, NettyConfig.getIpMulticastIf());
+        setOption(b, NettyConfig.getIpMulticastTtl());
+        setOption(b, NettyConfig.getIpMulticastLoopDisabled());
+        setOption(b, NettyConfig.getTcpNodelay());
+        setOption(b, NettyConfig.getSingleEventexecutorPerGroup());
+        setOption(b, NettyConfig.getSoLinger());
+        setOption(b, NettyConfig.getSoTimeout());
+    }
+
+    private void setOption(ServerBootstrap b, NettyConfig.NettyConfigValue nettyConfig) {
+        if (nettyConfig != null) {
+            b.option(nettyConfig.getName(), nettyConfig.getValue());
         }
     }
 

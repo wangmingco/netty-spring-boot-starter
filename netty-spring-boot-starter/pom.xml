@@ -10,6 +10,9 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<spring.boot.version>1.5.19.RELEASE</spring.boot.version>
+		<netty.version>4.0.56.Final</netty.version>
+		<protobuf.version>3.11.1</protobuf.version>
 	</properties>
 
 	<dependencies>
@@ -20,13 +23,20 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
-			<version>1.5.19.RELEASE</version>
+			<version>${spring.boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<version>${spring.boot.version}</version>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
-			<version>4.0.56.Final</version>
+			<version>${netty.version}</version>
 		</dependency>
 
 		<!--************************************************************************-->
@@ -35,7 +45,7 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>3.11.1</version>
+			<version>${protobuf.version}</version>
 		</dependency>
 
 
@@ -66,6 +76,11 @@
 			<version>2.6</version>
 		</dependency>
 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
 
 		<!--************************************************************************-->
 		<!--********************************日志依赖*********************************-->
