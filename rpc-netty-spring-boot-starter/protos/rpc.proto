@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.nscall.protobuf;
+
+message CallRequest {
+    string methodName = 1;
+    int64 callIndex = 2;
+    repeated Argument argument = 3;
+}
+
+message Argument {
+    int32 idx = 1;
+    int32 value = 2;
+}

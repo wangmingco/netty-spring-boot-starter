@@ -12,6 +12,7 @@
 	<modules>
 		<module>netty-spring-boot-starter</module>
 		<module>netty-spring-boot-starter-samples</module>
+		<module>rpc-netty-spring-boot-starter</module>
 	</modules>
 
 </project>
