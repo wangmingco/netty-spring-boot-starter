@@ -1,4 +1,4 @@
-package co.wangming.nsb.vo;
+package co.wangming.nsb.parameterHandlers;
 
 import com.google.protobuf.Parser;
 import lombok.Builder;
@@ -12,4 +12,6 @@ import lombok.Data;
 public class ParameterInfo {
 
     private Parser parser;
+
+    Class parameterType;
 }

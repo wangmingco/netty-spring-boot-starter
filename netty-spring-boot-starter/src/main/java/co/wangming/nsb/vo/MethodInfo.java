@@ -1,9 +1,9 @@
 package co.wangming.nsb.vo;
 
+import co.wangming.nsb.parameterHandlers.ParameterInfo;
 import lombok.Builder;
 import lombok.Data;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -15,7 +15,5 @@ public class MethodInfo {
 
     private List<ParameterInfo> parameterInfoList;
 
-    private Method targetMethod;
-
-    private Class targetBeanClass;
+    private String beanName;
 }
