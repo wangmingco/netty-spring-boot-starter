@@ -74,8 +74,14 @@ public class SpringBootNettyConfiguration {
 
 
         private void setOptions() throws Exception {
-            NettyConfig.setPORT(springBootNettyProperties.getPORT());
-            NettyConfig.setALLOCATOR(springBootNettyProperties.getAllocator());
+            NettyConfig.setPort(springBootNettyProperties.getPORT());
+            NettyConfig.setAllIdleTimeSeconds(springBootNettyProperties.getAllIdleTimeSeconds());
+            NettyConfig.setReaderIdleTimeSeconds(springBootNettyProperties.getReaderIdleTimeSeconds());
+            NettyConfig.setWriterIdleTimeSeconds(springBootNettyProperties.getWriterIdleTimeSeconds());
+            NettyConfig.setBossGroupThreadSize(springBootNettyProperties.getBossGroupThreadSize());
+            NettyConfig.setWorkGroupThreadSize(springBootNettyProperties.getWorkGroupThreadSize());
+
+            NettyConfig.setAllocator(springBootNettyProperties.getAllocator());
             NettyConfig.setRcvbufAllocator(springBootNettyProperties.getRcvbufAllocator());
             NettyConfig.setMessageSizeEstimator(springBootNettyProperties.getMessageSizeEstimator());
             NettyConfig.setConnectTimeoutMillis(springBootNettyProperties.getConnectTimeoutMillis());

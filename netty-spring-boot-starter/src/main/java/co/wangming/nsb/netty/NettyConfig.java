@@ -15,20 +15,25 @@ import java.net.NetworkInterface;
 @Data
 public class NettyConfig<T> {
 
-    private static NettyConfigValue<Integer> PORT = null;
+    private static NettyConfigValue<Integer> port = null;
+    private static Integer readerIdleTimeSeconds = null;
+    private static Integer writerIdleTimeSeconds = null;
+    private static Integer allIdleTimeSeconds = null;
+    private static int bossGroupThreadSize = 1;
+    private static int workGroupThreadSize = 1;
 
-    private static NettyConfigValue<ByteBufAllocator> ALLOCATOR = null;
-    private static NettyConfigValue<RecvByteBufAllocator> RCVBUF_ALLOCATOR = null;
-    private static NettyConfigValue<MessageSizeEstimator> MESSAGE_SIZE_ESTIMATOR = null;
+    private static NettyConfigValue<ByteBufAllocator> allocator = null;
+    private static NettyConfigValue<RecvByteBufAllocator> rcvbufAllocator = null;
+    private static NettyConfigValue<MessageSizeEstimator> messageSizeEstimator = null;
 
-    private static NettyConfigValue<Integer> CONNECT_TIMEOUT_MILLIS = null;
-    private static NettyConfigValue<Integer> MAX_MESSAGES_PER_READ = null;
-    private static NettyConfigValue<Integer> WRITE_SPIN_COUNT = null;
-    private static NettyConfigValue<Integer> WRITE_BUFFER_HIGH_WATER_MARK = null;
-    private static NettyConfigValue<Integer> WRITE_BUFFER_LOW_WATER_MARK = null;
+    private static NettyConfigValue<Integer> connectTimeoutMillis = null;
+    private static NettyConfigValue<Integer> maxMessagesPerRead = null;
+    private static NettyConfigValue<Integer> writeSpinCount = null;
+    private static NettyConfigValue<Integer> writeBufferHighWaterMark = null;
+    private static NettyConfigValue<Integer> writeBufferLowWaterMark = null;
 
-    private static NettyConfigValue<Boolean> ALLOW_HALF_CLOSURE = null;
-    private static NettyConfigValue<Boolean> AUTO_READ = null;
+    private static NettyConfigValue<Boolean> allowHalfClosure = null;
+    private static NettyConfigValue<Boolean> autoRead = null;
 
     private static NettyConfigValue<Boolean> SO_BROADCAST = null;
     private static NettyConfigValue<Boolean> SO_KEEPALIVE = null;
@@ -39,32 +44,72 @@ public class NettyConfig<T> {
     private static NettyConfigValue<Integer> SO_BACKLOG = null;
     private static NettyConfigValue<Integer> SO_TIMEOUT = null;
 
-    private static NettyConfigValue<Integer> IP_TOS = null;
-    private static NettyConfigValue<InetAddress> IP_MULTICAST_ADDR = null;
-    private static NettyConfigValue<NetworkInterface> IP_MULTICAST_IF = null;
-    private static NettyConfigValue<Integer> IP_MULTICAST_TTL = null;
-    private static NettyConfigValue<Boolean> IP_MULTICAST_LOOP_DISABLED = null;
-
     private static NettyConfigValue<Boolean> TCP_NODELAY = null;
 
-    private static NettyConfigValue<Boolean> SINGLE_EVENTEXECUTOR_PER_GROUP = null;
+    private static NettyConfigValue<Integer> ipTos = null;
+    private static NettyConfigValue<InetAddress> ipMulticastAddr = null;
+    private static NettyConfigValue<NetworkInterface> ipMulticastIf = null;
+    private static NettyConfigValue<Integer> ipMulticastTtl = null;
+    private static NettyConfigValue<Boolean> ipMulticastLoopDisabled = null;
 
-    public static NettyConfigValue<Integer> getPORT() {
-        return PORT;
+    private static NettyConfigValue<Boolean> singleEventexecutorPerGroup = null;
+
+    public static NettyConfigValue<Integer> getPort() {
+        return port;
     }
 
-    public static void setPORT(Integer PORT) {
+    public static void setPort(Integer port) {
         NettyConfigValue nettyConfigValue = new NettyConfigValue();
-        nettyConfigValue.value = PORT;
-        NettyConfig.PORT = nettyConfigValue;
+        nettyConfigValue.value = port;
+        NettyConfig.port = nettyConfigValue;
     }
 
-    public static NettyConfigValue<ByteBufAllocator> getALLOCATOR() {
-        return ALLOCATOR;
+    public static Integer getReaderIdleTimeSeconds() {
+        return readerIdleTimeSeconds;
     }
 
-    public static void setALLOCATOR(String allocator) throws Exception {
-        ALLOCATOR = getClassNettyConfigValue(allocator, ChannelOption.ALLOCATOR);
+    public static void setReaderIdleTimeSeconds(Integer readerIdleTimeSeconds) {
+        NettyConfig.readerIdleTimeSeconds = readerIdleTimeSeconds;
+    }
+
+    public static Integer getWriterIdleTimeSeconds() {
+        return writerIdleTimeSeconds;
+    }
+
+    public static void setWriterIdleTimeSeconds(Integer writerIdleTimeSeconds) {
+        NettyConfig.writerIdleTimeSeconds = writerIdleTimeSeconds;
+    }
+
+    public static Integer getAllIdleTimeSeconds() {
+        return allIdleTimeSeconds;
+    }
+
+    public static void setAllIdleTimeSeconds(Integer allIdleTimeSeconds) {
+        NettyConfig.allIdleTimeSeconds = allIdleTimeSeconds;
+    }
+
+    public static int getBossGroupThreadSize() {
+        return bossGroupThreadSize;
+    }
+
+    public static void setBossGroupThreadSize(int bossGroupThreadSize) {
+        NettyConfig.bossGroupThreadSize = bossGroupThreadSize;
+    }
+
+    public static int getWorkGroupThreadSize() {
+        return workGroupThreadSize;
+    }
+
+    public static void setWorkGroupThreadSize(int workGroupThreadSize) {
+        NettyConfig.workGroupThreadSize = workGroupThreadSize;
+    }
+
+    public static NettyConfigValue<ByteBufAllocator> getAllocator() {
+        return allocator;
+    }
+
+    public static void setAllocator(String allocator) throws Exception {
+        NettyConfig.allocator = getClassNettyConfigValue(allocator, ChannelOption.ALLOCATOR);
     }
 
     private static NettyConfigValue getClassNettyConfigValue(String className, ChannelOption channelOption) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
@@ -92,75 +137,75 @@ public class NettyConfig<T> {
     }
 
     public static NettyConfigValue<RecvByteBufAllocator> getRcvbufAllocator() {
-        return RCVBUF_ALLOCATOR;
+        return rcvbufAllocator;
     }
 
     public static void setRcvbufAllocator(String rcvbufAllocator) throws Exception {
-        RCVBUF_ALLOCATOR = getClassNettyConfigValue(rcvbufAllocator, ChannelOption.ALLOCATOR);
+        NettyConfig.rcvbufAllocator = getClassNettyConfigValue(rcvbufAllocator, ChannelOption.ALLOCATOR);
     }
 
     public static NettyConfigValue<MessageSizeEstimator> getMessageSizeEstimator() {
-        return MESSAGE_SIZE_ESTIMATOR;
+        return messageSizeEstimator;
     }
 
     public static void setMessageSizeEstimator(String messageSizeEstimator) throws Exception {
-        MESSAGE_SIZE_ESTIMATOR = getClassNettyConfigValue(messageSizeEstimator, ChannelOption.ALLOCATOR);
+        NettyConfig.messageSizeEstimator = getClassNettyConfigValue(messageSizeEstimator, ChannelOption.ALLOCATOR);
     }
 
     public static NettyConfigValue<Integer> getConnectTimeoutMillis() {
-        return CONNECT_TIMEOUT_MILLIS;
+        return connectTimeoutMillis;
     }
 
     public static void setConnectTimeoutMillis(Integer connectTimeoutMillis) {
-        CONNECT_TIMEOUT_MILLIS = getNettyConfigValue(connectTimeoutMillis, ChannelOption.CONNECT_TIMEOUT_MILLIS);
+        NettyConfig.connectTimeoutMillis = getNettyConfigValue(connectTimeoutMillis, ChannelOption.CONNECT_TIMEOUT_MILLIS);
     }
 
     public static NettyConfigValue<Integer> getMaxMessagesPerRead() {
-        return MAX_MESSAGES_PER_READ;
+        return maxMessagesPerRead;
     }
 
     public static void setMaxMessagesPerRead(Integer maxMessagesPerRead) {
-        MAX_MESSAGES_PER_READ = getNettyConfigValue(maxMessagesPerRead, ChannelOption.MAX_MESSAGES_PER_READ);
+        NettyConfig.maxMessagesPerRead = getNettyConfigValue(maxMessagesPerRead, ChannelOption.MAX_MESSAGES_PER_READ);
     }
 
     public static NettyConfigValue<Integer> getWriteSpinCount() {
-        return WRITE_SPIN_COUNT;
+        return writeSpinCount;
     }
 
     public static void setWriteSpinCount(Integer writeSpinCount) {
-        WRITE_SPIN_COUNT = getNettyConfigValue(writeSpinCount, ChannelOption.WRITE_SPIN_COUNT);
+        NettyConfig.writeSpinCount = getNettyConfigValue(writeSpinCount, ChannelOption.WRITE_SPIN_COUNT);
     }
 
     public static NettyConfigValue<Integer> getWriteBufferHighWaterMark() {
-        return WRITE_BUFFER_HIGH_WATER_MARK;
+        return writeBufferHighWaterMark;
     }
 
     public static void setWriteBufferHighWaterMark(Integer writeBufferHighWaterMark) {
-        WRITE_BUFFER_HIGH_WATER_MARK = getNettyConfigValue(writeBufferHighWaterMark, ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK);
+        NettyConfig.writeBufferHighWaterMark = getNettyConfigValue(writeBufferHighWaterMark, ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK);
     }
 
     public static NettyConfigValue<Integer> getWriteBufferLowWaterMark() {
-        return WRITE_BUFFER_LOW_WATER_MARK;
+        return writeBufferLowWaterMark;
     }
 
     public static void setWriteBufferLowWaterMark(Integer writeBufferLowWaterMark) {
-        WRITE_BUFFER_LOW_WATER_MARK = getNettyConfigValue(writeBufferLowWaterMark, ChannelOption.WRITE_BUFFER_LOW_WATER_MARK);
+        NettyConfig.writeBufferLowWaterMark = getNettyConfigValue(writeBufferLowWaterMark, ChannelOption.WRITE_BUFFER_LOW_WATER_MARK);
     }
 
     public static NettyConfigValue<Boolean> getAllowHalfClosure() {
-        return ALLOW_HALF_CLOSURE;
+        return allowHalfClosure;
     }
 
     public static void setAllowHalfClosure(Boolean allowHalfClosure) {
-        ALLOW_HALF_CLOSURE = getNettyConfigValue(allowHalfClosure, ChannelOption.ALLOW_HALF_CLOSURE);
+        NettyConfig.allowHalfClosure = getNettyConfigValue(allowHalfClosure, ChannelOption.ALLOW_HALF_CLOSURE);
     }
 
     public static NettyConfigValue<Boolean> getAutoRead() {
-        return AUTO_READ;
+        return autoRead;
     }
 
     public static void setAutoRead(Boolean autoRead) {
-        AUTO_READ = getNettyConfigValue(autoRead, ChannelOption.AUTO_READ);
+        NettyConfig.autoRead = getNettyConfigValue(autoRead, ChannelOption.AUTO_READ);
     }
 
     public static NettyConfigValue<Boolean> getSoBroadcast() {
@@ -228,43 +273,43 @@ public class NettyConfig<T> {
     }
 
     public static NettyConfigValue<Integer> getIpTos() {
-        return IP_TOS;
+        return ipTos;
     }
 
     public static void setIpTos(Integer ipTos) {
-        IP_TOS = getNettyConfigValue(ipTos, ChannelOption.IP_TOS);
+        NettyConfig.ipTos = getNettyConfigValue(ipTos, ChannelOption.IP_TOS);
     }
 
     public static NettyConfigValue<InetAddress> getIpMulticastAddr() {
-        return IP_MULTICAST_ADDR;
+        return ipMulticastAddr;
     }
 
     public static void setIpMulticastAddr(InetAddress ipMulticastAddr) {
-        IP_MULTICAST_ADDR = getNettyConfigValue(ipMulticastAddr, ChannelOption.IP_MULTICAST_ADDR);
+        NettyConfig.ipMulticastAddr = getNettyConfigValue(ipMulticastAddr, ChannelOption.IP_MULTICAST_ADDR);
     }
 
     public static NettyConfigValue<NetworkInterface> getIpMulticastIf() {
-        return IP_MULTICAST_IF;
+        return ipMulticastIf;
     }
 
     public static void setIpMulticastIf(NetworkInterface ipMulticastIf) {
-        IP_MULTICAST_IF = getNettyConfigValue(ipMulticastIf, ChannelOption.IP_MULTICAST_IF);
+        NettyConfig.ipMulticastIf = getNettyConfigValue(ipMulticastIf, ChannelOption.IP_MULTICAST_IF);
     }
 
     public static NettyConfigValue<Integer> getIpMulticastTtl() {
-        return IP_MULTICAST_TTL;
+        return ipMulticastTtl;
     }
 
     public static void setIpMulticastTtl(Integer ipMulticastTtl) {
-        IP_MULTICAST_TTL = getNettyConfigValue(ipMulticastTtl, ChannelOption.IP_MULTICAST_TTL);
+        NettyConfig.ipMulticastTtl = getNettyConfigValue(ipMulticastTtl, ChannelOption.IP_MULTICAST_TTL);
     }
 
     public static NettyConfigValue<Boolean> getIpMulticastLoopDisabled() {
-        return IP_MULTICAST_LOOP_DISABLED;
+        return ipMulticastLoopDisabled;
     }
 
     public static void setIpMulticastLoopDisabled(Boolean ipMulticastLoopDisabled) {
-        IP_MULTICAST_LOOP_DISABLED = getNettyConfigValue(ipMulticastLoopDisabled, ChannelOption.IP_MULTICAST_LOOP_DISABLED);
+        NettyConfig.ipMulticastLoopDisabled = getNettyConfigValue(ipMulticastLoopDisabled, ChannelOption.IP_MULTICAST_LOOP_DISABLED);
     }
 
     public static NettyConfigValue<Boolean> getTcpNodelay() {
@@ -276,11 +321,11 @@ public class NettyConfig<T> {
     }
 
     public static NettyConfigValue<Boolean> getSingleEventexecutorPerGroup() {
-        return SINGLE_EVENTEXECUTOR_PER_GROUP;
+        return singleEventexecutorPerGroup;
     }
 
     public static void setSingleEventexecutorPerGroup(Boolean singleEventexecutorPerGroup) {
-        SINGLE_EVENTEXECUTOR_PER_GROUP = getNettyConfigValue(singleEventexecutorPerGroup, ChannelOption.SINGLE_EVENTEXECUTOR_PER_GROUP);
+        NettyConfig.singleEventexecutorPerGroup = getNettyConfigValue(singleEventexecutorPerGroup, ChannelOption.SINGLE_EVENTEXECUTOR_PER_GROUP);
     }
 
     @Data

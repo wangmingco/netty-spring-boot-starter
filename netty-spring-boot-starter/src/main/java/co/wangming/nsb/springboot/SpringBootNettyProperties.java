@@ -17,8 +17,12 @@ public class SpringBootNettyProperties {
     /********************************************************************
      ***********************Netty 服务配置参数*****************************
      ********************************************************************/
-    private Integer PORT = null;
-
+    private Integer PORT = 8081;
+    private int readerIdleTimeSeconds = 5;
+    private int writerIdleTimeSeconds = 5;
+    private int allIdleTimeSeconds = 5;
+    private int bossGroupThreadSize = 1;
+    private int workGroupThreadSize = 1;
 
     /********************************************************************
      **************Netty #{@link ChannelOption} 配置参数******************

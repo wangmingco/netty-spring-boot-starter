@@ -43,31 +43,32 @@ public class SocketClient {
     }
 
     private static void sendMessage(byte[] message, int commandId) throws IOException {
-        Socket socket = new Socket();
-        socket.connect(new InetSocketAddress("localhost", 7001));
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("localhost", 7001));
 
-        OutputStream out = socket.getOutputStream();
-        out.write(message.length);
-        out.write(commandId);
-        out.write(message);
-        out.flush();
+            OutputStream out = socket.getOutputStream();
+            out.write(message.length);
+            out.write(commandId);
+            out.write(message);
+            out.flush();
 
-        log.info("commandId:{}, RemoteAddress:{}, LocalAddress:{}, write size::{}", commandId, socket.getRemoteSocketAddress(), socket.getLocalAddress(), message.length);
+            log.info("commandId:{}, RemoteAddress:{}, LocalAddress:{}, write size::{}", commandId, socket.getRemoteSocketAddress(), socket.getLocalAddress(), message.length);
 
-        if (commandId == 3 || commandId == 4) {
-            return;
+            if (commandId == 3 || commandId == 4) {
+                return;
+            }
+
+            InputStream in = socket.getInputStream();
+            int size = in.read();
+
+            byte[] responseMessage = new byte[size];
+            in.read(responseMessage);
+
+            Search.SearchResponse searchResponse = Search.SearchResponse.parseFrom(responseMessage);
+
+            log.info("commandId:{}, searchResponse:{}", commandId, searchResponse.getResult());
+
         }
 
-        InputStream in = socket.getInputStream();
-        int size = in.read();
-
-        byte[] responseMessage = new byte[size];
-        in.read(responseMessage);
-
-        Search.SearchResponse searchResponse = Search.SearchResponse.parseFrom(responseMessage);
-
-        log.info("commandId:{}, searchResponse:{}", commandId, searchResponse.getResult());
-
-        socket.close();
     }
 }

@@ -2,13 +2,13 @@ package co.wangming.nsb.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +29,8 @@ public class NettyServer {
         log.info("Netty Server starting...");
 
         try {
-            EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-            EventLoopGroup workerGroup = new NioEventLoopGroup();
+            EventLoopGroup bossGroup = new NioEventLoopGroup(NettyConfig.getBossGroupThreadSize());
+            EventLoopGroup workerGroup = new NioEventLoopGroup(NettyConfig.getWorkGroupThreadSize());
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
@@ -38,17 +38,19 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) {
-                            ChannelPipeline p = ch.pipeline();
-                            p.addLast(new NettyServerHandler());
+                            ch.pipeline()
+                                    .addLast(new NettyServerHandler())
+                                    .addLast(new IdleStateHandler(
+                                            NettyConfig.getReaderIdleTimeSeconds(),
+                                            NettyConfig.getWriterIdleTimeSeconds(),
+                                            NettyConfig.getAllIdleTimeSeconds()))
+                            ;
                         }
                     });
 
             setOption(b);
 
-            int port = 8081;
-            if (NettyConfig.getPORT() != null) {
-                port = NettyConfig.getPORT().getValue();
-            }
+            int port = NettyConfig.getPort().getValue();
 
             b.bind("localhost", port).sync();
 
@@ -64,7 +66,7 @@ public class NettyServer {
     }
 
     private void setOption(ServerBootstrap b) {
-        setOption(b, NettyConfig.getALLOCATOR());
+        setOption(b, NettyConfig.getAllocator());
         setOption(b, NettyConfig.getRcvbufAllocator());
         setOption(b, NettyConfig.getMessageSizeEstimator());
         setOption(b, NettyConfig.getConnectTimeoutMillis());
