@@ -15,7 +15,6 @@ public class CommandNameGenerator extends AnnotationBeanNameGenerator {
 
     @Override
     public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
-        log.info("generateBeanName");
         //从自定义注解中拿name
         String name = getNameByServiceFindAnntation(definition, registry);
         if (name != null) {

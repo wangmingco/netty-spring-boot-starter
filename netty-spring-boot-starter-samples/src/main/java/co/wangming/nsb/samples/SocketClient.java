@@ -29,10 +29,11 @@ public class SocketClient {
         for (int i = 0; i < 100; i++) {
 
             try {
-                sendMessage(message, 1);
-                sendMessage(message, 2);
-                sendMessage(message, 3);
-                sendMessage(message, 4);
+                sendMessage(message, 1, true);
+                sendMessage(message, 2, true);
+                sendMessage(message, 3, false);
+                sendMessage(message, 4, false);
+                sendMessage(message, 5, false);
             } catch (Exception e) {
 
             }
@@ -42,7 +43,7 @@ public class SocketClient {
 
     }
 
-    private static void sendMessage(byte[] message, int commandId) throws IOException {
+    private static void sendMessage(byte[] message, int commandId, boolean isRecive) throws IOException {
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress("localhost", 7001));
 
@@ -54,7 +55,7 @@ public class SocketClient {
 
             log.info("commandId:{}, RemoteAddress:{}, LocalAddress:{}, write size::{}", commandId, socket.getRemoteSocketAddress(), socket.getLocalAddress(), message.length);
 
-            if (commandId == 3 || commandId == 4) {
+            if (!isRecive) {
                 return;
             }
 

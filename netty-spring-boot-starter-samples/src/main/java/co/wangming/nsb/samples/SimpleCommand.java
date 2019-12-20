@@ -3,6 +3,7 @@ package co.wangming.nsb.samples;
 import co.wangming.nsb.netty.CommandController;
 import co.wangming.nsb.netty.CommandMapping;
 import co.wangming.nsb.samples.protobuf.Search;
+import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,7 +43,11 @@ public class SimpleCommand {
         log.info("收到SearchRequest 4 --> {}, {}", searchRequest.getQuery(), nullParam);
 
         simpleService.print();
+    }
 
+    @CommandMapping(id = 5)
+    public void justSearch5(Search.SearchRequest searchRequest, ChannelHandlerContext ctx) {
+        log.info("收到SearchRequest 5 --> {}", ctx.channel().remoteAddress());
     }
 
 }

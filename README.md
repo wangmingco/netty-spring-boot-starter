@@ -1,9 +1,10 @@
 # netty-spring-boot-starter
 基于Netty的Spring Boot Starter工程.
 
-## 特性
-* TCP长连接消息轻松转发到Spring容器
-* 在application.properties文件中轻松配置Netty参数
+## 介绍
+* 可以将TCP长连接消息轻松转发到Spring容器
+* 可以在application.properties文件中配置Netty参数
+* 支持自定义消息体解析
 
 ## 用例
 
@@ -80,10 +81,39 @@ private static void sendMessage(byte[] message, int commandId) throws IOExceptio
 }
 ```
 
+## 自定义消息体解析
+目前系统自带只支持Protobuf和Netty的ChannelHandlerContext的参数, 不过可以自定义参数解析器
+```java
+@ParserComponet(messageType = GeneratedMessageV3.class)
+@Slf4j
+public class ProtobufParser implements MessageParser<byte[], GeneratedMessageV3> {
+
+    private Parser parser;
+
+    @Override
+    public void setParser(Class parameterType) {
+        try {
+            Field parserField = parameterType.getDeclaredField("PARSER");
+            parserField.setAccessible(true);
+            Parser parser = (Parser) parserField.get(parameterType);
+            this.parser = parser;
+        } catch (NoSuchFieldException e) {
+            log.error("", e);
+        } catch (IllegalAccessException e) {
+            log.error("", e);
+        }
+    }
+
+    @Override
+    public GeneratedMessageV3 parse(ChannelHandlerContext ctx, byte[] bytes) throws Exception{
+        return (GeneratedMessageV3)parser.parseFrom(bytes);
+    }
+}
+```
+系统会调用参数解析器的setParser()方法, 将参数的parameterType传递进来, 然后就可以构建自己的参数解析器了, 等到调用带有该种参数的方法时就会调用该解析器进行参数解析
 
 ## TODO
 * 性能优化, 在收发消息时避免申请堆内内存
-* 支持消息方法自定义参数
 * 支持其他消息编码([thrift](https://thrift.apache.org/) 等)
 
 ## 其他

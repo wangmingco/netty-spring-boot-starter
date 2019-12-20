@@ -1,6 +1,6 @@
 package co.wangming.nsb.vo;
 
-import co.wangming.nsb.parameterHandlers.ParameterInfo;
+import co.wangming.nsb.parsers.MessageParser;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class MethodInfo {
 
-    private List<ParameterInfo> parameterInfoList;
+    private List<MessageParser> parameterInfoList;
 
     private String beanName;
 }

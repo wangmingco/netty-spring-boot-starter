@@ -5,6 +5,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
@@ -28,6 +29,9 @@ public class SpringContext implements ApplicationContextAware {
         return context.getBeansOfType(requiredType);
     }
 
+    public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> requiredType) throws BeansException {
+        return context.getBeansWithAnnotation(requiredType);
+    }
 
     public static Object getBean(String requiredType) {
         return context.getBean(requiredType);

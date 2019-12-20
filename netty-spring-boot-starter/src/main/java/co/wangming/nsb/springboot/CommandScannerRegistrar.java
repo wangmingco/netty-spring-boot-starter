@@ -3,12 +3,13 @@ package co.wangming.nsb.springboot;
 import co.wangming.nsb.netty.CommandController;
 import co.wangming.nsb.netty.CommandMapping;
 import co.wangming.nsb.netty.CommandProxy;
-import co.wangming.nsb.parameterHandlers.ParameterInfo;
+import co.wangming.nsb.parsers.CommonParser;
+import co.wangming.nsb.parsers.MessageParser;
+import co.wangming.nsb.parsers.ParserComponet;
 import co.wangming.nsb.util.CommandMethodCache;
 import co.wangming.nsb.util.ProxyClassMaker;
 import co.wangming.nsb.vo.MethodInfo;
-import com.google.protobuf.GeneratedMessageV3;
-import com.google.protobuf.Parser;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -21,11 +22,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.StandardAnnotationMetadata;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 用于扫描 #{@link CommandController} 注解
@@ -34,6 +33,10 @@ import java.util.Set;
  **/
 @Slf4j
 public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanDefinitionRegistrar {
+
+    private static final List<String> annotationPackages = new ArrayList() {{
+        add(ParserComponet.class.getPackage().getName());
+    }};
 
     private ResourceLoader resourceLoader;
 
@@ -46,15 +49,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
 
         log.debug("registerBeanDefinitions start: {}", annotationMetadata.getClassName());
-
-        //获取所有注解的属性和值
-        AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(CommandScan.class.getName()));
-        //获取到basePackage的值
-        String[] basePackages = annoAttrs.getStringArray("basePackage");
-        //如果没有设置basePackage 扫描路径,就扫描对应包下面的值
-        if (basePackages.length == 0) {
-            basePackages = new String[]{((StandardAnnotationMetadata) annotationMetadata).getIntrospectedClass().getPackage().getName()};
-        }
+        String[] scanPackages = getScanPackages(annotationMetadata);
 
         //自定义的包扫描器
         CommandClassPathScanner commandClassPathScanner = new CommandClassPathScanner(beanDefinitionRegistry, false);
@@ -66,15 +61,47 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         //这里实现的是根据名称来注入
         commandClassPathScanner.setBeanNameGenerator(new CommandNameGenerator());
 
-        log.debug("commandClassPathScanner doScan:{}", basePackages);
+        log.info("commandClassPathScanner 扫描路径:{}", JSON.toJSONString(scanPackages, true));
 
         //扫描指定路径下的接口
-        Set<BeanDefinitionHolder> beanDefinitionHolders = commandClassPathScanner.doScan(basePackages);
+        Set<BeanDefinitionHolder> beanDefinitionHolders = commandClassPathScanner.doScan(scanPackages);
 
-        registerCommandMapping(beanDefinitionRegistry, beanDefinitionHolders);
+        String beanNames = beanDefinitionHolders.stream().map(it -> it.getBeanName()).collect(Collectors.joining(", "));
+        log.info("commandClassPathScanner 扫描到的bean名称:{}", beanNames);
+
+        try {
+            registerCommandMapping(beanDefinitionRegistry, beanDefinitionHolders);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void registerCommandMapping(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) {
+    private String[] getScanPackages(AnnotationMetadata annotationMetadata) {
+        //获取所有注解的属性和值
+        AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(CommandScan.class.getName()));
+        //获取到basePackage的值
+        String[] basePackages = annoAttrs.getStringArray("basePackage");
+        //如果没有设置basePackage 扫描路径,就扫描对应包下面的值
+        if (basePackages.length == 0) {
+            basePackages = new String[]{((StandardAnnotationMetadata) annotationMetadata).getIntrospectedClass().getPackage().getName()};
+        }
+
+        List<String> scanPackages = new ArrayList<>();
+        scanPackages.addAll(Arrays.asList(basePackages));
+        scanPackages.addAll(annotationPackages);
+
+        String[] packages = new String[scanPackages.size()];
+        for (int i = 0; i < scanPackages.size(); i++) {
+            packages[i] = scanPackages.get(i);
+        }
+        return packages;
+    }
+
+    private void registerCommandMapping(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws InstantiationException, IllegalAccessException {
+        Map<Class, Class> parserComponets = getParserComponets(beanDefinitionHolders);
+
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
             log.debug("Find BeanDefinitionHolder: {}", beanDefinitionHolder.getBeanName());
 
@@ -96,7 +123,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
                 }
 
                 // 拿到参数信息
-                List<ParameterInfo> parameterInfoList = handleParameter(method);
+                List<MessageParser> parameterInfoList = handleParameter(method, parserComponets);
 
                 MethodInfo methodInfo = MethodInfo.builder()
                         .parameterInfoList(parameterInfoList)
@@ -110,39 +137,42 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         }
     }
 
+    private Map<Class, Class> getParserComponets(Set<BeanDefinitionHolder> beanDefinitionHolders) {
+        Map<Class, Class> map = new HashMap<>();
 
-    private List<ParameterInfo> handleParameter(Method method) {
-        List<ParameterInfo> parameterInfoList = new ArrayList<>();
-        // 解析消息接收方法, 得到protobuf的Parser对象
+        for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
+            try {
+                Class<?> beanClass = Class.forName(beanDefinitionHolder.getBeanDefinition().getBeanClassName());
+                if (MessageParser.class.isAssignableFrom(beanClass)) {
+                    ParserComponet parserComponet = beanClass.getAnnotation(ParserComponet.class);
+                    map.put(parserComponet.messageType(), beanClass);
+                }
+            } catch (ClassNotFoundException e) {
+                log.error("", e);
+            }
+        }
+        return map;
+    }
+
+
+    private List<MessageParser> handleParameter(Method method, Map<Class, Class> parserComponets) throws IllegalAccessException, InstantiationException {
+        List<MessageParser> parameterInfoList = new ArrayList<>();
+        loop1:
         for (Class parameterType : method.getParameterTypes()) {
-            ParameterInfo.ParameterInfoBuilder parameterInfoBuilder = ParameterInfo
-                    .builder()
-                    .parameterType(parameterType);
 
-            // 处理protobuf Parser
-            if (GeneratedMessageV3.class.isAssignableFrom(parameterType)) {
-                setParser(parameterInfoBuilder, parameterType);
+            for (Map.Entry<Class, Class> parserComponetEntry : parserComponets.entrySet()) {
+                if (parserComponetEntry.getKey().isAssignableFrom(parameterType)) {
+                    MessageParser messageParser = (MessageParser) parserComponetEntry.getValue().newInstance();
+                    messageParser.setParser(parameterType);
+                    parameterInfoList.add(messageParser);
+                    continue loop1;
+                }
             }
 
-            // TODO 非protobuf对象, 目前先跳过, 不过可以将netty的context设置进来
-
-            parameterInfoList.add(parameterInfoBuilder.build());
+            parameterInfoList.add(new CommonParser());
         }
 
         return parameterInfoList;
-    }
-
-    private void setParser(ParameterInfo.ParameterInfoBuilder builder, Class<?> parameterType) {
-        try {
-            Field parserField = parameterType.getDeclaredField("PARSER");
-            parserField.setAccessible(true);
-            Parser parser = (Parser) parserField.get(parameterType);
-            builder.parser(parser);
-        } catch (NoSuchFieldException e) {
-            log.error("", e);
-        } catch (IllegalAccessException e) {
-            log.error("", e);
-        }
     }
 
     private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass, Method method, CommandMapping commandMappingAnnotation) {
