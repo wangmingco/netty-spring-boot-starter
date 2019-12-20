@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Created By WangMing On 2019-12-20
  **/
-@ParserComponet(messageType = Object.class)
+@ParserRegister(messageType = Object.class)
 @Slf4j
 public class CommonParser implements MessageParser<byte[], Object> {
 

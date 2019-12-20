@@ -5,7 +5,7 @@ import co.wangming.nsb.netty.CommandMapping;
 import co.wangming.nsb.netty.CommandProxy;
 import co.wangming.nsb.parsers.CommonParser;
 import co.wangming.nsb.parsers.MessageParser;
-import co.wangming.nsb.parsers.ParserComponet;
+import co.wangming.nsb.parsers.ParserRegister;
 import co.wangming.nsb.util.CommandMethodCache;
 import co.wangming.nsb.util.ProxyClassMaker;
 import co.wangming.nsb.vo.MethodInfo;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanDefinitionRegistrar {
 
     private static final List<String> annotationPackages = new ArrayList() {{
-        add(ParserComponet.class.getPackage().getName());
+        add(ParserRegister.class.getPackage().getName());
     }};
 
     private ResourceLoader resourceLoader;
@@ -144,8 +144,8 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
             try {
                 Class<?> beanClass = Class.forName(beanDefinitionHolder.getBeanDefinition().getBeanClassName());
                 if (MessageParser.class.isAssignableFrom(beanClass)) {
-                    ParserComponet parserComponet = beanClass.getAnnotation(ParserComponet.class);
-                    map.put(parserComponet.messageType(), beanClass);
+                    ParserRegister parserRegister = beanClass.getAnnotation(ParserRegister.class);
+                    map.put(parserRegister.messageType(), beanClass);
                 }
             } catch (ClassNotFoundException e) {
                 log.error("", e);

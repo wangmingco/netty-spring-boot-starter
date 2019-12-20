@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 /**
  * Created By WangMing On 2019-12-20
  **/
-@ParserComponet(messageType = GeneratedMessageV3.class)
+@ParserRegister(messageType = GeneratedMessageV3.class)
 @Slf4j
 public class ProtobufParser implements MessageParser<byte[], GeneratedMessageV3> {
 

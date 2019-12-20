@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Created By WangMing On 2019-12-20
  **/
-@ParserComponet(messageType = ChannelHandlerContext.class)
+@ParserRegister(messageType = ChannelHandlerContext.class)
 @Slf4j
 public class ChannelHandlerContextParser implements MessageParser<byte[], ChannelHandlerContext> {
 
