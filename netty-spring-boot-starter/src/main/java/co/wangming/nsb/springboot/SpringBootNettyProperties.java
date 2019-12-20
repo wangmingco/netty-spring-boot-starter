@@ -23,6 +23,7 @@ public class SpringBootNettyProperties {
     private int allIdleTimeSeconds = 5;
     private int bossGroupThreadSize = 1;
     private int workGroupThreadSize = 1;
+    private String nettyServerHandler = "co.wangming.nsb.netty.NettyServerHandler";
 
     /********************************************************************
      **************Netty #{@link ChannelOption} 配置参数******************

@@ -1,10 +1,12 @@
 package co.wangming.nsb.netty;
 
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.MessageSizeEstimator;
 import io.netty.channel.RecvByteBufAllocator;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -13,6 +15,7 @@ import java.net.NetworkInterface;
  * Created By WangMing On 2019-12-09
  **/
 @Data
+@Slf4j
 public class NettyConfig<T> {
 
     private static NettyConfigValue<Integer> port = null;
@@ -21,6 +24,7 @@ public class NettyConfig<T> {
     private static Integer allIdleTimeSeconds = null;
     private static int bossGroupThreadSize = 1;
     private static int workGroupThreadSize = 1;
+    private static Class nettyServerHandler;
 
     private static NettyConfigValue<ByteBufAllocator> allocator = null;
     private static NettyConfigValue<RecvByteBufAllocator> rcvbufAllocator = null;
@@ -54,6 +58,7 @@ public class NettyConfig<T> {
 
     private static NettyConfigValue<Boolean> singleEventexecutorPerGroup = null;
 
+    /******************************/
     public static NettyConfigValue<Integer> getPort() {
         return port;
     }
@@ -104,36 +109,29 @@ public class NettyConfig<T> {
         NettyConfig.workGroupThreadSize = workGroupThreadSize;
     }
 
+    // TODO 优化, 每次都是用反射创建出ChannelInboundHandler 实例
+    public static ChannelInboundHandler getNettyServerHandler() {
+        try {
+            return (ChannelInboundHandler) nettyServerHandler.newInstance();
+        } catch (InstantiationException e) {
+            log.error("", e);
+        } catch (IllegalAccessException e) {
+            log.error("", e);
+        }
+        return null;
+    }
+
+    public static void setNettyServerHandler(String nettyServerHandler) throws Exception {
+        NettyConfig.nettyServerHandler = Class.forName(nettyServerHandler);
+    }
+
+    /******************************/
     public static NettyConfigValue<ByteBufAllocator> getAllocator() {
         return allocator;
     }
 
     public static void setAllocator(String allocator) throws Exception {
         NettyConfig.allocator = getClassNettyConfigValue(allocator, ChannelOption.ALLOCATOR);
-    }
-
-    private static NettyConfigValue getClassNettyConfigValue(String className, ChannelOption channelOption) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        if (className == null) {
-            return null;
-        }
-
-        Class value = Class.forName(className);
-
-        NettyConfigValue nettyConfigValue = new NettyConfigValue();
-        nettyConfigValue.value = value.newInstance();
-        nettyConfigValue.name = channelOption;
-        return nettyConfigValue;
-    }
-
-    private static NettyConfigValue getNettyConfigValue(Object ALLOCATOR, ChannelOption channelOption) {
-        if (ALLOCATOR == null) {
-            return null;
-        }
-
-        NettyConfigValue nettyConfigValue = new NettyConfigValue();
-        nettyConfigValue.value = ALLOCATOR;
-        nettyConfigValue.name = channelOption;
-        return nettyConfigValue;
     }
 
     public static NettyConfigValue<RecvByteBufAllocator> getRcvbufAllocator() {
@@ -326,6 +324,31 @@ public class NettyConfig<T> {
 
     public static void setSingleEventexecutorPerGroup(Boolean singleEventexecutorPerGroup) {
         NettyConfig.singleEventexecutorPerGroup = getNettyConfigValue(singleEventexecutorPerGroup, ChannelOption.SINGLE_EVENTEXECUTOR_PER_GROUP);
+    }
+
+    /******************************/
+    private static NettyConfigValue getClassNettyConfigValue(String className, ChannelOption channelOption) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        if (className == null) {
+            return null;
+        }
+
+        Class value = Class.forName(className);
+
+        NettyConfigValue nettyConfigValue = new NettyConfigValue();
+        nettyConfigValue.value = value.newInstance();
+        nettyConfigValue.name = channelOption;
+        return nettyConfigValue;
+    }
+
+    private static NettyConfigValue getNettyConfigValue(Object ALLOCATOR, ChannelOption channelOption) {
+        if (ALLOCATOR == null) {
+            return null;
+        }
+
+        NettyConfigValue nettyConfigValue = new NettyConfigValue();
+        nettyConfigValue.value = ALLOCATOR;
+        nettyConfigValue.name = channelOption;
+        return nettyConfigValue;
     }
 
     @Data

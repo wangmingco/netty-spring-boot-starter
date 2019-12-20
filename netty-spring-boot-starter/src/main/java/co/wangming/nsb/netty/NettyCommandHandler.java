@@ -8,6 +8,7 @@ import com.google.protobuf.GeneratedMessageV3;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 
@@ -18,9 +19,21 @@ import java.util.List;
  * Created By WangMing On 2019-12-07
  **/
 @Slf4j
-public class CommandDispatcher {
+public class NettyCommandHandler extends ChannelInboundHandlerAdapter {
 
-    public static void dispatch(ChannelHandlerContext ctx, int messageId, byte[] messageBytes) throws Exception {
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ctx.fireChannelRead(msg);
+        if (msg instanceof NettyMessage) {
+            NettyMessage nettyMessage = (NettyMessage) msg;
+            dispatch(nettyMessage);
+        }
+    }
+
+    public static void dispatch(NettyMessage nettyMessage) throws Exception {
+        ChannelHandlerContext ctx = nettyMessage.getCtx();
+        int messageId = nettyMessage.getMessageId();
+        byte[] messageBytes = nettyMessage.getMessageBytes();
         MethodInfo methodInfo = CommandMethodCache.getMethodInfo(String.valueOf(messageId));
         List<MessageParser> messageParsers = methodInfo.getParameterInfoList();
         String beanName = methodInfo.getBeanName();

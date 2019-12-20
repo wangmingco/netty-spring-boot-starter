@@ -80,6 +80,7 @@ public class SpringBootNettyConfiguration {
             NettyConfig.setWriterIdleTimeSeconds(springBootNettyProperties.getWriterIdleTimeSeconds());
             NettyConfig.setBossGroupThreadSize(springBootNettyProperties.getBossGroupThreadSize());
             NettyConfig.setWorkGroupThreadSize(springBootNettyProperties.getWorkGroupThreadSize());
+            NettyConfig.setNettyServerHandler(springBootNettyProperties.getNettyServerHandler());
 
             NettyConfig.setAllocator(springBootNettyProperties.getAllocator());
             NettyConfig.setRcvbufAllocator(springBootNettyProperties.getRcvbufAllocator());

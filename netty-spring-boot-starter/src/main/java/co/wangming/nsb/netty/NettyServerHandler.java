@@ -41,7 +41,14 @@ public class NettyServerHandler extends ByteToMessageDecoder {
         // TODO 优化, 每次都分配一块内存很浪费资源
         byte[] messageBytes = new byte[messageSize];
         in.readBytes(messageBytes);
-        CommandDispatcher.dispatch(ctx, messageId, messageBytes);
+
+        NettyMessage message = NettyMessage.builder()
+                .ctx(ctx)
+                .messageBytes(messageBytes)
+                .messageId(messageId)
+                .build();
+
+        out.add(message);
     }
 
     @Override

@@ -39,7 +39,8 @@ public class NettyServer {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline()
-                                    .addLast(new NettyServerHandler())
+                                    .addLast(NettyConfig.getNettyServerHandler())
+                                    .addLast(new NettyCommandHandler())
                                     .addLast(new IdleStateHandler(
                                             NettyConfig.getReaderIdleTimeSeconds(),
                                             NettyConfig.getWriterIdleTimeSeconds(),
