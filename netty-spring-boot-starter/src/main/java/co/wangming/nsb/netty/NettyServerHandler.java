@@ -1,5 +1,6 @@
 package co.wangming.nsb.netty;
 
+import co.wangming.nsb.event.EventDispatcher;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -42,44 +43,37 @@ public class NettyServerHandler extends ByteToMessageDecoder {
         byte[] messageBytes = new byte[messageSize];
         in.readBytes(messageBytes);
 
-        NettyMessage message = NettyMessage.builder()
-                .ctx(ctx)
-                .messageBytes(messageBytes)
-                .messageId(messageId)
-                .build();
-
-        out.add(message);
+        NettyCommandHandler.dispatch(ctx, messageId, messageBytes);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("接受自远端连接:{}", ctx.channel().remoteAddress());
-        // TODO 处理创建连接
-        super.channelActive(ctx);
+        log.debug("接受自远端连接:{}", ctx.channel().remoteAddress());
+
+        EventDispatcher.dispatchChannelActiveEvent(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("远端连接关闭:{}", ctx.channel().remoteAddress());
-        // TODO 处理关闭连接
-        super.channelInactive(ctx);
+        log.debug("远端连接关闭:{}", ctx.channel().remoteAddress());
+        EventDispatcher.dispatchChannelInactiveEvent(ctx);
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent event = (IdleStateEvent) evt;
-            log.info("远端连接超时, 状态:{}, 地址:{}", event.state(), ctx.channel().remoteAddress());
+            log.debug("远端连接超时, 状态:{}, 地址:{}", event.state(), ctx.channel().remoteAddress());
 
             switch (event.state()) {
                 case READER_IDLE:
-                    // TODO 处理读超时
+                    EventDispatcher.dispatchReaderIdleEvent(ctx);
                     break;
                 case WRITER_IDLE:
-                    // TODO 处理写超时
+                    EventDispatcher.dispatchWriterIdleEvent(ctx);
                     break;
                 case ALL_IDLE:
-                    // TODO 处理读写超时
+                    EventDispatcher.dispatchAllIdleEvent(ctx);
                     break;
                 default:
                     break;
@@ -90,7 +84,7 @@ public class NettyServerHandler extends ByteToMessageDecoder {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.info("远端连接发生异常:{}", ctx.channel().remoteAddress(), cause);
-        // TODO 处理异常
+        log.debug("远端连接发生异常:{}", ctx.channel().remoteAddress(), cause);
+        EventDispatcher.dispatchExceptionEvent(ctx, cause);
     }
 }

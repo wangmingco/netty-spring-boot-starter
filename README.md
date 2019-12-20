@@ -112,6 +112,53 @@ public class ProtobufParser implements MessageParser<byte[], GeneratedMessageV3>
 ```
 系统会调用参数解析器的setParser()方法, 将参数的parameterType传递进来, 然后就可以构建自己的参数解析器了, 等到调用带有该种参数的方法时就会调用该解析器进行参数解析
 
+## 事件处理
+系统同样提供了事件处理机制
+```java
+@EventRegister
+@Slf4j
+public class SimpleEventHandler implements EventHandler<String> {
+    @Override
+    public String channelActive(ChannelActiveEvent channelActiveEvent) {
+
+        log.info("新的连接进来了:{}", channelActiveEvent.getChannelHandlerContext().name());
+        return channelActiveEvent.getChannelHandlerContext().name();
+    }
+
+    @Override
+    public void channelInactive(ChannelInactiveEvent<String> channelActiveEvent) {
+        log.info("连接断开了:{}", channelActiveEvent.getContext());
+    }
+
+    @Override
+    public void exceptionEvent(ExceptionEvent<String> exceptionEvent) {
+        log.info("连接断开了:{}", exceptionEvent.getContext());
+    }
+
+    @Override
+    public void readerIdleEvent(ReaderIdleEvent<String> readerIdleEvent) {
+        log.info("连接读超时:{}", readerIdleEvent.getContext());
+    }
+
+    @Override
+    public void writerIdleEvent(WriterIdleEvent<String> readerIdleEvent) {
+        log.info("连接写超时:{}", readerIdleEvent.getContext());
+    }
+
+    @Override
+    public void allIdleEvent(AllIdleEvent<String> readerIdleEvent) {
+        log.info("连接读写超时:{}", readerIdleEvent.getContext());
+    }
+}
+```
+通过注解EventRegister和实现EventHandler接口, 即可自定义一个事件处理器, 当前支持
+* 连接接入事件
+* 连接断开事件
+* 异常事件
+* 读超时时间
+* 写超时时间
+* 读写超时时间
+
 ## TODO
 * 性能优化, 在收发消息时避免申请堆内内存
 * 支持其他消息编码([thrift](https://thrift.apache.org/) 等)

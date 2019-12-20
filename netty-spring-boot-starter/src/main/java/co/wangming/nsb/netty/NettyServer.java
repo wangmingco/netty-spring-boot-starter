@@ -40,7 +40,6 @@ public class NettyServer {
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline()
                                     .addLast(NettyConfig.getNettyServerHandler())
-                                    .addLast(new NettyCommandHandler())
                                     .addLast(new IdleStateHandler(
                                             NettyConfig.getReaderIdleTimeSeconds(),
                                             NettyConfig.getWriterIdleTimeSeconds(),

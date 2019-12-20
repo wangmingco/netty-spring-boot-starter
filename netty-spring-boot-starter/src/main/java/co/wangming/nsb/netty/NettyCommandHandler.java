@@ -9,9 +9,7 @@ import com.google.protobuf.GeneratedMessageV3;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +18,9 @@ import java.util.List;
  * Created By WangMing On 2019-12-07
  **/
 @Slf4j
-public class NettyCommandHandler extends ChannelInboundHandlerAdapter {
+public class NettyCommandHandler {
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ctx.fireChannelRead(msg);
-        if (msg instanceof NettyMessage) {
-            NettyMessage nettyMessage = (NettyMessage) msg;
-            dispatch(nettyMessage);
-        }
-    }
-
-    public static void dispatch(NettyMessage nettyMessage) throws Exception {
-        ChannelHandlerContext ctx = nettyMessage.getCtx();
-        int messageId = nettyMessage.getMessageId();
-        byte[] messageBytes = nettyMessage.getMessageBytes();
+    public static void dispatch(ChannelHandlerContext ctx, int messageId, byte[] messageBytes) throws Exception {
         CommandMethod commandMethod = CommandMethodCache.getMethodInfo(String.valueOf(messageId));
         List<MessageParser> messageParsers = commandMethod.getMessageParsers();
         String beanName = commandMethod.getBeanName();
@@ -76,17 +62,8 @@ public class NettyCommandHandler extends ChannelInboundHandlerAdapter {
     private static Object invoke(String beanName, int messageId, List paramters) {
         String proxyBeanName = beanName + "$$" + CommandProxy.class.getSimpleName() + "$$" + messageId;
         CommandProxy methodBean = null;
-        try {
-            methodBean = (CommandProxy) SpringContext.getBean(proxyBeanName);
-        } catch (BeansException e) {
-            log.error("获取bean异常:{}", proxyBeanName, e);
-        }
-        try {
-            return methodBean.invoke(paramters);
-        } catch (Exception e) {
-            log.error("调用bean方法异常:\nproxyBeanName:{}\n CommandProxy:{}", proxyBeanName, methodBean.getClass().getName(), e);
-            return null;
-        }
+        methodBean = (CommandProxy) SpringContext.getBean(proxyBeanName);
+        return methodBean.invoke(paramters);
     }
 
     /**

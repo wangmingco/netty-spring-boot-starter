@@ -2,6 +2,7 @@ package co.wangming.nsb.springboot;
 
 import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
+import co.wangming.nsb.event.EventRegister;
 import co.wangming.nsb.parsers.ParserRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -27,6 +28,7 @@ public class CommandClassPathScanner extends ClassPathBeanDefinitionScanner {
         add(CommandController.class);
         add(CommandMapping.class);
         add(ParserRegister.class);
+        add(EventRegister.class);
     }};
 
     public CommandClassPathScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters) {

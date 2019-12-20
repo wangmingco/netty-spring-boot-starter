@@ -47,7 +47,12 @@ public class SimpleCommand {
 
     @CommandMapping(id = 5)
     public void justSearch5(Search.SearchRequest searchRequest, ChannelHandlerContext ctx) {
-        log.info("收到SearchRequest 5 --> {}", ctx.channel().remoteAddress());
+        log.info("收到SearchRequest 5 --> {}, {}", ctx.channel().remoteAddress(), searchRequest.getQuery());
     }
 
+    @CommandMapping(id = 6)
+    public void justSearch6(Search.SearchRequest searchRequest, ChannelHandlerContext ctx) {
+        log.info("收到SearchRequest 6 --> {}, {}", ctx.channel().remoteAddress());
+        throw new RuntimeException();
+    }
 }

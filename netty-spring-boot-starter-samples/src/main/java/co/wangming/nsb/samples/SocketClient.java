@@ -34,6 +34,7 @@ public class SocketClient {
                 sendMessage(message, 3, false);
                 sendMessage(message, 4, false);
                 sendMessage(message, 5, false);
+                sendMessage(message, 6, false);
             } catch (Exception e) {
 
             }
@@ -43,7 +44,7 @@ public class SocketClient {
 
     }
 
-    private static void sendMessage(byte[] message, int commandId, boolean isRecive) throws IOException {
+    private static void sendMessage(byte[] message, int commandId, boolean isRecive) throws Exception {
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress("localhost", 7001));
 
@@ -56,6 +57,7 @@ public class SocketClient {
             log.info("commandId:{}, RemoteAddress:{}, LocalAddress:{}, write size::{}", commandId, socket.getRemoteSocketAddress(), socket.getLocalAddress(), message.length);
 
             if (!isRecive) {
+                TimeUnit.SECONDS.sleep(1);
                 return;
             }
 
