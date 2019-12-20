@@ -1,6 +1,6 @@
 package co.wangming.nsb.util;
 
-import co.wangming.nsb.vo.MethodInfo;
+import co.wangming.nsb.vo.CommandMethod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,14 +10,14 @@ import java.util.Map;
  **/
 public class CommandMethodCache {
 
-    private static Map<String, MethodInfo> ID2MethodInfo = new HashMap<>();
+    private static Map<String, CommandMethod> ID2MethodInfo = new HashMap<>();
 
 
-    public static MethodInfo add(String id, MethodInfo methodInfo) {
-        return ID2MethodInfo.put(id, methodInfo);
+    public static CommandMethod add(String id, CommandMethod commandMethod) {
+        return ID2MethodInfo.put(id, commandMethod);
     }
 
-    public static MethodInfo getMethodInfo(String id) {
+    public static CommandMethod getMethodInfo(String id) {
         return ID2MethodInfo.get(id);
     }
 

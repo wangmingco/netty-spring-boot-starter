@@ -3,7 +3,7 @@ package co.wangming.nsb.netty;
 import co.wangming.nsb.parsers.MessageParser;
 import co.wangming.nsb.springboot.SpringContext;
 import co.wangming.nsb.util.CommandMethodCache;
-import co.wangming.nsb.vo.MethodInfo;
+import co.wangming.nsb.vo.CommandMethod;
 import com.google.protobuf.GeneratedMessageV3;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -34,9 +34,9 @@ public class NettyCommandHandler extends ChannelInboundHandlerAdapter {
         ChannelHandlerContext ctx = nettyMessage.getCtx();
         int messageId = nettyMessage.getMessageId();
         byte[] messageBytes = nettyMessage.getMessageBytes();
-        MethodInfo methodInfo = CommandMethodCache.getMethodInfo(String.valueOf(messageId));
-        List<MessageParser> messageParsers = methodInfo.getParameterInfoList();
-        String beanName = methodInfo.getBeanName();
+        CommandMethod commandMethod = CommandMethodCache.getMethodInfo(String.valueOf(messageId));
+        List<MessageParser> messageParsers = commandMethod.getMessageParsers();
+        String beanName = commandMethod.getBeanName();
 
         // 生成调用方法参数
         List paramters = getParameters(ctx, messageBytes, messageParsers);

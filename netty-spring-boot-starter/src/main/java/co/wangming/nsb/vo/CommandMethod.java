@@ -11,9 +11,9 @@ import java.util.List;
  **/
 @Data
 @Builder
-public class MethodInfo {
+public class CommandMethod {
 
-    private List<MessageParser> parameterInfoList;
+    private List<MessageParser> messageParsers;
 
     private String beanName;
 }

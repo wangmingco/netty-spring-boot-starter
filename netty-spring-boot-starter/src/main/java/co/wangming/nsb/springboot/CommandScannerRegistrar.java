@@ -8,7 +8,7 @@ import co.wangming.nsb.parsers.MessageParser;
 import co.wangming.nsb.parsers.ParserRegister;
 import co.wangming.nsb.util.CommandMethodCache;
 import co.wangming.nsb.util.ProxyClassMaker;
-import co.wangming.nsb.vo.MethodInfo;
+import co.wangming.nsb.vo.CommandMethod;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -125,12 +125,12 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
                 // 拿到参数信息
                 List<MessageParser> parameterInfoList = handleParameter(method, parserComponets);
 
-                MethodInfo methodInfo = MethodInfo.builder()
-                        .parameterInfoList(parameterInfoList)
+                CommandMethod commandMethod = CommandMethod.builder()
+                        .messageParsers(parameterInfoList)
                         .beanName(beanDefinitionHolder.getBeanName())
                         .build();
 
-                CommandMethodCache.add(String.valueOf(commandMappingAnnotation.id()), methodInfo);
+                CommandMethodCache.add(String.valueOf(commandMappingAnnotation.id()), commandMethod);
 
                 register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, commandMappingAnnotation);
             }
