@@ -1,4 +1,4 @@
-package co.wangming.nsb.vo;
+package co.wangming.nsb.command;
 
 import co.wangming.nsb.parsers.MessageParser;
 import lombok.Builder;

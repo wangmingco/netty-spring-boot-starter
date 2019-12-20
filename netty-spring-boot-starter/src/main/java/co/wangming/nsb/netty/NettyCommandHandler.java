@@ -1,9 +1,10 @@
 package co.wangming.nsb.netty;
 
+import co.wangming.nsb.command.CommandMapping;
+import co.wangming.nsb.command.CommandMethod;
+import co.wangming.nsb.command.CommandMethodCache;
 import co.wangming.nsb.parsers.MessageParser;
 import co.wangming.nsb.springboot.SpringContext;
-import co.wangming.nsb.util.CommandMethodCache;
-import co.wangming.nsb.vo.CommandMethod;
 import com.google.protobuf.GeneratedMessageV3;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;

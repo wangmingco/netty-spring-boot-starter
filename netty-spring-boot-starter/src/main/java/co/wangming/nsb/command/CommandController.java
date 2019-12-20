@@ -1,4 +1,4 @@
-package co.wangming.nsb.netty;
+package co.wangming.nsb.command;
 
 import java.lang.annotation.*;
 

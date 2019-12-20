@@ -1,7 +1,7 @@
 package co.wangming.nsb.springboot;
 
-import co.wangming.nsb.netty.CommandController;
-import co.wangming.nsb.netty.CommandMapping;
+import co.wangming.nsb.command.CommandController;
+import co.wangming.nsb.command.CommandMapping;
 import co.wangming.nsb.parsers.ParserRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;

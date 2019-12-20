@@ -1,14 +1,14 @@
 package co.wangming.nsb.springboot;
 
-import co.wangming.nsb.netty.CommandController;
-import co.wangming.nsb.netty.CommandMapping;
+import co.wangming.nsb.command.CommandController;
+import co.wangming.nsb.command.CommandMapping;
+import co.wangming.nsb.command.CommandMethod;
+import co.wangming.nsb.command.CommandMethodCache;
 import co.wangming.nsb.netty.CommandProxy;
 import co.wangming.nsb.parsers.CommonParser;
 import co.wangming.nsb.parsers.MessageParser;
 import co.wangming.nsb.parsers.ParserRegister;
-import co.wangming.nsb.util.CommandMethodCache;
 import co.wangming.nsb.util.ProxyClassMaker;
-import co.wangming.nsb.vo.CommandMethod;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;

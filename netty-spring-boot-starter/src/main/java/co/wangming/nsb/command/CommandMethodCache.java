@@ -1,6 +1,4 @@
-package co.wangming.nsb.util;
-
-import co.wangming.nsb.vo.CommandMethod;
+package co.wangming.nsb.command;
 
 import java.util.HashMap;
 import java.util.Map;
