@@ -1,7 +1,7 @@
 package co.wangming.nsb.springboot;
 
-import co.wangming.nsb.netty.CommandController;
-import co.wangming.nsb.netty.CommandMapping;
+import co.wangming.nsb.command.CommandController;
+import co.wangming.nsb.command.CommandMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -15,7 +15,6 @@ public class CommandNameGenerator extends AnnotationBeanNameGenerator {
 
     @Override
     public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
-        log.info("generateBeanName");
         //从自定义注解中拿name
         String name = getNameByServiceFindAnntation(definition, registry);
         if (name != null) {

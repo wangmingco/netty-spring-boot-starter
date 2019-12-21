@@ -13,6 +13,7 @@
 		<spring.boot.version>1.5.19.RELEASE</spring.boot.version>
 		<netty.version>4.0.56.Final</netty.version>
 		<protobuf.version>3.11.1</protobuf.version>
+		<javassist.version>3.26.0-GA</javassist.version>
 	</properties>
 
 	<dependencies>
@@ -37,6 +38,12 @@
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
 			<version>${netty.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>${javassist.version}</version>
 		</dependency>
 
 		<!--************************************************************************-->
@@ -76,12 +83,6 @@
 			<version>2.6</version>
 		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-		</dependency>
-
 		<!--************************************************************************-->
 		<!--********************************日志依赖*********************************-->
 		<!--************************************************************************-->
@@ -90,6 +91,36 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.29</version>
+		</dependency>
+
+		<!--************************************************************************-->
+		<!--********************************测试依赖*********************************-->
+		<!--************************************************************************-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.11.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.11.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.11.1</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

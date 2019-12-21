@@ -1,6 +1,7 @@
 package co.wangming.nsb.samples;
 
 import co.wangming.nsb.samples.protobuf.Search;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created By WangMing On 2019-12-08
  **/
+@Slf4j
 public class SocketClient {
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -26,35 +28,49 @@ public class SocketClient {
 
         for (int i = 0; i < 100; i++) {
 
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress("localhost", 7001));
+            try {
+                sendMessage(message, 1, true);
+                sendMessage(message, 2, true);
+                sendMessage(message, 3, false);
+                sendMessage(message, 4, false);
+                sendMessage(message, 5, false);
+                sendMessage(message, 6, false);
+            } catch (Exception e) {
 
-            System.out.println("RemoteAddress: " + socket.getRemoteSocketAddress());
-            System.out.println("LocalAddress: " + socket.getLocalAddress());
-            System.out.println("socket.isConnected: " + socket.isConnected());
+            }
+
+            TimeUnit.SECONDS.sleep(20);
+        }
+
+    }
+
+    private static void sendMessage(byte[] message, int commandId, boolean isRecive) throws Exception {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("localhost", 7001));
 
             OutputStream out = socket.getOutputStream();
             out.write(message.length);
-            out.write((int) 1);
+            out.write(commandId);
             out.write(message);
             out.flush();
 
-            System.out.println("write size:" + message.length);
+            log.info("commandId:{}, RemoteAddress:{}, LocalAddress:{}, write size::{}", commandId, socket.getRemoteSocketAddress(), socket.getLocalAddress(), message.length);
+
+            if (!isRecive) {
+                TimeUnit.SECONDS.sleep(1);
+                return;
+            }
 
             InputStream in = socket.getInputStream();
             int size = in.read();
-            in.read();
 
             byte[] responseMessage = new byte[size];
             in.read(responseMessage);
 
             Search.SearchResponse searchResponse = Search.SearchResponse.parseFrom(responseMessage);
 
-            System.out.println("searchResponse:" + searchResponse.getResult());
+            log.info("commandId:{}, searchResponse:{}", commandId, searchResponse.getResult());
 
-            socket.close();
-
-            TimeUnit.SECONDS.sleep(20);
         }
 
     }
