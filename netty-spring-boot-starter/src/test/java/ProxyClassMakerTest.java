@@ -22,8 +22,8 @@ public class ProxyClassMakerTest {
 
         Class proxyClass = makeClass(targetClass, printMethod);
 
-        Assert.assertEquals(1, proxyClass.getInterfaces().length);
-        Assert.assertEquals(CommandProxy.class.getCanonicalName(), proxyClass.getInterfaces()[0].getTypeName());
+        Assert.assertEquals(0, proxyClass.getInterfaces().length);
+        Assert.assertEquals(CommandProxy.class.getCanonicalName(), proxyClass.getSuperclass().getTypeName());
         Assert.assertNotNull(proxyClass.getAnnotation(Component.class));
     }
 

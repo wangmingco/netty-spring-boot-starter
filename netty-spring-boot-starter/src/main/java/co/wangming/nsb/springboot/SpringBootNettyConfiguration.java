@@ -1,6 +1,5 @@
 package co.wangming.nsb.springboot;
 
-import co.wangming.nsb.netty.NettyConfig;
 import co.wangming.nsb.netty.NettyServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -53,11 +52,10 @@ public class SpringBootNettyConfiguration {
         @Override
         public void afterPropertiesSet() throws Exception {
             log.info("Starting The Netty Server");
-            setOptions();
 
             NettyServer nettyServer = NettyServer.builder().build();
 
-            nettyServer.start();
+            nettyServer.start(springBootNettyProperties);
 
             this.nettyServer = nettyServer;
             log.info("Started The Netty Server");
@@ -71,44 +69,6 @@ public class SpringBootNettyConfiguration {
 
             log.info("Stopped The Netty Server");
         }
-
-
-        private void setOptions() throws Exception {
-            NettyConfig.setPort(springBootNettyProperties.getPORT());
-            NettyConfig.setAllIdleTimeSeconds(springBootNettyProperties.getAllIdleTimeSeconds());
-            NettyConfig.setReaderIdleTimeSeconds(springBootNettyProperties.getReaderIdleTimeSeconds());
-            NettyConfig.setWriterIdleTimeSeconds(springBootNettyProperties.getWriterIdleTimeSeconds());
-            NettyConfig.setBossGroupThreadSize(springBootNettyProperties.getBossGroupThreadSize());
-            NettyConfig.setWorkGroupThreadSize(springBootNettyProperties.getWorkGroupThreadSize());
-            NettyConfig.setNettyServerHandler(springBootNettyProperties.getNettyServerHandler());
-
-            NettyConfig.setAllocator(springBootNettyProperties.getAllocator());
-            NettyConfig.setRcvbufAllocator(springBootNettyProperties.getRcvbufAllocator());
-            NettyConfig.setMessageSizeEstimator(springBootNettyProperties.getMessageSizeEstimator());
-            NettyConfig.setConnectTimeoutMillis(springBootNettyProperties.getConnectTimeoutMillis());
-            NettyConfig.setMaxMessagesPerRead(springBootNettyProperties.getMaxMessagesPerRead());
-            NettyConfig.setWriteSpinCount(springBootNettyProperties.getWriteSpinCount());
-            NettyConfig.setWriteBufferHighWaterMark(springBootNettyProperties.getWriteBufferHighWaterMark());
-            NettyConfig.setWriteBufferLowWaterMark(springBootNettyProperties.getWriteBufferLowWaterMark());
-            NettyConfig.setAllowHalfClosure(springBootNettyProperties.getAllowHalfClosure());
-            NettyConfig.setAutoRead(springBootNettyProperties.getAutoRead());
-            NettyConfig.setSoBroadcast(springBootNettyProperties.getSoBroadcast());
-            NettyConfig.setSoKeepalive(springBootNettyProperties.getSoKeepalive());
-            NettyConfig.setSoSndbuf(springBootNettyProperties.getSoSndbuf());
-            NettyConfig.setSoRcvbuf(springBootNettyProperties.getSoRcvbuf());
-            NettyConfig.setSoReuseaddr(springBootNettyProperties.getSoReuseaddr());
-            NettyConfig.setSoBacklog(springBootNettyProperties.getSoBacklog());
-            NettyConfig.setIpTos(springBootNettyProperties.getIpTos());
-            NettyConfig.setIpMulticastAddr(springBootNettyProperties.getIpMulticastAddr());
-            NettyConfig.setIpMulticastIf(springBootNettyProperties.getIpMulticastIf());
-            NettyConfig.setIpMulticastTtl(springBootNettyProperties.getIpMulticastTtl());
-            NettyConfig.setIpMulticastLoopDisabled(springBootNettyProperties.getIpMulticastLoopDisabled());
-            NettyConfig.setTcpNodelay(springBootNettyProperties.getTcpNodelay());
-            NettyConfig.setSingleEventexecutorPerGroup(springBootNettyProperties.getSingleEventexecutorPerGroup());
-            NettyConfig.setSoLinger(springBootNettyProperties.getSoLinger());
-            NettyConfig.setSoTimeout(springBootNettyProperties.getSoTimeout());
-        }
-
 
     }
 

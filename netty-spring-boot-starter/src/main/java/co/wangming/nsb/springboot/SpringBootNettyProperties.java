@@ -17,13 +17,14 @@ public class SpringBootNettyProperties {
     /********************************************************************
      ***********************Netty 服务配置参数*****************************
      ********************************************************************/
+    // Netty启动端口
     private Integer PORT = 8081;
-    private int readerIdleTimeSeconds = 5;
-    private int writerIdleTimeSeconds = 5;
-    private int allIdleTimeSeconds = 5;
-    private int bossGroupThreadSize = 1;
-    private int workGroupThreadSize = 1;
-    private String nettyServerHandler = "co.wangming.nsb.netty.NettyServerHandler";
+    private Integer readerIdleTimeSeconds = 5;
+    private Integer writerIdleTimeSeconds = 5;
+    private Integer allIdleTimeSeconds = 5;
+    private Integer bossGroupThreadSize = 1;
+    private Integer workGroupThreadSize = 1;
+//    private ChannelInboundHandler nettyServerHandler;
 
     /********************************************************************
      **************Netty #{@link ChannelOption} 配置参数******************
@@ -31,17 +32,17 @@ public class SpringBootNettyProperties {
     /**
      * #{@link ChannelOption#ALLOCATOR}
      */
-    private String allocator = null;
+//    private ByteBufAllocator allocator = null;
 
     /**
      * #{@link ChannelOption#RCVBUF_ALLOCATOR}
      */
-    private String rcvbufAllocator = null;
+//    private RecvByteBufAllocator rcvbufAllocator = null;
 
     /**
      * #{@link ChannelOption#MESSAGE_SIZE_ESTIMATOR}
      */
-    private String messageSizeEstimator = null;
+//    private MessageSizeEstimator messageSizeEstimator = null;
 
     /**
      * #{@link ChannelOption#CONNECT_TIMEOUT_MILLIS}
