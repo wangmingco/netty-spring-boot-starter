@@ -132,6 +132,8 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
 
                 CommandMethodCache.add(String.valueOf(commandMappingAnnotation.id()), commandMethod);
 
+                log.info("消息[{}] 注册CommandMethod:{}", commandMappingAnnotation.id(), commandMethod);
+
                 register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, commandMappingAnnotation);
             }
         }
@@ -146,6 +148,8 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
                 if (MessageParser.class.isAssignableFrom(beanClass)) {
                     ParserRegister parserRegister = beanClass.getAnnotation(ParserRegister.class);
                     map.put(parserRegister.messageType(), beanClass);
+
+                    log.info("找到ParserComponets: {} -> {}", parserRegister.messageType(), beanClass.getName());
                 }
             } catch (ClassNotFoundException e) {
                 log.error("", e);
