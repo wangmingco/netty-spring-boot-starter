@@ -1,4 +1,4 @@
-import co.wangming.nsb.netty.CommandProxy;
+import co.wangming.nsb.command.CommandProxy;
 import co.wangming.nsb.util.ProxyClassMaker;
 import org.junit.Assert;
 import org.junit.Test;

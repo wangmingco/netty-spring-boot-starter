@@ -2,16 +2,15 @@ package co.wangming.nsb.springboot;
 
 import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
-import co.wangming.nsb.command.CommandMethod;
-import co.wangming.nsb.command.CommandMethodCache;
+import co.wangming.nsb.command.CommandProxy;
 import co.wangming.nsb.exception.RegisterException;
-import co.wangming.nsb.netty.CommandProxy;
-import co.wangming.nsb.parsers.CommonParser;
 import co.wangming.nsb.parsers.MessageParser;
 import co.wangming.nsb.parsers.ParserRegister;
+import co.wangming.nsb.parsers.UnknowParser;
 import co.wangming.nsb.util.ProxyClassMaker;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -67,14 +66,9 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         //扫描指定路径下的接口
         Set<BeanDefinitionHolder> beanDefinitionHolders = commandClassPathScanner.doScan(scanPackages);
 
-        String beanNames = beanDefinitionHolders.stream().map(it -> it.getBeanName()).collect(Collectors.joining(", "));
-        log.info("commandClassPathScanner 扫描到的bean名称:{}", beanNames);
-
         try {
             registerCommandMapping(beanDefinitionRegistry, beanDefinitionHolders);
-        } catch (InstantiationException e) {
-            throw new RegisterException(e);
-        } catch (IllegalAccessException e) {
+        } catch (final Exception e) {
             throw new RegisterException(e);
         }
     }
@@ -114,11 +108,10 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    private void registerCommandMapping(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws InstantiationException, IllegalAccessException {
-        Map<Class, Class> parserComponets = getParserComponets(beanDefinitionHolders);
+    private void registerCommandMapping(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
+        Map<Class, Class> parserRegisters = getParserRegisters(beanDefinitionHolders);
 
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
-            log.debug("Find BeanDefinitionHolder: {}", beanDefinitionHolder.getBeanName());
 
             String beanClassName = beanDefinitionHolder.getBeanDefinition().getBeanClassName();
 
@@ -126,30 +119,20 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
             try {
                 beanClass = Class.forName(beanClassName);
             } catch (ClassNotFoundException e) {
-                log.error("", e);
-                continue;
+                log.error("加载类失败:{}", beanClassName, e);
+                throw e;
             }
+
+            log.info("开始加载消息类:[{}] 中的消息接口", beanClassName);
 
             for (Method method : beanClass.getMethods()) {
                 CommandMapping commandMappingAnnotation = method.getAnnotation(CommandMapping.class);
-                // 不是消息接受类, 则跳过处理
+                // 不是消息处理方法, 则跳过处理
                 if (commandMappingAnnotation == null) {
                     continue;
                 }
 
-                // 拿到参数信息
-                List<MessageParser> parameterInfoList = handleParameter(method, parserComponets);
-
-                CommandMethod commandMethod = CommandMethod.builder()
-                        .messageParsers(parameterInfoList)
-                        .beanName(beanDefinitionHolder.getBeanName())
-                        .build();
-
-                CommandMethodCache.add(String.valueOf(commandMappingAnnotation.id()), commandMethod);
-
-                log.info("消息[{}] 注册CommandMethod:{}", commandMappingAnnotation.id(), commandMethod);
-
-                register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, commandMappingAnnotation);
+                register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, commandMappingAnnotation, parserRegisters);
             }
         }
     }
@@ -160,7 +143,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @param beanDefinitionHolders
      * @return
      */
-    private Map<Class, Class> getParserComponets(Set<BeanDefinitionHolder> beanDefinitionHolders) {
+    private Map<Class, Class> getParserRegisters(Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
         Map<Class, Class> map = new HashMap<>();
 
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
@@ -170,13 +153,42 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
                     ParserRegister parserRegister = beanClass.getAnnotation(ParserRegister.class);
                     map.put(parserRegister.messageType(), beanClass);
 
-                    log.info("找到ParserComponets: {} -> {}", parserRegister.messageType(), beanClass.getName());
+                    log.info("找到ParserRegister, 所在类:{}, 消息类型:{}", beanClass.getName(), parserRegister.messageType());
                 }
             } catch (ClassNotFoundException e) {
-                log.error("", e);
+                log.error("寻找ParserRegister时, 找不到类:{}", beanDefinitionHolder.getBeanDefinition().getBeanClassName(), e);
+                throw e;
             }
         }
         return map;
+    }
+
+    /**
+     * 将每个消息方法都生成代理类注册到Spring里
+     *
+     * 扫描到了被 #{@link CommandController} 注解的类, 但是还是需要将该类里面的被 #{@link CommandMapping} 注解的方法处理一下.
+     *
+     * 当前的背景是, 要将netty收到的消息转发到该方法上同时带上spring整个环境. 目前的做法是要将每个方法生成一个代理类, 代理类里直接调用
+     * 被 #{@link CommandMapping} 注解的方法.
+     *
+     * @param beanDefinitionRegistry
+     * @param beanName
+     * @param beanClass
+     * @param method
+     * @param commandMappingAnnotation
+     */
+    private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass, Method method, CommandMapping commandMappingAnnotation, Map<Class, Class> parserComponets) throws InstantiationException, IllegalAccessException {
+        String proxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
+        log.info("开始注册消息接口. beanName:{}, 代理类名:{}, 消息接口方法名称:{}", beanName, proxyClassName, method.getName());
+
+        Class proxyClass = ProxyClassMaker.make(beanName, proxyClassName, beanClass, method);
+
+        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(proxyClass);
+        AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
+
+        addMessageParser(beanDefinition, method, parserComponets);
+
+        beanDefinitionRegistry.registerBeanDefinition(proxyClassName, beanDefinition);
     }
 
     /**
@@ -188,8 +200,8 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private List<MessageParser> handleParameter(Method method, Map<Class, Class> parserComponets) throws IllegalAccessException, InstantiationException {
-        List<MessageParser> parameterInfoList = new ArrayList<>();
+    private void addMessageParser(AbstractBeanDefinition beanDefinition, Method method, Map<Class, Class> parserComponets) throws IllegalAccessException, InstantiationException {
+        List<MessageParser> messageParsers = new ArrayList<>();
         loop1:
         for (Class parameterType : method.getParameterTypes()) {
 
@@ -197,42 +209,19 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
                 if (parserComponetEntry.getKey().isAssignableFrom(parameterType)) {
                     MessageParser messageParser = (MessageParser) parserComponetEntry.getValue().newInstance();
                     messageParser.setParser(parameterType);
-                    parameterInfoList.add(messageParser);
+                    messageParsers.add(messageParser);
                     continue loop1;
                 }
             }
 
-            parameterInfoList.add(new CommonParser());
+            messageParsers.add(new UnknowParser());
         }
 
-        return parameterInfoList;
-    }
+        MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();
+        mutablePropertyValues.add("messageParsers", messageParsers);
+        beanDefinition.setPropertyValues(mutablePropertyValues);
 
-    /**
-     * 将每个消息方法都生成代理类注册到Spring里
-     *
-     * @param beanDefinitionRegistry
-     * @param beanName
-     * @param beanClass
-     * @param method
-     * @param commandMappingAnnotation
-     */
-    private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass, Method method, CommandMapping commandMappingAnnotation) {
-        String commandMappingName = beanName + "$$" + CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
-        String proxyClassName = beanClass.getCanonicalName() + "$$" + CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
-        log.debug(" 注册beanName:{} 的代理beanName:{}", beanName, commandMappingName);
-
-        /**
-         * 现在扫描到了被 #{@link CommandController} 注解的类, 但是还是需要将该类里面的被 #{@link CommandMapping} 注解的方法处理一下.
-         *
-         * 当前的背景是, 要将netty收到的消息转发到该方法上同时带上spring整个环境. 目前的做法是要将每个方法生成一个代理类, 代理类里直接调用
-         * 被 #{@link CommandMapping} 注解的方法.
-         */
-        Class proxyClass = ProxyClassMaker.make(beanName, proxyClassName, beanClass, method);
-
-        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(proxyClass);
-        AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
-
-        beanDefinitionRegistry.registerBeanDefinition(commandMappingName, beanDefinition);
+        String parserNames = messageParsers.stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.joining(","));
+        log.info("代理类:{} 添加MessageParser:{}", beanDefinition.getBeanClassName(), parserNames);
     }
 }

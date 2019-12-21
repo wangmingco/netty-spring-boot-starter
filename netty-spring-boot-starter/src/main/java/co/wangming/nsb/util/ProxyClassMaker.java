@@ -1,6 +1,6 @@
 package co.wangming.nsb.util;
 
-import co.wangming.nsb.netty.CommandProxy;
+import co.wangming.nsb.command.CommandProxy;
 import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
@@ -45,7 +45,7 @@ public class ProxyClassMaker {
         CtClass proxyClass = null;
         try {
             proxyClass = makeProxyClasss(proxyClassName, cp);
-        } catch (NotFoundException e) {
+        } catch (Exception e) {
             log.error("[代理类生成] 生成class失败", e);
             return null;
         }
@@ -85,10 +85,10 @@ public class ProxyClassMaker {
      * @return
      * @throws NotFoundException
      */
-    private static CtClass makeProxyClasss(String proxyClassName, ClassPool cp) throws NotFoundException {
-        CtClass proxyInterface = cp.get(CommandProxy.class.getCanonicalName());
+    private static CtClass makeProxyClasss(String proxyClassName, ClassPool cp) throws Exception {
+        CtClass superClass = cp.get(CommandProxy.class.getCanonicalName());
         CtClass proxyClass = cp.makeClass(proxyClassName);
-        proxyClass.setInterfaces(new CtClass[]{proxyInterface});
+        proxyClass.setSuperclass(superClass);
 
         AnnotationsAttribute attr = getAnnotationsAttribute(proxyClass, Component.class.getCanonicalName());
         proxyClass.getClassFile().addAttribute(attr);

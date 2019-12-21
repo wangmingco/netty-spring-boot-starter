@@ -1,5 +1,6 @@
 package co.wangming.nsb.netty;
 
+import co.wangming.nsb.command.CommandDispatcher;
 import co.wangming.nsb.event.EventDispatcher;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -43,7 +44,7 @@ public class NettyServerHandler extends ByteToMessageDecoder {
         byte[] messageBytes = new byte[messageSize];
         in.readBytes(messageBytes);
 
-        NettyCommandHandler.dispatch(ctx, messageId, messageBytes);
+        CommandDispatcher.dispatch(ctx, messageId, messageBytes);
     }
 
     @Override
