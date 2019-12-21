@@ -4,6 +4,7 @@ import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
 import co.wangming.nsb.command.CommandMethod;
 import co.wangming.nsb.command.CommandMethodCache;
+import co.wangming.nsb.exception.RegisterException;
 import co.wangming.nsb.netty.CommandProxy;
 import co.wangming.nsb.parsers.CommonParser;
 import co.wangming.nsb.parsers.MessageParser;
@@ -72,12 +73,18 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         try {
             registerCommandMapping(beanDefinitionRegistry, beanDefinitionHolders);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            throw new RegisterException(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            throw new RegisterException(e);
         }
     }
 
+    /**
+     * 将starter包加载到扫描器里, 新的需扫描路径只需要添加到 annotationPackages 全局变量里即可
+     *
+     * @param annotationMetadata
+     * @return
+     */
     private String[] getScanPackages(AnnotationMetadata annotationMetadata) {
         //获取所有注解的属性和值
         AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(CommandScan.class.getName()));
@@ -99,6 +106,14 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         return packages;
     }
 
+    /**
+     * 进bean注册
+     *
+     * @param beanDefinitionRegistry
+     * @param beanDefinitionHolders
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     private void registerCommandMapping(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws InstantiationException, IllegalAccessException {
         Map<Class, Class> parserComponets = getParserComponets(beanDefinitionHolders);
 
@@ -139,6 +154,12 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         }
     }
 
+    /**
+     * 找到被 #{@link ParserRegister} 注解的参数解析器
+     *
+     * @param beanDefinitionHolders
+     * @return
+     */
     private Map<Class, Class> getParserComponets(Set<BeanDefinitionHolder> beanDefinitionHolders) {
         Map<Class, Class> map = new HashMap<>();
 
@@ -158,7 +179,15 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         return map;
     }
 
-
+    /**
+     * 找到方法参数的解析器
+     *
+     * @param method
+     * @param parserComponets
+     * @return
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
     private List<MessageParser> handleParameter(Method method, Map<Class, Class> parserComponets) throws IllegalAccessException, InstantiationException {
         List<MessageParser> parameterInfoList = new ArrayList<>();
         loop1:
@@ -179,6 +208,15 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         return parameterInfoList;
     }
 
+    /**
+     * 将每个消息方法都生成代理类注册到Spring里
+     *
+     * @param beanDefinitionRegistry
+     * @param beanName
+     * @param beanClass
+     * @param method
+     * @param commandMappingAnnotation
+     */
     private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass, Method method, CommandMapping commandMappingAnnotation) {
         String commandMappingName = beanName + "$$" + CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
         String proxyClassName = beanClass.getCanonicalName() + "$$" + CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
