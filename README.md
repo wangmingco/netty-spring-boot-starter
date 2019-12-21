@@ -159,6 +159,9 @@ public class SimpleEventHandler implements EventHandler<String> {
 * 写超时时间
 * 读写超时时间
 
+## 架构图
+![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture.jpg)
+
 ## TODO
 * 性能优化, 在收发消息时避免申请堆内内存
 * 支持其他消息编码([thrift](https://thrift.apache.org/) 等)
