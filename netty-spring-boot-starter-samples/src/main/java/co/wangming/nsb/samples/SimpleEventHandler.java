@@ -8,36 +8,41 @@ import lombok.extern.slf4j.Slf4j;
  **/
 @EventRegister
 @Slf4j
-public class SimpleEventHandler implements EventHandler<String> {
+public class SimpleEventHandler extends EventHandlerAdaptor<User> {
+
     @Override
-    public String channelActive(ChannelActiveEvent channelActiveEvent) {
+    public User fireChannelActiveEvent(ChannelActiveEvent channelActiveEvent) {
 
         log.info("新的连接进来了:{}", channelActiveEvent.getChannelHandlerContext().name());
-        return channelActiveEvent.getChannelHandlerContext().name();
+        User user = new User();
+        user.setChannelHandlerContext(channelActiveEvent.getChannelHandlerContext());
+        return user;
     }
 
     @Override
-    public void channelInactive(ChannelInactiveEvent<String> channelActiveEvent) {
+    public void fireChannelInactiveEvent(ChannelInactiveEvent<User> channelActiveEvent) {
         log.info("连接断开了:{}", channelActiveEvent.getContext());
     }
 
     @Override
-    public void exceptionEvent(ExceptionEvent<String> exceptionEvent) {
+    public void fireExceptionEvent(ExceptionEvent<User> exceptionEvent) {
         log.info("发生异常:{}", exceptionEvent.getContext(), exceptionEvent.getCause());
     }
 
     @Override
-    public void readerIdleEvent(ReaderIdleEvent<String> readerIdleEvent) {
+    public void fireReaderIdleEvent(ReaderIdleEvent<User> readerIdleEvent) {
         log.info("连接读超时:{}", readerIdleEvent.getContext());
     }
 
     @Override
-    public void writerIdleEvent(WriterIdleEvent<String> readerIdleEvent) {
+    public void fireWriterIdleEvent(WriterIdleEvent<User> readerIdleEvent) {
         log.info("连接写超时:{}", readerIdleEvent.getContext());
     }
 
     @Override
-    public void allIdleEvent(AllIdleEvent<String> readerIdleEvent) {
+    public void fireAllIdleEvent(AllIdleEvent<User> readerIdleEvent) {
         log.info("连接读写超时:{}", readerIdleEvent.getContext());
     }
+
+
 }

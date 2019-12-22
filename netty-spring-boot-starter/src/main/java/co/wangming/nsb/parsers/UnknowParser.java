@@ -1,6 +1,8 @@
 package co.wangming.nsb.parsers;
 
 import co.wangming.nsb.command.CommandProxy;
+import co.wangming.nsb.context.ContextCache;
+import co.wangming.nsb.context.ContextWrapper;
 import co.wangming.nsb.springboot.CommandScannerRegistrar;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +21,24 @@ import java.util.Map;
 @Slf4j
 public class UnknowParser implements MessageParser<byte[], Object> {
 
-    @Override
-    public void setParser(Class parameterType) {
+    private Class parameterType;
 
+    @Override
+    public void setParameterType(Class parameterType) {
+        this.parameterType = parameterType;
     }
 
     @Override
     public Object parse(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
-        log.warn("当前运行到未知参数处理器, 请检查消息参数");
+        ContextWrapper contextWrapper = ContextCache.get(ctx);
+        if (parameterType.isAssignableFrom(contextWrapper.getContextType())) {
+            return contextWrapper.getContext();
+        }
+
+        if (parameterType.isAssignableFrom(ctx.getClass())) {
+            return ctx;
+        }
+
         return null;
     }
 }

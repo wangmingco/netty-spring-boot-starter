@@ -55,4 +55,9 @@ public class SimpleCommand {
         log.info("收到SearchRequest 6 --> {}, {}", ctx.channel().remoteAddress());
         throw new RuntimeException();
     }
+
+    @CommandMapping(id = 7)
+    public void justSearch7(Search.SearchRequest searchRequest, User user) {
+        log.info("收到SearchRequest 7 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
+    }
 }

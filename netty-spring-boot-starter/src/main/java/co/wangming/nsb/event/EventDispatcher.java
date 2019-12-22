@@ -1,8 +1,6 @@
 package co.wangming.nsb.event;
 
-import co.wangming.nsb.cache.ContextCache;
 import co.wangming.nsb.springboot.SpringContext;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.Map;
@@ -19,9 +17,7 @@ public class EventDispatcher {
 
             ChannelActiveEvent channelActiveEvent = new ChannelActiveEvent();
             channelActiveEvent.setChannelHandlerContext(ctx);
-            Object context = eventHandler.channelActive(channelActiveEvent);
-
-            ContextCache.put(getChannelId(ctx), context);
+            eventHandler.channelActive(channelActiveEvent);
         }
     }
 
@@ -31,7 +27,6 @@ public class EventDispatcher {
             EventHandler eventHandler = (EventHandler) value;
             ChannelInactiveEvent channelActiveEvent = new ChannelInactiveEvent();
             channelActiveEvent.setChannelHandlerContext(ctx);
-            channelActiveEvent.setContext(getContext(ctx));
             eventHandler.channelInactive(channelActiveEvent);
         }
     }
@@ -43,9 +38,8 @@ public class EventDispatcher {
 
             ExceptionEvent exceptionEvent = new ExceptionEvent();
             exceptionEvent.setChannelHandlerContext(ctx);
-            exceptionEvent.setContext(getContext(ctx));
             exceptionEvent.setCause(cause);
-            eventHandler.exceptionEvent(exceptionEvent);
+            eventHandler.exception(exceptionEvent);
         }
     }
 
@@ -56,8 +50,7 @@ public class EventDispatcher {
 
             ReaderIdleEvent readerIdleEvent = new ReaderIdleEvent();
             readerIdleEvent.setChannelHandlerContext(ctx);
-            readerIdleEvent.setContext(getContext(ctx));
-            eventHandler.readerIdleEvent(readerIdleEvent);
+            eventHandler.readerIdle(readerIdleEvent);
         }
     }
 
@@ -68,8 +61,7 @@ public class EventDispatcher {
 
             WriterIdleEvent writerIdleEvent = new WriterIdleEvent();
             writerIdleEvent.setChannelHandlerContext(ctx);
-            writerIdleEvent.setContext(getContext(ctx));
-            eventHandler.writerIdleEvent(writerIdleEvent);
+            eventHandler.writerIdle(writerIdleEvent);
         }
     }
 
@@ -80,17 +72,8 @@ public class EventDispatcher {
 
             AllIdleEvent allIdleEvent = new AllIdleEvent();
             allIdleEvent.setChannelHandlerContext(ctx);
-            allIdleEvent.setContext(getContext(ctx));
-            eventHandler.allIdleEvent(allIdleEvent);
+            eventHandler.allIdle(allIdleEvent);
         }
     }
 
-    private static Object getContext(ChannelHandlerContext ctx) {
-        return ContextCache.get(getChannelId(ctx));
-    }
-
-    private static String getChannelId(ChannelHandlerContext ctx) {
-        Channel channel = ctx.channel();
-        return channel.remoteAddress() + "_" + channel.localAddress();
-    }
 }

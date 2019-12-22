@@ -35,11 +35,12 @@ public class SocketClient {
                 sendMessage(message, 4, false);
                 sendMessage(message, 5, false);
                 sendMessage(message, 6, false);
+                sendMessage(message, 7, false);
             } catch (Exception e) {
 
             }
 
-            TimeUnit.SECONDS.sleep(20);
+            TimeUnit.SECONDS.sleep(10);
         }
 
     }

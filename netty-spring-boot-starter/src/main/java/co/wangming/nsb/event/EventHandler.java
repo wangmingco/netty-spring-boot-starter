@@ -5,16 +5,16 @@ package co.wangming.nsb.event;
  **/
 public interface EventHandler<T> {
 
-    T channelActive(ChannelActiveEvent channelActiveEvent);
+    void channelActive(ChannelActiveEvent channelActiveEvent);
 
-    void channelInactive(ChannelInactiveEvent<T> channelActiveEvent);
+    void channelInactive(ChannelInactiveEvent<T> channelInactiveEvent);
 
-    void exceptionEvent(ExceptionEvent<T> exceptionEvent);
+    void exception(ExceptionEvent<T> exceptionEvent);
 
-    void readerIdleEvent(ReaderIdleEvent<T> readerIdleEvent);
+    void readerIdle(ReaderIdleEvent<T> readerIdleEvent);
 
-    void writerIdleEvent(WriterIdleEvent<T> readerIdleEvent);
+    void writerIdle(WriterIdleEvent<T> writerIdleEvent);
 
-    void allIdleEvent(AllIdleEvent<T> readerIdleEvent);
+    void allIdle(AllIdleEvent<T> allIdleEvent);
 
 }

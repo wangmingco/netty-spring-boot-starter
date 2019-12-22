@@ -45,7 +45,7 @@ public class CommandDispatcher {
         List<MessageParser> messageParsers = commandProxy.getMessageParsers();
         List paramters = new ArrayList();
 
-        for (co.wangming.nsb.parsers.MessageParser messageParser : messageParsers) {
+        for (MessageParser messageParser : messageParsers) {
             paramters.add(messageParser.parse(ctx, messageBytes));
         }
 

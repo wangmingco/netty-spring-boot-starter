@@ -7,7 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
  **/
 public interface MessageParser<T, U> {
 
-    void setParser(Class v);
+    void setParameterType(Class parameterType);
 
     U parse(ChannelHandlerContext ctx, T t) throws Exception;
 }

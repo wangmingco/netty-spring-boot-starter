@@ -208,13 +208,15 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
             for (Map.Entry<Class, Class> parserComponetEntry : parserComponets.entrySet()) {
                 if (parserComponetEntry.getKey().isAssignableFrom(parameterType)) {
                     MessageParser messageParser = (MessageParser) parserComponetEntry.getValue().newInstance();
-                    messageParser.setParser(parameterType);
+                    messageParser.setParameterType(parameterType);
                     messageParsers.add(messageParser);
                     continue loop1;
                 }
             }
 
-            messageParsers.add(new UnknowParser());
+            UnknowParser unknowParser = new UnknowParser();
+            unknowParser.setParameterType(parameterType);
+            messageParsers.add(unknowParser);
         }
 
         MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();

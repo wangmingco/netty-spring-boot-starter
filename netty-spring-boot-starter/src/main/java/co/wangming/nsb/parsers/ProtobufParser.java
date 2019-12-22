@@ -17,7 +17,7 @@ public class ProtobufParser implements MessageParser<byte[], GeneratedMessageV3>
     private Parser parser;
 
     @Override
-    public void setParser(Class parameterType) {
+    public void setParameterType(Class parameterType) {
         try {
             Field parserField = parameterType.getDeclaredField("PARSER");
             parserField.setAccessible(true);
