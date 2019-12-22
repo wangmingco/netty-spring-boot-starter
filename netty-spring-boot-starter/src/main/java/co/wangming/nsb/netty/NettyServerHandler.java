@@ -77,8 +77,11 @@ public class NettyServerHandler extends ByteToMessageDecoder {
                     EventDispatcher.dispatchAllIdleEvent(ctx);
                     break;
                 default:
+                    EventDispatcher.dispatchUnknowEvent(ctx);
                     break;
             }
+        } else {
+            EventDispatcher.dispatchUnknowEvent(ctx);
         }
         super.userEventTriggered(ctx, evt);
     }

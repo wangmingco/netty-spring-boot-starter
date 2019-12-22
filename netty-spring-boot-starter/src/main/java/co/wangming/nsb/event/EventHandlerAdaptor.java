@@ -68,8 +68,18 @@ public abstract class EventHandlerAdaptor<T> implements EventHandler {
 
     public abstract void fireAllIdleEvent(AllIdleEvent<T> allIdleEvent);
 
+    @Override
+    public void unknow(UnknowEvent unknowEvent) {
+        unknowEvent.setContext(getContext(unknowEvent));
+
+        fireUnknowEvent(unknowEvent);
+    }
+
+    public abstract void fireUnknowEvent(UnknowEvent<T> unknowEvent);
+
     private ContextWrapper getContext(AbstractEvent event) {
         return ContextCache.get(event.getChannelHandlerContext());
     }
+
 
 }

@@ -76,4 +76,15 @@ public class EventDispatcher {
         }
     }
 
+    public static void dispatchUnknowEvent(ChannelHandlerContext ctx) {
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        for (Object value : eventHandlers.values()) {
+            EventHandler eventHandler = (EventHandler) value;
+
+            UnknowEvent unknowEvent = new UnknowEvent();
+            unknowEvent.setChannelHandlerContext(ctx);
+            eventHandler.unknow(unknowEvent);
+        }
+    }
+
 }

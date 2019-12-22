@@ -44,5 +44,10 @@ public class SimpleEventHandler extends EventHandlerAdaptor<User> {
         log.info("连接读写超时:{}", readerIdleEvent.getContext());
     }
 
+    @Override
+    public void fireUnknowEvent(UnknowEvent<User> unknowEvent) {
+        log.info("触发未知事件:{}", unknowEvent.getContext());
+    }
+
 
 }

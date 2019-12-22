@@ -17,4 +17,6 @@ public interface EventHandler<T> {
 
     void allIdle(AllIdleEvent<T> allIdleEvent);
 
+    void unknow(UnknowEvent<T> unknowEvent);
+
 }
