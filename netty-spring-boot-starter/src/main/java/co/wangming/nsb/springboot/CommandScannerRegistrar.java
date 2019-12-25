@@ -4,9 +4,9 @@ import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
 import co.wangming.nsb.command.CommandProxy;
 import co.wangming.nsb.exception.RegisterException;
-import co.wangming.nsb.parsers.MessageParser;
-import co.wangming.nsb.parsers.ParserRegister;
-import co.wangming.nsb.parsers.UnknowParser;
+import co.wangming.nsb.processors.MethodProtocolProcessor;
+import co.wangming.nsb.processors.ProtocolProcessorRegister;
+import co.wangming.nsb.processors.UnknowProtocolProcessor;
 import co.wangming.nsb.util.ProxyClassMaker;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanDefinitionRegistrar {
 
     private static final List<String> annotationPackages = new ArrayList() {{
-        add(ParserRegister.class.getPackage().getName());
+        add(ProtocolProcessorRegister.class.getPackage().getName());
     }};
 
     private ResourceLoader resourceLoader;
@@ -109,7 +109,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @throws IllegalAccessException
      */
     private void registerCommandMapping(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
-        Map<Class, Class> parserRegisters = getParserRegisters(beanDefinitionHolders);
+        Map<Class, Class> registerMessageType2BeanClassMap = getParserRegisters(beanDefinitionHolders);
 
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
 
@@ -132,35 +132,35 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
                     continue;
                 }
 
-                register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, commandMappingAnnotation, parserRegisters);
+                register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, commandMappingAnnotation, registerMessageType2BeanClassMap);
             }
         }
     }
 
     /**
-     * 找到被 #{@link ParserRegister} 注解的参数解析器
+     * 找到被 #{@link ProtocolProcessorRegister} 注解的参数解析器
      *
      * @param beanDefinitionHolders
      * @return
      */
     private Map<Class, Class> getParserRegisters(Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
-        Map<Class, Class> map = new HashMap<>();
+        Map<Class, Class> messageType2BeanClassMap = new HashMap<>();
 
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
             try {
                 Class<?> beanClass = Class.forName(beanDefinitionHolder.getBeanDefinition().getBeanClassName());
-                if (MessageParser.class.isAssignableFrom(beanClass)) {
-                    ParserRegister parserRegister = beanClass.getAnnotation(ParserRegister.class);
-                    map.put(parserRegister.messageType(), beanClass);
+                if (MethodProtocolProcessor.class.isAssignableFrom(beanClass)) {
+                    ProtocolProcessorRegister protocolProcessorRegister = beanClass.getAnnotation(ProtocolProcessorRegister.class);
+                    messageType2BeanClassMap.put(protocolProcessorRegister.messageType(), beanClass);
 
-                    log.info("找到ParserRegister, 所在类:{}, 消息类型:{}", beanClass.getName(), parserRegister.messageType());
+                    log.info("找到ParserRegister, 所在类:{}, 消息类型:{}", beanClass.getName(), protocolProcessorRegister.messageType());
                 }
             } catch (ClassNotFoundException e) {
                 log.error("寻找ParserRegister时, 找不到类:{}", beanDefinitionHolder.getBeanDefinition().getBeanClassName(), e);
                 throw e;
             }
         }
-        return map;
+        return messageType2BeanClassMap;
     }
 
     /**
@@ -177,7 +177,9 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @param method
      * @param commandMappingAnnotation
      */
-    private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass, Method method, CommandMapping commandMappingAnnotation, Map<Class, Class> parserComponets) throws InstantiationException, IllegalAccessException {
+    private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass,
+                          Method method, CommandMapping commandMappingAnnotation, Map<Class, Class> registerMessageType2BeanClassMap) throws InstantiationException, IllegalAccessException {
+
         String proxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
         log.info("开始注册消息接口. beanName:{}, 代理类名:{}, 消息接口方法名称:{}", beanName, proxyClassName, method.getName());
 
@@ -186,7 +188,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(proxyClass);
         AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
 
-        addMessageParser(beanDefinition, method, parserComponets);
+        addMessageParser(beanDefinition, method, registerMessageType2BeanClassMap);
 
         beanDefinitionRegistry.registerBeanDefinition(proxyClassName, beanDefinition);
     }
@@ -195,35 +197,49 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * 找到方法参数的解析器
      *
      * @param method
-     * @param parserComponets
+     * @param registerMessageType2BeanClassMap
      * @return
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private void addMessageParser(AbstractBeanDefinition beanDefinition, Method method, Map<Class, Class> parserComponets) throws IllegalAccessException, InstantiationException {
-        List<MessageParser> messageParsers = new ArrayList<>();
+    private void addMessageParser(AbstractBeanDefinition beanDefinition, Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws IllegalAccessException, InstantiationException {
+        List<MethodProtocolProcessor> methodProtocolProcessors = new ArrayList<>();
         loop1:
         for (Class parameterType : method.getParameterTypes()) {
 
-            for (Map.Entry<Class, Class> parserComponetEntry : parserComponets.entrySet()) {
-                if (parserComponetEntry.getKey().isAssignableFrom(parameterType)) {
-                    MessageParser messageParser = (MessageParser) parserComponetEntry.getValue().newInstance();
-                    messageParser.setParameterType(parameterType);
-                    messageParsers.add(messageParser);
+            for (Map.Entry<Class, Class> parserRegisterEntry : registerMessageType2BeanClassMap.entrySet()) {
+                Class messageType = parserRegisterEntry.getKey();
+                if (messageType.isAssignableFrom(parameterType)) {
+                    MethodProtocolProcessor methodProtocolProcessor = (MethodProtocolProcessor) parserRegisterEntry.getValue().newInstance();
+                    methodProtocolProcessor.setParameterType(parameterType);
+                    methodProtocolProcessors.add(methodProtocolProcessor);
                     continue loop1;
                 }
             }
 
-            UnknowParser unknowParser = new UnknowParser();
-            unknowParser.setParameterType(parameterType);
-            messageParsers.add(unknowParser);
+            UnknowProtocolProcessor unknowProtocolProcessor = new UnknowProtocolProcessor();
+            unknowProtocolProcessor.setParameterType(parameterType);
+            methodProtocolProcessors.add(unknowProtocolProcessor);
         }
 
         MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();
-        mutablePropertyValues.add(CommandProxy.PARAMETER_PARSERS, messageParsers);
-        beanDefinition.setPropertyValues(mutablePropertyValues);
+        mutablePropertyValues.add(CommandProxy.PARAMETER_PROCESSORS, methodProtocolProcessors);
 
-        String parserNames = messageParsers.stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.joining(","));
+        Class<?> returnType = method.getReturnType();
+        if (!Void.TYPE.equals(returnType)) {
+            for (Map.Entry<Class, Class> parserRegisterEntry : registerMessageType2BeanClassMap.entrySet()) {
+                Class messageType = parserRegisterEntry.getKey();
+                if (messageType.isAssignableFrom(returnType)) {
+                    MethodProtocolProcessor methodProtocolProcessor = (MethodProtocolProcessor) parserRegisterEntry.getValue().newInstance();
+                    methodProtocolProcessor.setParameterType(returnType);
+                    mutablePropertyValues.add(CommandProxy.RETURN_PROCESSOR, methodProtocolProcessor);
+                    break;
+                }
+            }
+        }
+
+        beanDefinition.setPropertyValues(mutablePropertyValues);
+        String parserNames = methodProtocolProcessors.stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.joining(","));
         log.info("代理类:{} 添加MessageParser:{}", beanDefinition.getBeanClassName(), parserNames);
     }
 }

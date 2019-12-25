@@ -1,6 +1,6 @@
 package co.wangming.nsb.command;
 
-import co.wangming.nsb.parsers.MessageParser;
+import co.wangming.nsb.processors.MethodProtocolProcessor;
 
 import java.util.List;
 
@@ -9,16 +9,27 @@ import java.util.List;
  **/
 public abstract class CommandProxy {
 
-    public static final String PARAMETER_PARSERS = "parameterParsers";
+    public static final String PARAMETER_PROCESSORS = "parameterProtocolProcessors";
+    public static final String RETURN_PROCESSOR = "returnProtocolProcessor";
 
-    private List<MessageParser> parameterParsers;
+    private List<MethodProtocolProcessor> parameterProtocolProcessors;
 
-    public List<MessageParser> getParameterParsers() {
-        return parameterParsers;
+    private MethodProtocolProcessor returnProtocolProcessor;
+
+    public List<MethodProtocolProcessor> getParameterProtocolProcessors() {
+        return parameterProtocolProcessors;
     }
 
-    public void setParameterParsers(List<MessageParser> parameterParsers) {
-        this.parameterParsers = parameterParsers;
+    public void setParameterProtocolProcessors(List<MethodProtocolProcessor> parameterProtocolProcessors) {
+        this.parameterProtocolProcessors = parameterProtocolProcessors;
+    }
+
+    public MethodProtocolProcessor getReturnProtocolProcessor() {
+        return returnProtocolProcessor;
+    }
+
+    public void setReturnProtocolProcessor(MethodProtocolProcessor returnProtocolProcessor) {
+        this.returnProtocolProcessor = returnProtocolProcessor;
     }
 
     public abstract Object invoke(List paramters);

@@ -1,4 +1,4 @@
-package co.wangming.nsb.parsers;
+package co.wangming.nsb.processors;
 
 import java.lang.annotation.*;
 
@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface ParserRegister {
+public @interface ProtocolProcessorRegister {
 
     Class messageType();
 }

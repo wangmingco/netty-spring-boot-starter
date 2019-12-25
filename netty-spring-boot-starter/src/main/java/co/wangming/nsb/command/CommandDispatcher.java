@@ -1,8 +1,7 @@
 package co.wangming.nsb.command;
 
-import co.wangming.nsb.parsers.MessageParser;
+import co.wangming.nsb.processors.MethodProtocolProcessor;
 import co.wangming.nsb.springboot.SpringContext;
-import com.google.protobuf.GeneratedMessageV3;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
@@ -29,7 +28,7 @@ public class CommandDispatcher {
         Object result = invoke(commandProxy, paramters);
 
         // 调用方法后可能产生应答, 将应答返回给前端
-        response(ctx, result);
+        response(commandProxy, ctx, result);
     }
 
     /**
@@ -42,11 +41,11 @@ public class CommandDispatcher {
      */
     private static List getParameters(ChannelHandlerContext ctx, byte[] messageBytes, CommandProxy commandProxy) throws Exception {
 
-        List<MessageParser> messageParsers = commandProxy.getParameterParsers();
+        List<MethodProtocolProcessor> methodProtocolProcessors = commandProxy.getParameterProtocolProcessors();
         List paramters = new ArrayList();
 
-        for (MessageParser messageParser : messageParsers) {
-            paramters.add(messageParser.parse(ctx, messageBytes));
+        for (MethodProtocolProcessor methodProtocolProcessor : methodProtocolProcessors) {
+            paramters.add(methodProtocolProcessor.serialize(ctx, messageBytes));
         }
 
         return paramters;
@@ -69,25 +68,25 @@ public class CommandDispatcher {
      * @param ctx
      * @param result
      */
-    private static void response(ChannelHandlerContext ctx, Object result) {
+    private static void response(CommandProxy commandProxy, ChannelHandlerContext ctx, Object result) throws Exception {
         if (result == null) {
             return;
         }
 
-        if (GeneratedMessageV3.class.isAssignableFrom(result.getClass())) {
-            GeneratedMessageV3 generatedMessage = (GeneratedMessageV3) result;
-            byte[] bytearray = generatedMessage.toByteArray();
-            ByteBuf response = ByteBufAllocator.DEFAULT.heapBuffer(bytearray.length)
-                    .writeByte(bytearray.length)
-                    .writeBytes(bytearray);
-            ctx.writeAndFlush(response).addListener(listener -> {
-                if (listener.isSuccess()) {
-                    log.debug("消息发送成功");
-                } else {
-                    log.info("消息发送失败", listener.cause());
-                }
-            });
-        }
+        MethodProtocolProcessor parser = commandProxy.getReturnProtocolProcessor();
+        byte[] bytearray = parser.deserialize(ctx, result);
+
+        // TODO 优化, 避免每次都分配一块内存
+        ByteBuf response = ByteBufAllocator.DEFAULT.heapBuffer(bytearray.length)
+                .writeByte(bytearray.length)
+                .writeBytes(bytearray);
+        ctx.writeAndFlush(response).addListener(listener -> {
+            if (listener.isSuccess()) {
+                log.debug("消息发送成功");
+            } else {
+                log.info("消息发送失败", listener.cause());
+            }
+        });
     }
 
 

@@ -3,7 +3,7 @@ package co.wangming.nsb.springboot;
 import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
 import co.wangming.nsb.event.EventRegister;
-import co.wangming.nsb.parsers.ParserRegister;
+import co.wangming.nsb.processors.ProtocolProcessorRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -27,7 +27,7 @@ public class CommandClassPathScanner extends ClassPathBeanDefinitionScanner {
     private static final List<Class> annotations = new ArrayList() {{
         add(CommandController.class);
         add(CommandMapping.class);
-        add(ParserRegister.class);
+        add(ProtocolProcessorRegister.class);
         add(EventRegister.class);
     }};
 

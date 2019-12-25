@@ -1,4 +1,4 @@
-package co.wangming.nsb.parsers;
+package co.wangming.nsb.processors;
 
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.Parser;
@@ -10,9 +10,9 @@ import java.lang.reflect.Field;
 /**
  * Created By WangMing On 2019-12-20
  **/
-@ParserRegister(messageType = GeneratedMessageV3.class)
+@ProtocolProcessorRegister(messageType = GeneratedMessageV3.class)
 @Slf4j
-public class ProtobufParser implements MessageParser<byte[], GeneratedMessageV3> {
+public class ProtobufProtocolProcessor implements MethodProtocolProcessor<byte[], GeneratedMessageV3> {
 
     private Parser parser;
 
@@ -31,7 +31,12 @@ public class ProtobufParser implements MessageParser<byte[], GeneratedMessageV3>
     }
 
     @Override
-    public GeneratedMessageV3 parse(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
+    public GeneratedMessageV3 serialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
         return (GeneratedMessageV3) parser.parseFrom(bytes);
+    }
+
+    @Override
+    public byte[] deserialize(ChannelHandlerContext ctx, GeneratedMessageV3 bytes) throws Exception {
+        return bytes.toByteArray();
     }
 }

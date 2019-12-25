@@ -1,4 +1,4 @@
-package co.wangming.nsb.parsers;
+package co.wangming.nsb.processors;
 
 import co.wangming.nsb.command.CommandProxy;
 import co.wangming.nsb.context.ContextCache;
@@ -12,14 +12,14 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 这是一种特殊类型的 #{@link MessageParser}, 主要是处理未注册解析器的参数, 当前策略时直接返回空.
+ * 这是一种特殊类型的 #{@link MethodProtocolProcessor}, 主要是处理未注册解析器的参数, 当前策略时直接返回空.
  *
  * 该解析器不可被Spring扫描到, 手动添加到 #{@link CommandProxy} 中. 详见 #{@link CommandScannerRegistrar#addMessageParser(AbstractBeanDefinition, Method, Map)}
  *
  * Created By WangMing On 2019-12-20
  **/
 @Slf4j
-public class UnknowParser implements MessageParser<byte[], Object> {
+public class UnknowProtocolProcessor implements MethodProtocolProcessor<byte[], Object> {
 
     private Class parameterType;
 
@@ -29,7 +29,7 @@ public class UnknowParser implements MessageParser<byte[], Object> {
     }
 
     @Override
-    public Object parse(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
+    public Object serialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
         ContextWrapper contextWrapper = ContextCache.get(ctx);
         if (parameterType.isAssignableFrom(contextWrapper.getContextType())) {
             return contextWrapper.getContext();
@@ -40,5 +40,10 @@ public class UnknowParser implements MessageParser<byte[], Object> {
         }
 
         return null;
+    }
+
+    @Override
+    public byte[] deserialize(ChannelHandlerContext ctx, Object t) throws Exception {
+        return t.toString().getBytes();
     }
 }
