@@ -220,7 +220,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         }
 
         MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();
-        mutablePropertyValues.add("messageParsers", messageParsers);
+        mutablePropertyValues.add(CommandProxy.PARAMETER_PARSERS, messageParsers);
         beanDefinition.setPropertyValues(mutablePropertyValues);
 
         String parserNames = messageParsers.stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.joining(","));

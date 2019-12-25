@@ -42,7 +42,7 @@ public class CommandDispatcher {
      */
     private static List getParameters(ChannelHandlerContext ctx, byte[] messageBytes, CommandProxy commandProxy) throws Exception {
 
-        List<MessageParser> messageParsers = commandProxy.getMessageParsers();
+        List<MessageParser> messageParsers = commandProxy.getParameterParsers();
         List paramters = new ArrayList();
 
         for (MessageParser messageParser : messageParsers) {

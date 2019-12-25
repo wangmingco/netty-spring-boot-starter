@@ -9,14 +9,16 @@ import java.util.List;
  **/
 public abstract class CommandProxy {
 
-    private List<MessageParser> messageParsers;
+    public static final String PARAMETER_PARSERS = "parameterParsers";
 
-    public List<MessageParser> getMessageParsers() {
-        return messageParsers;
+    private List<MessageParser> parameterParsers;
+
+    public List<MessageParser> getParameterParsers() {
+        return parameterParsers;
     }
 
-    public void setMessageParsers(List<MessageParser> messageParsers) {
-        this.messageParsers = messageParsers;
+    public void setParameterParsers(List<MessageParser> parameterParsers) {
+        this.parameterParsers = parameterParsers;
     }
 
     public abstract Object invoke(List paramters);
