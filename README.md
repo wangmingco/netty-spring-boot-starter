@@ -2,9 +2,10 @@
 基于Netty的Spring Boot Starter工程.
 
 ## 介绍
-* 可以将TCP长连接消息轻松转发到Spring容器
-* 可以在application.properties文件中配置Netty参数
-* 支持自定义消息体解析
+* 支持TCP长连接消息转发到Spring容器
+* 支持自定义消息枚举类(`CommandController`, `CommandMapping`)
+* 支持自定义通信协议解析(`ProtocolProcessor`)
+* 支持不同系统事件通知机制(`EventHandler`)
 
 ## 用例
 
@@ -81,7 +82,7 @@ private static void sendMessage(byte[] message, int commandId) throws IOExceptio
 }
 ```
 
-## 自定义消息体解析
+## 自定义通信协议解析
 目前系统自带只支持Protobuf和Netty的ChannelHandlerContext的参数, 不过可以自定义参数解析器
 ```java
 @ParserComponet(messageType = GeneratedMessageV3.class)
