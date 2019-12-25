@@ -167,5 +167,3 @@ public class SimpleEventHandler implements EventHandler<String> {
 * 性能优化, 在收发消息时避免申请堆内内存
 * 支持其他消息编码([thrift](https://thrift.apache.org/) 等)
 
-## 其他
-* 看看能否使用编译器反射工具, 美化代码
