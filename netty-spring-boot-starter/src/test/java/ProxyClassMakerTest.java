@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ProxyClassMakerTest {
 
     @Test
-    public void testMakeClass() throws NoSuchMethodException, NoSuchFieldException {
+    public void testMakeClass() throws Exception {
         Class targetClass = TestClass.class;
         Method printMethod = targetClass.getMethod("print1");
 
@@ -27,15 +27,19 @@ public class ProxyClassMakerTest {
         Assert.assertNotNull(proxyClass.getAnnotation(Component.class));
     }
 
-    private Class makeClass(Class targetClass, Method printMethod) {
+    private Class makeClass(Class targetClass, Method printMethod) throws Exception {
         String beanName = "testClass";
         String commandMappingName = beanName + "$$" + CommandProxy.class.getSimpleName() + "$$" + System.currentTimeMillis() + ThreadLocalRandom.current().nextInt();
 
-        return ProxyClassMaker.make(beanName, commandMappingName, targetClass, printMethod);
+        try {
+            return ProxyClassMaker.INSTANCE.make(beanName, commandMappingName, targetClass, printMethod);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Test
-    public void testGetField() throws NoSuchMethodException, NoSuchFieldException {
+    public void testGetField() throws Exception {
         Class targetClass = TestClass.class;
         Method printMethod = targetClass.getMethod("print1");
 
@@ -49,7 +53,7 @@ public class ProxyClassMakerTest {
     }
 
     @Test
-    public void testMethodPrint1() throws NoSuchMethodException, NoSuchFieldException {
+    public void testMethodPrint1() throws Exception {
         Class targetClass = TestClass.class;
         Method printMethod = targetClass.getMethod("print1");
 

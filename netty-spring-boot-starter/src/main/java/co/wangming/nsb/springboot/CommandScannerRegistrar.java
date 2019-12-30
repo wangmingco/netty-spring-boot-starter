@@ -178,12 +178,12 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @param commandMappingAnnotation
      */
     private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass,
-                          Method method, CommandMapping commandMappingAnnotation, Map<Class, Class> registerMessageType2BeanClassMap) throws InstantiationException, IllegalAccessException {
+                          Method method, CommandMapping commandMappingAnnotation, Map<Class, Class> registerMessageType2BeanClassMap) throws Exception {
 
         String proxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
         log.info("开始注册消息接口. beanName:{}, 代理类名:{}, 消息接口方法名称:{}", beanName, proxyClassName, method.getName());
 
-        Class proxyClass = ProxyClassMaker.make(beanName, proxyClassName, beanClass, method);
+        Class proxyClass = ProxyClassMaker.INSTANCE.make(beanName, proxyClassName, beanClass, method);
 
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(proxyClass);
         AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();

@@ -42,8 +42,32 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<compilerArguments>
+						<extdirs>${project.basedir}/src/main/resources/lib</extdirs>
+					</compilerArguments>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot.version}</version>
+				<configuration>
+					<mainClass>co.wangming.nsb.samples.SocketServer</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<classifier>exec</classifier>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
 		</plugins>
 	</build>
 
