@@ -18,7 +18,8 @@ public class SpringBootNettyProperties {
      ***********************Netty 服务配置参数*****************************
      ********************************************************************/
     // Netty启动端口
-    private Integer PORT = 8081;
+    private String address = null;
+    private Integer port = 7001;
     private Integer readerIdleTimeSeconds = 5;
     private Integer writerIdleTimeSeconds = 5;
     private Integer allIdleTimeSeconds = 5;

@@ -52,9 +52,14 @@ public class NettyServer {
 
             setOption(b, springBootNettyProperties);
 
-            int port = springBootNettyProperties.getPORT();
+            int port = springBootNettyProperties.getPort();
 
-            b.bind("localhost", port).sync();
+            if (springBootNettyProperties.getAddress() != null) {
+                b.bind(springBootNettyProperties.getAddress(), port).sync();
+            } else {
+                b.bind(port).sync();
+            }
+
 
             log.info("Netty Server listening at:{}", port);
 

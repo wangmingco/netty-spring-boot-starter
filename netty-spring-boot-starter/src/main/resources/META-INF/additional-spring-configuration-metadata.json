@@ -2,6 +2,12 @@
   "properties": [
     {
       "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "name": "spring.boot.netty.ADDRESS",
+      "description": "",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.PORT",
       "description": "",
       "type": "java.lang.Integer"
