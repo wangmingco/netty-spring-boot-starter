@@ -24,7 +24,6 @@ import org.springframework.core.type.StandardAnnotationMetadata;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 用于扫描 #{@link CommandController} 注解
@@ -126,13 +125,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
             log.info("开始加载消息类:[{}] 中的消息接口", beanClassName);
 
             for (Method method : beanClass.getMethods()) {
-                CommandMapping commandMappingAnnotation = method.getAnnotation(CommandMapping.class);
-                // 不是消息处理方法, 则跳过处理
-                if (commandMappingAnnotation == null) {
-                    continue;
-                }
-
-                register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, commandMappingAnnotation, registerMessageType2BeanClassMap);
+                register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, registerMessageType2BeanClassMap);
             }
         }
     }
@@ -175,12 +168,17 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @param beanName
      * @param beanClass
      * @param method
-     * @param commandMappingAnnotation
      */
     private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass,
-                          Method method, CommandMapping commandMappingAnnotation, Map<Class, Class> registerMessageType2BeanClassMap) throws Exception {
+                          Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws Exception {
 
-        String proxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.id();
+        CommandMapping commandMappingAnnotation = method.getAnnotation(CommandMapping.class);
+        // 不是消息处理方法, 则跳过处理
+        if (commandMappingAnnotation == null) {
+            return;
+        }
+
+        String proxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.requestId();
         log.info("开始注册消息接口. beanName:{}, 代理类名:{}, 消息接口方法名称:{}", beanName, proxyClassName, method.getName());
 
         Class proxyClass = ProxyClassMaker.INSTANCE.make(beanName, proxyClassName, beanClass, method);
@@ -188,7 +186,12 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(proxyClass);
         AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
 
-        addMessageParser(beanDefinition, method, registerMessageType2BeanClassMap);
+        MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();
+
+        addMessageParser(mutablePropertyValues, method, registerMessageType2BeanClassMap);
+        addMethodInfo(mutablePropertyValues, method, commandMappingAnnotation);
+
+        beanDefinition.setPropertyValues(mutablePropertyValues);
 
         beanDefinitionRegistry.registerBeanDefinition(proxyClassName, beanDefinition);
     }
@@ -202,7 +205,7 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private void addMessageParser(AbstractBeanDefinition beanDefinition, Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws IllegalAccessException, InstantiationException {
+    private void addMessageParser(MutablePropertyValues mutablePropertyValues, Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws IllegalAccessException, InstantiationException {
         List<MethodProtocolProcessor> methodProtocolProcessors = new ArrayList<>();
         loop1:
         for (Class parameterType : method.getParameterTypes()) {
@@ -222,7 +225,6 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
             methodProtocolProcessors.add(unknowProtocolProcessor);
         }
 
-        MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();
         mutablePropertyValues.add(CommandProxy.PARAMETER_PROCESSORS, methodProtocolProcessors);
 
         Class<?> returnType = method.getReturnType();
@@ -238,8 +240,12 @@ public class CommandScannerRegistrar implements ResourceLoaderAware, ImportBeanD
             }
         }
 
-        beanDefinition.setPropertyValues(mutablePropertyValues);
-        String parserNames = methodProtocolProcessors.stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.joining(","));
-        log.info("代理类:{} 添加MessageParser:{}", beanDefinition.getBeanClassName(), parserNames);
+//        String parserNames = methodProtocolProcessors.stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.joining(","));
+//        log.info("代理类:{} 添加MessageParser:{}", beanDefinition.getBeanClassName(), parserNames);
+    }
+
+    private void addMethodInfo(MutablePropertyValues mutablePropertyValues, Method method, CommandMapping commandMappingAnnotation) {
+        mutablePropertyValues.add(CommandProxy.REQUEST_ID, commandMappingAnnotation.requestId());
+        mutablePropertyValues.add(CommandProxy.RESPONSE_ID, commandMappingAnnotation.responseId());
     }
 }

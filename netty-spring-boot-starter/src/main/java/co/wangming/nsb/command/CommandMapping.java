@@ -11,6 +11,8 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 public @interface CommandMapping {
 
-    long id();
+    long requestId();
+
+    long responseId() default -1;
 
 }

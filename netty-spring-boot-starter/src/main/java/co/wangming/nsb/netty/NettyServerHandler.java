@@ -28,8 +28,8 @@ public class NettyServerHandler extends ByteToMessageDecoder {
         in.markReaderIndex();
 
         // TODO 改成INT
-        int messageSize = in.readByte();
         int messageId = in.readByte();
+        int messageSize = in.readByte();
         int readableBytes = in.readableBytes();
 
         log.debug("接收到远端[{}]消息. messageSize:{}, readableBytes:{}", ctx.channel().remoteAddress(), messageSize, readableBytes);

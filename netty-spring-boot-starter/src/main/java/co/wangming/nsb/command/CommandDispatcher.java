@@ -78,6 +78,7 @@ public class CommandDispatcher {
 
         // TODO 优化, 避免每次都分配一块内存
         ByteBuf response = ByteBufAllocator.DEFAULT.heapBuffer(bytearray.length)
+                .writeByte(commandProxy.getResponseId())
                 .writeByte(bytearray.length)
                 .writeBytes(bytearray);
         ctx.writeAndFlush(response).addListener(listener -> {

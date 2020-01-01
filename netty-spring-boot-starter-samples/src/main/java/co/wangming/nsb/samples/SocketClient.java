@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
@@ -49,11 +48,11 @@ public class SocketClient {
     private static void sendMessage(byte[] message, int commandId, boolean isRecive) throws Exception {
         try (Socket socket = new Socket()) {
 
-            socket.connect(new InetSocketAddress(InetAddress.getLocalHost(), 7800));
+            socket.connect(new InetSocketAddress("localhost", 7800));
 
             OutputStream out = socket.getOutputStream();
-            out.write(message.length);
             out.write(commandId);
+            out.write(message.length);
             out.write(message);
             out.flush();
 
@@ -65,6 +64,7 @@ public class SocketClient {
             }
 
             InputStream in = socket.getInputStream();
+            int messageId = in.read();
             int size = in.read();
 
             byte[] responseMessage = new byte[size];
