@@ -1,5 +1,7 @@
 package co.wangming.nsb.processors;
 
+import co.wangming.nsb.command.ScannedCommand;
+
 import java.lang.annotation.*;
 
 /**
@@ -9,6 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
+@ScannedCommand
 public @interface ProtocolProcessorRegister {
 
     Class messageType();

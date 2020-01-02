@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+@ScannedCommand
 public @interface CommandMapping {
 
     long requestId();

@@ -3,16 +3,13 @@ package co.wangming.nsb.command;
 import java.lang.annotation.*;
 
 /**
- * 命令注解, 用于注解在消息处理类以及方法上
+ * 用于spring扫描的注解类
  * <p>
- * Created By WangMing On 2019-12-06
+ * Created By WangMing On 2020-01-02
  **/
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@ScannedCommand
-public @interface CommandController {
-
-
+public @interface ScannedCommand {
 }
