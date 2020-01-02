@@ -1,5 +1,5 @@
 import co.wangming.nsb.command.CommandProxy;
-import co.wangming.nsb.util.ProxyClassMaker;
+import co.wangming.nsb.util.CommandProxyMaker;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created By WangMing On 2019-12-11
  **/
-public class ProxyClassMakerTest {
+public class CommandProxyMakerTest {
 
     @Test
     public void testMakeClass() throws Exception {
@@ -32,7 +32,7 @@ public class ProxyClassMakerTest {
         String commandMappingName = beanName + "$$" + CommandProxy.class.getSimpleName() + "$$" + System.currentTimeMillis() + ThreadLocalRandom.current().nextInt();
 
         try {
-            return ProxyClassMaker.INSTANCE.make(beanName, commandMappingName, targetClass, printMethod);
+            return CommandProxyMaker.INSTANCE.make(beanName, commandMappingName, targetClass, printMethod);
         } catch (Exception e) {
             return null;
         }

@@ -3,8 +3,6 @@ package co.wangming.nsb.springboot;
 import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.ScannedCommand;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
@@ -31,16 +29,6 @@ public class CommandClassPathScanner extends ClassPathBeanDefinitionScanner {
 //        addIncludeFilter(new AssignableTypeFilter(MethodProtocolProcessor.class));
 //        addIncludeFilter(new AssignableTypeFilter(EventHandler.class));
         return super.doScan(basePackages);
-    }
-
-    @Override
-    protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-        return super.isCandidateComponent(beanDefinition);
-    }
-
-    @Override
-    protected boolean checkCandidate(String beanName, BeanDefinition beanDefinition) {
-        return super.checkCandidate(beanName, beanDefinition);
     }
 
 }

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * Created By WangMing On 2019-12-11
  **/
 @Slf4j
-public enum ProxyClassMaker {
+public enum CommandProxyMaker {
 
     INSTANCE;
 
