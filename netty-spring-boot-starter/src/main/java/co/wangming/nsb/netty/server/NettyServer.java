@@ -1,4 +1,4 @@
-package co.wangming.nsb.netty;
+package co.wangming.nsb.netty.server;
 
 import co.wangming.nsb.springboot.SpringBootNettyProperties;
 import io.netty.bootstrap.ServerBootstrap;

@@ -1,6 +1,6 @@
 package co.wangming.nsb.springboot;
 
-import co.wangming.nsb.netty.NettyServer;
+import co.wangming.nsb.netty.server.NettyServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
