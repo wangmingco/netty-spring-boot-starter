@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
  **/
 @ProtocolProcessorRegister(messageType = GeneratedMessageV3.class)
 @Slf4j
-public class ProtobufProtocolProcessor implements MethodProtocolProcessor<byte[], GeneratedMessageV3> {
+public class GeneratedMessageV3Processor implements ProtocolProcessor<byte[], GeneratedMessageV3> {
 
     private Parser parser;
 
@@ -22,6 +22,7 @@ public class ProtobufProtocolProcessor implements MethodProtocolProcessor<byte[]
             Field parserField = parameterType.getDeclaredField("PARSER");
             parserField.setAccessible(true);
             Parser parser = (Parser) parserField.get(parameterType);
+            parserField.setAccessible(false);
             this.parser = parser;
         } catch (NoSuchFieldException e) {
             log.error("", e);
@@ -31,12 +32,12 @@ public class ProtobufProtocolProcessor implements MethodProtocolProcessor<byte[]
     }
 
     @Override
-    public GeneratedMessageV3 serialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
+    public GeneratedMessageV3 deserialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
         return (GeneratedMessageV3) parser.parseFrom(bytes);
     }
 
     @Override
-    public byte[] deserialize(ChannelHandlerContext ctx, GeneratedMessageV3 bytes) throws Exception {
+    public byte[] serialize(ChannelHandlerContext ctx, GeneratedMessageV3 bytes) throws Exception {
         return bytes.toByteArray();
     }
 }

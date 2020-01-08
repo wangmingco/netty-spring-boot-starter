@@ -1,6 +1,6 @@
 package co.wangming.nsb.command;
 
-import co.wangming.nsb.processors.MethodProtocolProcessor;
+import co.wangming.nsb.processors.ProtocolProcessor;
 import lombok.Data;
 
 import java.util.List;
@@ -19,9 +19,9 @@ public abstract class CommandProxy {
     private int requestId;
     private int responseId;
 
-    private List<MethodProtocolProcessor> parameterProtocolProcessors;
+    private List<ProtocolProcessor> parameterProtocolProcessors;
 
-    private MethodProtocolProcessor returnProtocolProcessor;
+    private ProtocolProcessor returnProtocolProcessor;
 
     public abstract Object invoke(List paramters);
 }

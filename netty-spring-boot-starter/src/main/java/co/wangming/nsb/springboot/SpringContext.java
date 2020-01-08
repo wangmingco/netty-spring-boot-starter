@@ -33,9 +33,11 @@ public class SpringContext implements ApplicationContextAware {
         return context.getBeansWithAnnotation(requiredType);
     }
 
-    public static Object getBean(String requiredType) {
-        return context.getBean(requiredType);
+    public static Object getBean(String name) {
+        return context.getBean(name);
     }
 
-
+    public static <T> T getBean(String name, Class<T> requiredType) {
+        return context.getBean(name, requiredType);
+    }
 }

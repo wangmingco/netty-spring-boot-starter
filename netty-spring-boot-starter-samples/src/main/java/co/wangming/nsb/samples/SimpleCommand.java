@@ -2,10 +2,15 @@ package co.wangming.nsb.samples;
 
 import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
+import co.wangming.nsb.command.CommandSender;
+import co.wangming.nsb.netty.client.CommandTemplate;
 import co.wangming.nsb.samples.protobuf.Search;
+import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created By WangMing On 2019-12-07
@@ -16,6 +21,9 @@ public class SimpleCommand {
 
     @Autowired
     private SimpleService simpleService;
+
+    @CommandSender(host = "localhost", port = 7800)
+    private CommandTemplate<GeneratedMessageV3> commandTemplate;
 
     @CommandMapping(requestId = 1)
     public Search.SearchResponse search(Search.SearchRequest searchRequest) {
@@ -59,5 +67,24 @@ public class SimpleCommand {
     @CommandMapping(requestId = 7)
     public void justSearch7(Search.SearchRequest searchRequest, User user) {
         log.info("收到SearchRequest 7 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
+    }
+
+    @CommandMapping(requestId = 8)
+    public void justSearch8(Search.SearchRequest searchRequest, User user) {
+        log.info("收到SearchRequest 8 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
+
+        commandTemplate.syncWrite(9, searchRequest);
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @CommandMapping(requestId = 9)
+    public void justSearch9(Search.SearchRequest searchRequest, User user) {
+        log.info("收到SearchRequest 9 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
+
     }
 }

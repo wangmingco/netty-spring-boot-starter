@@ -145,6 +145,12 @@
 			<version>2.11.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml</groupId>
+			<artifactId>classmate</artifactId>
+			<version>1.5.1</version>
+			<scope>compile</scope>
+		</dependency>
 
 	</dependencies>
 

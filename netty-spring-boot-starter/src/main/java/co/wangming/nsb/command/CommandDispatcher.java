@@ -1,6 +1,6 @@
 package co.wangming.nsb.command;
 
-import co.wangming.nsb.processors.MethodProtocolProcessor;
+import co.wangming.nsb.processors.ProtocolProcessor;
 import co.wangming.nsb.springboot.SpringContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -41,11 +41,11 @@ public class CommandDispatcher {
      */
     private static List getParameters(ChannelHandlerContext ctx, byte[] messageBytes, CommandProxy commandProxy) throws Exception {
 
-        List<MethodProtocolProcessor> methodProtocolProcessors = commandProxy.getParameterProtocolProcessors();
+        List<ProtocolProcessor> protocolProcessors = commandProxy.getParameterProtocolProcessors();
         List paramters = new ArrayList();
 
-        for (MethodProtocolProcessor methodProtocolProcessor : methodProtocolProcessors) {
-            paramters.add(methodProtocolProcessor.serialize(ctx, messageBytes));
+        for (ProtocolProcessor protocolProcessor : protocolProcessors) {
+            paramters.add(protocolProcessor.deserialize(ctx, messageBytes));
         }
 
         return paramters;
@@ -73,8 +73,8 @@ public class CommandDispatcher {
             return;
         }
 
-        MethodProtocolProcessor parser = commandProxy.getReturnProtocolProcessor();
-        byte[] bytearray = parser.deserialize(ctx, result);
+        ProtocolProcessor parser = commandProxy.getReturnProtocolProcessor();
+        byte[] bytearray = parser.serialize(ctx, result);
 
         // TODO 优化, 避免每次都分配一块内存
         ByteBuf response = ByteBufAllocator.DEFAULT.heapBuffer(bytearray.length)

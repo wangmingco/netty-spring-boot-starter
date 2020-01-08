@@ -12,14 +12,14 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 这是一种特殊类型的 #{@link MethodProtocolProcessor}, 主要是处理未注册解析器的参数, 当前策略时直接返回空.
+ * 这是一种特殊类型的 #{@link ProtocolProcessor}, 主要是处理未注册解析器的参数, 当前策略时直接返回空.
  *
  * 该解析器不可被Spring扫描到, 手动添加到 #{@link CommandProxy} 中. 详见 #{@link CommonScannerRegistrar#addMessageParser(AbstractBeanDefinition, Method, Map)}
  *
  * Created By WangMing On 2019-12-20
  **/
 @Slf4j
-public class UnknowProtocolProcessor implements MethodProtocolProcessor<byte[], Object> {
+public class UnknowProtocolProcessor implements ProtocolProcessor<byte[], Object> {
 
     private Class parameterType;
 
@@ -29,7 +29,7 @@ public class UnknowProtocolProcessor implements MethodProtocolProcessor<byte[], 
     }
 
     @Override
-    public Object serialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
+    public Object deserialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
         ContextWrapper contextWrapper = ContextCache.get(ctx);
         if (parameterType.isAssignableFrom(contextWrapper.getContextType())) {
             return contextWrapper.getContext();
@@ -43,7 +43,7 @@ public class UnknowProtocolProcessor implements MethodProtocolProcessor<byte[], 
     }
 
     @Override
-    public byte[] deserialize(ChannelHandlerContext ctx, Object t) throws Exception {
+    public byte[] serialize(ChannelHandlerContext ctx, Object t) throws Exception {
         return t.toString().getBytes();
     }
 }

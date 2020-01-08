@@ -2,6 +2,7 @@ package co.wangming.nsb.netty.server;
 
 import co.wangming.nsb.springboot.SpringBootNettyProperties;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -54,14 +55,15 @@ public class NettyServer {
 
             int port = springBootNettyProperties.getPort();
 
+            ChannelFuture bindChannelFuture = null;
             if (springBootNettyProperties.getAddress() != null) {
-                b.bind(springBootNettyProperties.getAddress(), port).sync();
+                bindChannelFuture = b.bind(springBootNettyProperties.getAddress(), port).sync();
             } else {
-                b.bind(port).sync();
+                bindChannelFuture = b.bind(port).sync();
             }
 
-
-            log.info("Netty Server listening at:{}", port);
+            bindChannelFuture.sync();
+            log.info("Netty Server listening at:{}", bindChannelFuture.channel().localAddress());
 
             this.bossGroup = bossGroup;
             this.workerGroup = workerGroup;

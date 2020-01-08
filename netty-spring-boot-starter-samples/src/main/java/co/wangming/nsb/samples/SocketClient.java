@@ -36,6 +36,7 @@ public class SocketClient {
                 sendMessage(message, 5, false);
                 sendMessage(message, 6, false);
                 sendMessage(message, 7, false);
+                sendMessage(message, 8, false);
             } catch (Exception e) {
 
             }

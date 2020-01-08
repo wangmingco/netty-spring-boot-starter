@@ -3,7 +3,7 @@ package co.wangming.nsb.springboot.register;
 import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
 import co.wangming.nsb.command.CommandProxy;
-import co.wangming.nsb.processors.MethodProtocolProcessor;
+import co.wangming.nsb.processors.ProtocolProcessor;
 import co.wangming.nsb.processors.ProtocolProcessorRegister;
 import co.wangming.nsb.processors.UnknowProtocolProcessor;
 import co.wangming.nsb.util.CommandProxyMaker;
@@ -78,7 +78,7 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
             try {
                 Class<?> beanClass = Class.forName(beanDefinitionHolder.getBeanDefinition().getBeanClassName());
-                if (MethodProtocolProcessor.class.isAssignableFrom(beanClass)) {
+                if (ProtocolProcessor.class.isAssignableFrom(beanClass)) {
                     ProtocolProcessorRegister protocolProcessorRegister = beanClass.getAnnotation(ProtocolProcessorRegister.class);
                     messageType2BeanClassMap.put(protocolProcessorRegister.messageType(), beanClass);
 
@@ -117,14 +117,17 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
         String proxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.requestId();
         log.info("开始注册消息接口. beanName:{}, 代理类名:{}, 消息接口方法名称:{}", beanName, proxyClassName, method.getName());
 
-        Class proxyClass = CommandProxyMaker.INSTANCE.make(beanName, proxyClassName, beanClass, method);
+        /**
+         * 生成 #{@link CommandProxy} 代理类
+         */
+        Class commandProxyClass = CommandProxyMaker.INSTANCE.make(beanName, proxyClassName, beanClass, method);
 
-        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(proxyClass);
+        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(commandProxyClass);
         AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
 
         MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();
 
-        addMessageParser(mutablePropertyValues, method, registerMessageType2BeanClassMap);
+        addMessageParser(beanDefinitionRegistry, mutablePropertyValues, method, registerMessageType2BeanClassMap);
         addMethodInfo(mutablePropertyValues, method, commandMappingAnnotation);
 
         beanDefinition.setPropertyValues(mutablePropertyValues);
@@ -141,36 +144,42 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private void addMessageParser(MutablePropertyValues mutablePropertyValues, Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws IllegalAccessException, InstantiationException {
-        List<MethodProtocolProcessor> methodProtocolProcessors = new ArrayList<>();
+    private void addMessageParser(BeanDefinitionRegistry beanDefinitionRegistry, MutablePropertyValues mutablePropertyValues, Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws IllegalAccessException, InstantiationException {
+        List<ProtocolProcessor> protocolProcessors = new ArrayList<>();
         loop1:
         for (Class parameterType : method.getParameterTypes()) {
 
             for (Map.Entry<Class, Class> parserRegisterEntry : registerMessageType2BeanClassMap.entrySet()) {
                 Class messageType = parserRegisterEntry.getKey();
                 if (messageType.isAssignableFrom(parameterType)) {
-                    MethodProtocolProcessor methodProtocolProcessor = (MethodProtocolProcessor) parserRegisterEntry.getValue().newInstance();
-                    methodProtocolProcessor.setParameterType(parameterType);
-                    methodProtocolProcessors.add(methodProtocolProcessor);
+                    ProtocolProcessor protocolProcessor = (ProtocolProcessor) parserRegisterEntry.getValue().newInstance();
+                    protocolProcessor.setParameterType(parameterType);
+                    protocolProcessors.add(protocolProcessor);
+
+                    // 提供给CommandTemplate使用
+                    BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(parserRegisterEntry.getValue());
+                    AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
+                    String protocolProcessorName = messageType.getSimpleName() + "ProtocolProcessor";
+                    beanDefinitionRegistry.registerBeanDefinition(protocolProcessorName, beanDefinition);
                     continue loop1;
                 }
             }
 
             UnknowProtocolProcessor unknowProtocolProcessor = new UnknowProtocolProcessor();
             unknowProtocolProcessor.setParameterType(parameterType);
-            methodProtocolProcessors.add(unknowProtocolProcessor);
+            protocolProcessors.add(unknowProtocolProcessor);
         }
 
-        mutablePropertyValues.add(CommandProxy.PARAMETER_PROCESSORS, methodProtocolProcessors);
+        mutablePropertyValues.add(CommandProxy.PARAMETER_PROCESSORS, protocolProcessors);
 
         Class<?> returnType = method.getReturnType();
         if (!Void.TYPE.equals(returnType)) {
             for (Map.Entry<Class, Class> parserRegisterEntry : registerMessageType2BeanClassMap.entrySet()) {
                 Class messageType = parserRegisterEntry.getKey();
                 if (messageType.isAssignableFrom(returnType)) {
-                    MethodProtocolProcessor methodProtocolProcessor = (MethodProtocolProcessor) parserRegisterEntry.getValue().newInstance();
-                    methodProtocolProcessor.setParameterType(returnType);
-                    mutablePropertyValues.add(CommandProxy.RETURN_PROCESSOR, methodProtocolProcessor);
+                    ProtocolProcessor protocolProcessor = (ProtocolProcessor) parserRegisterEntry.getValue().newInstance();
+                    protocolProcessor.setParameterType(returnType);
+                    mutablePropertyValues.add(CommandProxy.RETURN_PROCESSOR, protocolProcessor);
                     break;
                 }
             }

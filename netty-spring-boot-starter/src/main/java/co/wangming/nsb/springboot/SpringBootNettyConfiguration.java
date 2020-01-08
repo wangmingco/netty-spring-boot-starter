@@ -1,6 +1,8 @@
 package co.wangming.nsb.springboot;
 
 import co.wangming.nsb.netty.server.NettyServer;
+import co.wangming.nsb.springboot.BeanPostProcessor.CommandSenderBeanPostProcessor;
+import co.wangming.nsb.springboot.factorybean.CommandSenderFactoryBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -39,6 +41,18 @@ public class SpringBootNettyConfiguration {
     @ConditionalOnMissingBean(SpringContext.class)
     public SpringContext springContext() {
         return new SpringContext();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CommandSenderBeanPostProcessor.class)
+    public CommandSenderBeanPostProcessor commandSenderBeanPostProcessor() {
+        return new CommandSenderBeanPostProcessor();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(CommandSenderFactoryBean.class)
+    public CommandSenderFactoryBean commandSenderFactoryBean() {
+        return new CommandSenderFactoryBean();
     }
 
     @Component
