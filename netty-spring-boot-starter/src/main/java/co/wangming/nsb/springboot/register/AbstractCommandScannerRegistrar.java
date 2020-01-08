@@ -3,7 +3,6 @@ package co.wangming.nsb.springboot.register;
 import co.wangming.nsb.exception.RegisterException;
 import co.wangming.nsb.springboot.CommandNameGenerator;
 import co.wangming.nsb.springboot.CommandScan;
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -78,8 +77,6 @@ public abstract class AbstractCommandScannerRegistrar implements ResourceLoaderA
 
         //这里实现的是根据名称来注入
         commandClassPathScanner.setBeanNameGenerator(new CommandNameGenerator());
-
-        log.info("commandClassPathScanner 扫描路径:{}", JSON.toJSONString(scanPackages, true));
 
         //扫描指定路径下的接口
         Set<BeanDefinitionHolder> beanDefinitionHolders = commandClassPathScanner.doScan(scanPackages);

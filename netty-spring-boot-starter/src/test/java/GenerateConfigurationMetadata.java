@@ -1,5 +1,4 @@
 import co.wangming.nsb.springboot.SpringBootNettyProperties;
-import com.alibaba.fastjson.JSON;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,6 +26,6 @@ public class GenerateConfigurationMetadata {
 
         }
 
-        System.out.println(JSON.toJSONString(list, true));
+        System.out.println(list);
     }
 }

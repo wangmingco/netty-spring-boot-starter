@@ -14,6 +14,8 @@
 		<netty.version>4.0.56.Final</netty.version>
 		<protobuf.version>3.11.1</protobuf.version>
 		<javassist.version>3.26.0-GA</javassist.version>
+		<lombok.version>1.18.10</lombok.version>
+		<commons.lang3.version>3.9</commons.lang3.version>
 	</properties>
 
 	<dependencies>
@@ -69,39 +71,13 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.10</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>LATEST</version>
+			<version>${lombok.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.9</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
-		<dependency>
-			<groupId>net.lingala.zip4j</groupId>
-			<artifactId>zip4j</artifactId>
-			<version>2.2.8</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-compress</artifactId>
-			<version>1.19</version>
+			<version>${commons.lang3.version}</version>
 		</dependency>
 
 
