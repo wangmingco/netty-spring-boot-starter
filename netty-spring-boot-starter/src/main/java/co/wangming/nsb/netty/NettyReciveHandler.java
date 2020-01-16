@@ -1,4 +1,4 @@
-package co.wangming.nsb.netty.server;
+package co.wangming.nsb.netty;
 
 import co.wangming.nsb.command.CommandDispatcher;
 import co.wangming.nsb.event.EventDispatcher;
@@ -14,7 +14,7 @@ import java.util.List;
  * Created By WangMing On 2019-12-06
  **/
 @Slf4j
-public class NettyServerHandler extends ByteToMessageDecoder {
+public class NettyReciveHandler extends ByteToMessageDecoder {
 
     private static final int MIN_PACKAGE_SIZE = 8;
 

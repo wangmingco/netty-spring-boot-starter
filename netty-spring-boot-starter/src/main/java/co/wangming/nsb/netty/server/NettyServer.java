@@ -1,5 +1,6 @@
 package co.wangming.nsb.netty.server;
 
+import co.wangming.nsb.netty.NettyReciveHandler;
 import co.wangming.nsb.springboot.SpringBootNettyProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -42,7 +43,7 @@ public class NettyServer {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline()
-                                    .addLast(new NettyServerHandler())
+                                    .addLast(new NettyReciveHandler())
                                     .addLast(new IdleStateHandler(
                                             springBootNettyProperties.getReaderIdleTimeSeconds(),
                                             springBootNettyProperties.getWriterIdleTimeSeconds(),
