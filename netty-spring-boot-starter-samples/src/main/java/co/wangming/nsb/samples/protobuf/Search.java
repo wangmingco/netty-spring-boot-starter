@@ -139,15 +139,15 @@ public final class Search {
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
             return co.wangming.nsb.samples.protobuf.Search.internal_static_co_wangming_nsb_samples_protobuf_SearchRequest_descriptor;
-        }
+    }
 
-        @java.lang.Override
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-            return co.wangming.nsb.samples.protobuf.Search.internal_static_co_wangming_nsb_samples_protobuf_SearchRequest_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(
-                            co.wangming.nsb.samples.protobuf.Search.SearchRequest.class, co.wangming.nsb.samples.protobuf.Search.SearchRequest.Builder.class);
-        }
+    internalGetFieldAccessorTable() {
+        return co.wangming.nsb.samples.protobuf.Search.internal_static_co_wangming_nsb_samples_protobuf_SearchRequest_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        co.wangming.nsb.samples.protobuf.Search.SearchRequest.class, co.wangming.nsb.samples.protobuf.Search.SearchRequest.Builder.class);
+    }
 
         public static final int QUERY_FIELD_NUMBER = 1;
         private volatile java.lang.Object query_;
@@ -884,15 +884,15 @@ public final class Search {
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
             return co.wangming.nsb.samples.protobuf.Search.internal_static_co_wangming_nsb_samples_protobuf_SearchResponse_descriptor;
-        }
+    }
 
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-            return co.wangming.nsb.samples.protobuf.Search.internal_static_co_wangming_nsb_samples_protobuf_SearchResponse_fieldAccessorTable
-                    .ensureFieldAccessorsInitialized(
-                            co.wangming.nsb.samples.protobuf.Search.SearchResponse.class, co.wangming.nsb.samples.protobuf.Search.SearchResponse.Builder.class);
-        }
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    internalGetFieldAccessorTable() {
+        return co.wangming.nsb.samples.protobuf.Search.internal_static_co_wangming_nsb_samples_protobuf_SearchResponse_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        co.wangming.nsb.samples.protobuf.Search.SearchResponse.class, co.wangming.nsb.samples.protobuf.Search.SearchResponse.Builder.class);
+    }
 
         public static final int RESULT_FIELD_NUMBER = 1;
         private volatile java.lang.Object result_;
@@ -1378,7 +1378,7 @@ public final class Search {
             @java.lang.Override
             public SearchResponse parsePartialFrom(
                     com.google.protobuf.CodedInputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return new SearchResponse(input, extensionRegistry);
             }
@@ -1413,26 +1413,24 @@ public final class Search {
 
     public static com.google.protobuf.Descriptors.FileDescriptor
     getDescriptor() {
-        return descriptor;
-    }
-
-    private static com.google.protobuf.Descriptors.FileDescriptor
-            descriptor;
-
-    static {
-        java.lang.String[] descriptorData = {
-                "\n\014search.proto\022 co.wangming.nsb.samples." +
-                        "protobuf\"L\n\rSearchRequest\022\r\n\005query\030\001 \001(\t" +
-                        "\022\023\n\013page_number\030\002 \001(\005\022\027\n\017result_per_page" +
-                        "\030\003 \001(\005\" \n\016SearchResponse\022\016\n\006result\030\001 \001(\t" +
-                        "b\006proto3"
-        };
-        descriptor = com.google.protobuf.Descriptors.FileDescriptor
-                .internalBuildGeneratedFileFrom(descriptorData,
-                        new com.google.protobuf.Descriptors.FileDescriptor[]{
-                        });
-        internal_static_co_wangming_nsb_samples_protobuf_SearchRequest_descriptor =
-                getDescriptor().getMessageTypes().get(0);
+    return descriptor;
+  }
+  private static  com.google.protobuf.Descriptors.FileDescriptor
+      descriptor;
+  static {
+    java.lang.String[] descriptorData = {
+      "\n\014search.proto\022 co.wangming.nsb.samples." +
+      "protobuf\"L\n\rSearchRequest\022\r\n\005query\030\001 \001(\t" +
+      "\022\023\n\013page_number\030\002 \001(\005\022\027\n\017result_per_page" +
+      "\030\003 \001(\005\" \n\016SearchResponse\022\016\n\006result\030\001 \001(\t" +
+      "b\006proto3"
+    };
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
+      .internalBuildGeneratedFileFrom(descriptorData,
+        new com.google.protobuf.Descriptors.FileDescriptor[] {
+        });
+    internal_static_co_wangming_nsb_samples_protobuf_SearchRequest_descriptor =
+      getDescriptor().getMessageTypes().get(0);
     internal_static_co_wangming_nsb_samples_protobuf_SearchRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_co_wangming_nsb_samples_protobuf_SearchRequest_descriptor,
