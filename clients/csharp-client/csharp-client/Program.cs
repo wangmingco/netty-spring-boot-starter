@@ -9,38 +9,37 @@ namespace csharpclient
 {
     class MainClass
     {
+        private static string IP = "tcp.nsbs.xyz";
+        private static int PORT = 7800;
+
         public static void Main(string[] args)
         {
             SearchRequest searchRequest = new SearchRequest {
                 PageNumber = 1,
-                Query = "123"
+                Query = "data from c# client"
             };
 
             byte[] msg = Serizlize(searchRequest);
 
-            sendMessage(msg);
-
+            for(;;)
+            {
+                sendMessage(msg, 1);
+                sendMessage(msg, 2);
+                sendMessage(msg, 3);
+                sendMessage(msg, 4);
+                sendMessage(msg, 5);
+                sendMessage(msg, 6);
+            }
         }
 
-        public static byte[] Serizlize(SearchRequest meg)
+        public static byte[] Serizlize(SearchRequest searchRequest)
         {
             try
             {
-                //涉及格式转换，需要用到流，将二进制序列化到流中
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    //使用ProtoBuf工具的序列化方法
-                    meg.WriteTo(ms);
-
+                    searchRequest.WriteTo(ms);
                     return ms.ToArray();
-                    ////定义二级制数组，保存序列化后的结果
-                    //byte[] result = new byte[ms.Length];
-                    ////将流的位置设为0，起始点
-                    //ms.Position = 0;
-                    ////将流中的内容读取到二进制数组中
-                    //ms.Read(result, 0, result.Length);
-
-                    //return result;
                 }
             }
             catch (Exception ex)
@@ -50,22 +49,29 @@ namespace csharpclient
             }
         }
 
-        public static void sendMessage(byte[] msg)
+        public static void sendMessage(byte[] msg, byte messageId)
         {
-            Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            try
+            using (MemoryStream ms = new MemoryStream())
             {
-                clientSocket.Connect("tcp.nsbs.xyz", 7800); //配置服务器IP与端口  
-                Console.WriteLine("连接服务器成功");
-            }
-            catch
-            {
-                Console.WriteLine("连接服务器失败，请按回车键退出！");
-                return;
-            }
+                ms.WriteByte(messageId);
+                ms.WriteByte(Convert.ToByte(msg.Length));
+                ms.Write(msg, 0, msg.Length);
 
-            int result = clientSocket.Send(msg);
-            Console.WriteLine("发送数据完成 " + result);
+                Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                try
+                {
+                    clientSocket.Connect(IP, PORT); //配置服务器IP与端口  
+                    Console.WriteLine("连接服务器成功");
+                }
+                catch
+                {
+                    Console.WriteLine("连接服务器失败，请按回车键退出！");
+                    return;
+                }
+
+                int result = clientSocket.Send(ms.ToArray());
+                Console.WriteLine("发送数据完成 " + result);
+            }
         }
 
     }
