@@ -17,6 +17,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 /**
  * Created By WangMing On 2019-12-06
  **/
@@ -56,15 +61,17 @@ public class NettyServer {
 
             int port = springBootNettyProperties.getPort();
 
-            ChannelFuture bindChannelFuture = null;
+            String ip = "0.0.0.0";
             if (springBootNettyProperties.getAddress() != null) {
-                bindChannelFuture = b.bind(springBootNettyProperties.getAddress(), port).sync();
+                ip = springBootNettyProperties.getAddress();
             } else {
-                bindChannelFuture = b.bind("0.0.0.0", port).sync();
+                ip = getServerIp();
             }
 
+            ChannelFuture bindChannelFuture = null;
+            bindChannelFuture = b.bind(ip, port).sync();
             bindChannelFuture.sync();
-            log.info("Netty Server listening at:{}", bindChannelFuture.channel().localAddress());
+            log.info("Netty Server listening at[{}:{}]", ip, port);
 
             this.bossGroup = bossGroup;
             this.workerGroup = workerGroup;
@@ -72,6 +79,38 @@ public class NettyServer {
         } catch (InterruptedException e) {
             log.error("", e);
             stop();
+        }
+    }
+
+    public static String getServerIp() {
+        String localip = null;// 本地IP，如果没有配置外网IP则返回它
+        String netip = null;// 外网IP
+        try {
+            Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
+            boolean finded = false;// 是否找到外网IP
+            while (netInterfaces.hasMoreElements() && !finded) {
+                NetworkInterface ni = (NetworkInterface) netInterfaces.nextElement();
+                Enumeration address = ni.getInetAddresses();
+                while (address.hasMoreElements()) {
+
+                    InetAddress ip = (InetAddress) address.nextElement();
+                    if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {// 外网IP
+                        netip = ip.getHostAddress();
+                        finded = true;
+                        break;
+                    } else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {// 内网IP
+                        localip = ip.getHostAddress();
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            return "0.0.0.0";
+        }
+
+        if (netip != null && !"".equals(netip)) {
+            return netip;
+        } else {
+            return localip;
         }
     }
 
