@@ -32,12 +32,14 @@ func main() {
 	msgData.Write(protoData)
 	msgBytes := msgData.Bytes()
 
-	go loopSendData(msgBytes, 1)
-	go loopSendData(msgBytes, 2)
-	go loopSendData(msgBytes, 3)
-	go loopSendData(msgBytes, 4)
-	go loopSendData(msgBytes, 5)
-	go loopSendData(msgBytes, 6)
+	for i:=0; i < 120; i++ {
+		go loopSendData(msgBytes, 1)
+		go loopSendData(msgBytes, 2)
+		go loopSendData(msgBytes, 3)
+		go loopSendData(msgBytes, 4)
+		go loopSendData(msgBytes, 5)
+		go loopSendData(msgBytes, 6)
+	}
 
 	for {
 		time.Sleep(time.Minute)
@@ -70,7 +72,7 @@ func sendData(msgBytes []byte, msgId byte) {
 
 	read(conn)
 	time.Sleep(time.Second)
-	fmt.Println(TargetIpPort, " 发送数据完成")
+	fmt.Println(TargetIpPort, " 发送数据完成, 消息号:", msgId)
 }
 
 func read(conn net.Conn) {
