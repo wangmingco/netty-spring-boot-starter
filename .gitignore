@@ -3,6 +3,7 @@
 logs/
 target
 
+.vs
 bin
 obj
 packages
