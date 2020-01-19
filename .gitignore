@@ -1,10 +1,7 @@
-logs/
 .idea
 *.iml
-*.DS_Store
-
-# Thumbnails
-._*
+logs/
+target
 
 bin
 obj
