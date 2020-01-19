@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const TargetIpPort = "localhost:7800"
+const TargetIpPort = "tcp.nsbs.xyz:7800"
 
 func main() {
 	//发送消息
@@ -32,7 +32,7 @@ func main() {
 	msgData.Write(protoData)
 	msgBytes := msgData.Bytes()
 
-	for i:=0; i < 120; i++ {
+	for i := 0; i < 120; i++ {
 		go loopSendData(msgBytes, 1)
 		go loopSendData(msgBytes, 2)
 		go loopSendData(msgBytes, 3)
