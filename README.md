@@ -1,6 +1,8 @@
 # netty-spring-boot-starter
 基于Netty的Spring Boot Starter工程.
 
+![](https://github.com/wangmingco/netty-spring-boot-starter/blob/master/docs/nsbs.gif?raw=true)
+
 ## 介绍
 * 支持TCP长连接消息转发到Spring容器
 * 支持自定义消息枚举类(`CommandController`, `CommandMapping`)
