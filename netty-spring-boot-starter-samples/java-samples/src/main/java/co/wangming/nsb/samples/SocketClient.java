@@ -49,7 +49,7 @@ public class SocketClient {
     private static void sendMessage(byte[] message, int commandId, boolean isRecive) throws Exception {
         try (Socket socket = new Socket()) {
 
-            socket.connect(new InetSocketAddress("129.204.140.2", 7800));
+            socket.connect(new InetSocketAddress("172.16.112.68", 7800));
 
             OutputStream out = socket.getOutputStream();
             out.write(commandId);
