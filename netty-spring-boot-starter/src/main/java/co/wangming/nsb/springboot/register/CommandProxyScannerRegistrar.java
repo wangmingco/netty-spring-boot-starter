@@ -34,6 +34,21 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
         return classes;
     }
 
+    private static class BeanDefinitionGroup {
+        List<BeanWrapper> commandControllerList = new ArrayList<>();
+        Map<Class, BeanWrapper> protocolProcessorRegisterList = new HashMap<>();
+    }
+
+    private static class BeanWrapper {
+        Class beanClass;
+        BeanDefinitionHolder beanDefinitionHolder;
+
+        BeanWrapper(Class beanClass, BeanDefinitionHolder beanDefinitionHolder) {
+            this.beanClass = beanClass;
+            this.beanDefinitionHolder = beanDefinitionHolder;
+        }
+    }
+
     /**
      * 进bean注册
      *
@@ -44,24 +59,12 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
      */
     @Override
     public void process(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
-        Map<Class, Class> registerMessageType2BeanClassMap = getParserRegisters(beanDefinitionHolders);
+        BeanDefinitionGroup beanDefinitionGroup = groupBeanDefinitionHolder(beanDefinitionHolders);
 
-        for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
-
-            String beanClassName = beanDefinitionHolder.getBeanDefinition().getBeanClassName();
-
-            Class beanClass = null;
-            try {
-                beanClass = Class.forName(beanClassName);
-            } catch (ClassNotFoundException e) {
-                log.error("加载类失败:{}", beanClassName, e);
-                throw e;
-            }
-
-            log.info("开始加载消息类:[{}] 中的消息接口", beanClassName);
-
-            for (Method method : beanClass.getMethods()) {
-                register(beanDefinitionRegistry, beanDefinitionHolder.getBeanName(), beanClass, method, registerMessageType2BeanClassMap);
+        for (BeanWrapper commandControllerBeanWrapper : beanDefinitionGroup.commandControllerList) {
+            // 开始将 commandController 注册进Spring里
+            for (Method method : commandControllerBeanWrapper.beanClass.getMethods()) {
+                register(beanDefinitionRegistry, commandControllerBeanWrapper, method, beanDefinitionGroup.protocolProcessorRegisterList);
             }
         }
     }
@@ -72,24 +75,29 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
      * @param beanDefinitionHolders
      * @return
      */
-    private Map<Class, Class> getParserRegisters(Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
-        Map<Class, Class> messageType2BeanClassMap = new HashMap<>();
+    private BeanDefinitionGroup groupBeanDefinitionHolder(Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
+//        Map<Class, Class> messageType2BeanClassMap = new HashMap<>();
+        BeanDefinitionGroup beanDefinitionGroup = new BeanDefinitionGroup();
 
         for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
             try {
                 Class<?> beanClass = Class.forName(beanDefinitionHolder.getBeanDefinition().getBeanClassName());
-                if (ProtocolProcessor.class.isAssignableFrom(beanClass)) {
-                    ProtocolProcessorRegister protocolProcessorRegister = beanClass.getAnnotation(ProtocolProcessorRegister.class);
-                    messageType2BeanClassMap.put(protocolProcessorRegister.messageType(), beanClass);
 
-                    log.info("找到ParserRegister, 所在类:{}, 消息类型:{}", beanClass.getName(), protocolProcessorRegister.messageType());
+                ProtocolProcessorRegister protocolProcessorRegister = beanClass.getAnnotation(ProtocolProcessorRegister.class);
+                if (protocolProcessorRegister != null) {
+                    beanDefinitionGroup.protocolProcessorRegisterList.put(protocolProcessorRegister.messageType(), new BeanWrapper(beanClass, beanDefinitionHolder));
                 }
+
+                if (beanClass.getAnnotation(CommandController.class) != null) {
+                    beanDefinitionGroup.commandControllerList.add(new BeanWrapper(beanClass, beanDefinitionHolder));
+                }
+
             } catch (ClassNotFoundException e) {
-                log.error("寻找ParserRegister时, 找不到类:{}", beanDefinitionHolder.getBeanDefinition().getBeanClassName(), e);
+                log.error("寻找BeanDefinitionHolder时, 找不到类:{}", beanDefinitionHolder.getBeanDefinition().getBeanClassName(), e);
                 throw e;
             }
         }
-        return messageType2BeanClassMap;
+        return beanDefinitionGroup;
     }
 
     /**
@@ -101,12 +109,10 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
      * 被 #{@link CommandMapping} 注解的方法.
      *
      * @param beanDefinitionRegistry
-     * @param beanName
-     * @param beanClass
      * @param method
      */
-    private void register(BeanDefinitionRegistry beanDefinitionRegistry, String beanName, Class beanClass,
-                          Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws Exception {
+    private void register(BeanDefinitionRegistry beanDefinitionRegistry, BeanWrapper commandControllerBeanWrapper,
+                          Method method, Map<Class, BeanWrapper> protocolProcessorRegisterList) throws Exception {
 
         CommandMapping commandMappingAnnotation = method.getAnnotation(CommandMapping.class);
         // 不是消息处理方法, 则跳过处理
@@ -114,20 +120,22 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
             return;
         }
 
+        String beanName = commandControllerBeanWrapper.beanDefinitionHolder.getBeanName();
+
         String proxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.requestId();
         log.info("开始注册消息接口. beanName:{}, 代理类名:{}, 消息接口方法名称:{}", beanName, proxyClassName, method.getName());
 
         /**
          * 生成 #{@link CommandProxy} 代理类
          */
-        Class commandProxyClass = CommandProxyMaker.INSTANCE.make(beanName, proxyClassName, beanClass, method);
+        Class commandProxyClass = CommandProxyMaker.INSTANCE.make(beanName, proxyClassName, commandControllerBeanWrapper.beanClass, method);
 
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(commandProxyClass);
         AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
 
         MutablePropertyValues mutablePropertyValues = new MutablePropertyValues();
 
-        addMessageParser(beanDefinitionRegistry, mutablePropertyValues, method, registerMessageType2BeanClassMap);
+        addMessageParser(beanDefinitionRegistry, mutablePropertyValues, method, protocolProcessorRegisterList);
         addMethodInfo(mutablePropertyValues, method, commandMappingAnnotation);
 
         beanDefinition.setPropertyValues(mutablePropertyValues);
@@ -139,25 +147,27 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
      * 找到方法参数的解析器
      *
      * @param method
-     * @param registerMessageType2BeanClassMap
+     * @param protocolProcessorRegisterList
      * @return
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private void addMessageParser(BeanDefinitionRegistry beanDefinitionRegistry, MutablePropertyValues mutablePropertyValues, Method method, Map<Class, Class> registerMessageType2BeanClassMap) throws IllegalAccessException, InstantiationException {
+    private void addMessageParser(BeanDefinitionRegistry beanDefinitionRegistry, MutablePropertyValues mutablePropertyValues, Method method, Map<Class, BeanWrapper> protocolProcessorRegisterList) throws IllegalAccessException, InstantiationException {
+
         List<ProtocolProcessor> protocolProcessors = new ArrayList<>();
         loop1:
         for (Class parameterType : method.getParameterTypes()) {
 
-            for (Map.Entry<Class, Class> parserRegisterEntry : registerMessageType2BeanClassMap.entrySet()) {
+            for (Map.Entry<Class, BeanWrapper> parserRegisterEntry : protocolProcessorRegisterList.entrySet()) {
                 Class messageType = parserRegisterEntry.getKey();
                 if (messageType.isAssignableFrom(parameterType)) {
-                    ProtocolProcessor protocolProcessor = (ProtocolProcessor) parserRegisterEntry.getValue().newInstance();
+                    Class beanClass = parserRegisterEntry.getValue().beanClass;
+                    ProtocolProcessor protocolProcessor = (ProtocolProcessor) beanClass.newInstance();
                     protocolProcessor.setParameterType(parameterType);
                     protocolProcessors.add(protocolProcessor);
 
                     // 提供给CommandTemplate使用
-                    BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(parserRegisterEntry.getValue());
+                    BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(beanClass);
                     AbstractBeanDefinition beanDefinition = beanDefinitionBuilder.getBeanDefinition();
                     String protocolProcessorName = messageType.getSimpleName() + "ProtocolProcessor";
                     beanDefinitionRegistry.registerBeanDefinition(protocolProcessorName, beanDefinition);
@@ -174,10 +184,10 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
 
         Class<?> returnType = method.getReturnType();
         if (!Void.TYPE.equals(returnType)) {
-            for (Map.Entry<Class, Class> parserRegisterEntry : registerMessageType2BeanClassMap.entrySet()) {
+            for (Map.Entry<Class, BeanWrapper> parserRegisterEntry : protocolProcessorRegisterList.entrySet()) {
                 Class messageType = parserRegisterEntry.getKey();
                 if (messageType.isAssignableFrom(returnType)) {
-                    ProtocolProcessor protocolProcessor = (ProtocolProcessor) parserRegisterEntry.getValue().newInstance();
+                    ProtocolProcessor protocolProcessor = (ProtocolProcessor) parserRegisterEntry.getValue().beanClass.newInstance();
                     protocolProcessor.setParameterType(returnType);
                     mutablePropertyValues.add(CommandProxy.RETURN_PROCESSOR, protocolProcessor);
                     break;
@@ -185,8 +195,6 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
             }
         }
 
-//        String parserNames = methodProtocolProcessors.stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.joining(","));
-//        log.info("代理类:{} 添加MessageParser:{}", beanDefinition.getBeanClassName(), parserNames);
     }
 
     private void addMethodInfo(MutablePropertyValues mutablePropertyValues, Method method, CommandMapping commandMappingAnnotation) {
