@@ -1,5 +1,33 @@
 #!/usr/bin/env bash
 
+function install_maven() {
+
+  wget https://mirrors.bfsu.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip
+  unzip apache-maven-3.6.3-bin.zip
+  sudo mv apache-maven-3.6.3 /opt
+  sudo chown -R root:root /opt/apache-maven-3.6.3
+  sudo ln -s /opt/apache-maven-3.6.3 /opt/apache-maven
+
+  echo "" >/etc/profile.d/maven.sh
+  echo "export M2_HOME=/opt/apache-maven" >>/etc/profile.d/maven.sh
+  echo "export PATH=\$PATH:\$M2_HOME/bin" >>/etc/profile.d/maven.sh
+
+  source /etc/profile.d/maven.sh
+}
+
+function install_mariadb() {
+
+  yum install -y mariadb mariadb-server
+  systemctl start mariadb
+  systemctl enable mariadb
+  echo "请使用 mysql_secure_installation 命令设置密码"
+}
+
+function install_jdk() {
+  yum install -y java-1.8.0-openjdk-devel.x86_64
+}
+
+
 function stop() {
     echo "运行中的 netty-spring-boot-starter 进程:"
     jps -l | grep "netty-spring-boot-starter"
