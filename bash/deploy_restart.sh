@@ -49,8 +49,12 @@ function stop() {
 }
 
 function download() {
-    cd ../
-    git pull
+    if [ ! -d "~/netty-spring-boot-starter" ]; then
+      git clone git@github.com:wangmingco/netty-spring-boot-starter.git ~/netty-spring-boot-starter
+    else
+      cd ~/netty-spring-boot-starter
+      git pull
+    fi
 }
 
 function build() {
