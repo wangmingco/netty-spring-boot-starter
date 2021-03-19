@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+REPO_URL='git@github.com:wangmingco/netty-spring-boot-starter.git'
+REPO_NAME='netty-spring-boot-starter'
+
 function install_maven() {
+  echo "安装maven"
 
   wget https://mirrors.bfsu.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip
   unzip apache-maven-3.6.3-bin.zip
@@ -16,6 +20,7 @@ function install_maven() {
 }
 
 function install_mariadb() {
+  echo "安装mariadb"
 
   yum install -y mariadb mariadb-server
   systemctl start mariadb
@@ -24,10 +29,13 @@ function install_mariadb() {
 }
 
 function install_jdk() {
+  echo "安装jdk"
+
   yum install -y java-1.8.0-openjdk-devel.x86_64
 }
 
 function install_git() {
+  echo "安装git"
   yum install -y git
 }
 
@@ -39,20 +47,23 @@ function install() {
 }
 
 function stop() {
-    echo "运行中的 netty-spring-boot-starter 进程:"
-    jps -l | grep "netty-spring-boot-starter"
-    pid=`cat server.pid`
-    echo "即将关闭的Java服务Pid:"$pid
-    kill -9 $pid
-    echo "即将关闭的Java服务完成, 运行中的 netty-spring-boot-starter 进程:"
-    jps -l | grep "netty-spring-boot-starter"
+    echo "运行中的 ${REPO_NAME} 进程:"
+    jps -l | grep ${REPO_NAME}
+    if [ -f "~/${REPO_NAME}/server.pid" ]; then
+
+	pid=`cat server.pid`
+    	echo "即将关闭的Java服务Pid:"$pid
+    	kill -9 $pid
+    	echo "即将关闭的Java服务完成, 运行中的 ${REPO_NAME} 进程:"
+    	jps -l | grep ${REPO_NAME}
+    fi
 }
 
 function download() {
-    if [ ! -d "~/netty-spring-boot-starter" ]; then
-      git clone git@github.com:wangmingco/netty-spring-boot-starter.git ~/netty-spring-boot-starter
+    if [ ! -d "~/${REPO_NAME}" ]; then
+      git clone ${REPO_URL} ${REPO_NAME}
     else
-      cd ~/netty-spring-boot-starter
+      cd ~/${REPO_NAME}
       git pull
     fi
 }
@@ -65,6 +76,7 @@ function build() {
 
 function start() {
     echo "开始启动服务"
+    cd ~/${REPO_NAME}/
     nohup java -jar ./netty-spring-boot-starter-samples/java-samples/target/java-samples-0.1-exec.jar >server.log 2>&1 &
     jps -l | grep "netty-spring-boot-starter" | awk '{print $1}' > server.pid
     jps -l | grep "netty-spring-boot-starter"
