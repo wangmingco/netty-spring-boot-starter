@@ -27,6 +27,16 @@ function install_jdk() {
   yum install -y java-1.8.0-openjdk-devel.x86_64
 }
 
+function install_git() {
+  yum install -y git
+}
+
+function install() {
+  command -v git >/dev/null 2>&1 || { install_git; }
+  command -v mvn >/dev/null 2>&1 || { install_maven; }
+  command -v java >/dev/null 2>&1 || { install_jdk; }
+  command -v mysql >/dev/null 2>&1 || { install_mariadb; }
+}
 
 function stop() {
     echo "运行中的 netty-spring-boot-starter 进程:"
@@ -57,6 +67,7 @@ function start() {
     echo "启动服务完成"
 }
 
+install
 stop
 download
 build
