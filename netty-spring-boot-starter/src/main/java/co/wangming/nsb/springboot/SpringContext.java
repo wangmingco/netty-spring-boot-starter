@@ -1,6 +1,5 @@
 package co.wangming.nsb.springboot;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -11,7 +10,6 @@ import java.util.Map;
 /**
  * Created By WangMing On 2019-12-07
  **/
-@Slf4j
 public class SpringContext implements ApplicationContextAware {
 
     private static ApplicationContext context;

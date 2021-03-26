@@ -3,7 +3,8 @@ package co.wangming.nsb.springboot;
 import co.wangming.nsb.netty.server.NettyServer;
 import co.wangming.nsb.springboot.BeanPostProcessor.CommandSenderBeanPostProcessor;
 import co.wangming.nsb.springboot.factorybean.CommandSenderFactoryBean;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,9 @@ import javax.annotation.Resource;
  **/
 @Configuration
 @EnableConfigurationProperties(SpringBootNettyProperties.class)
-@Slf4j
 public class SpringBootNettyConfiguration {
+
+    private static final Logger log = LoggerFactory.getLogger(SpringBootNettyConfiguration.class);
 
     @Autowired
     private SpringBootNettyProperties springBootNettyProperties;
@@ -67,7 +69,7 @@ public class SpringBootNettyConfiguration {
         public void afterPropertiesSet() throws Exception {
             log.info("Starting The Netty Server");
 
-            NettyServer nettyServer = NettyServer.builder().build();
+            NettyServer nettyServer = new NettyServer();
 
             nettyServer.start(springBootNettyProperties);
 

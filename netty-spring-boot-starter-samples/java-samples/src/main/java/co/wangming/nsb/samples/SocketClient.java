@@ -1,7 +1,9 @@
 package co.wangming.nsb.samples;
 
 import co.wangming.nsb.samples.protobuf.Search;
-import lombok.extern.slf4j.Slf4j;
+import co.wangming.nsb.util.NetUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +15,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created By WangMing On 2019-12-08
  **/
-@Slf4j
 public class SocketClient {
+
+    private static final Logger log = LoggerFactory.getLogger(SocketClient.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -49,7 +52,10 @@ public class SocketClient {
     private static void sendMessage(byte[] message, int commandId, boolean isRecive) throws Exception {
         try (Socket socket = new Socket()) {
 
-            socket.connect(new InetSocketAddress("172.16.112.68", 7800));
+            String ip = NetUtils.getLocalIp();
+            log.info("开始与[{}:7800] 通信", ip);
+
+            socket.connect(new InetSocketAddress(ip, 7800));
 
             OutputStream out = socket.getOutputStream();
             out.write(commandId);
@@ -57,7 +63,7 @@ public class SocketClient {
             out.write(message);
             out.flush();
 
-            log.info("commandId:{}, RemoteAddress:{}, LocalAddress:{}, write size::{}", commandId, socket.getRemoteSocketAddress(), socket.getLocalAddress(), message.length);
+            log.info("commandId:{}, write size::{}", commandId, message.length);
 
             if (!isRecive) {
                 TimeUnit.SECONDS.sleep(1);

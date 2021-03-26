@@ -1,9 +1,11 @@
 package co.wangming.nsb.springboot.register;
 
 import co.wangming.nsb.exception.RegisterException;
+import co.wangming.nsb.springboot.BeanPostProcessor.CommandSenderBeanPostProcessor;
 import co.wangming.nsb.springboot.CommandNameGenerator;
 import co.wangming.nsb.springboot.CommandScan;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;
@@ -23,8 +25,9 @@ import java.util.Set;
 /**
  * Created By WangMing On 2020-01-02
  **/
-@Slf4j
 public abstract class AbstractCommandScannerRegistrar implements ResourceLoaderAware, ImportBeanDefinitionRegistrar {
+
+    private static final Logger log = LoggerFactory.getLogger(CommandSenderBeanPostProcessor.class);
 
     protected ResourceLoader resourceLoader;
 

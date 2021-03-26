@@ -5,7 +5,8 @@ import co.wangming.nsb.springboot.SpringContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +14,9 @@ import java.util.List;
 /**
  * Created By WangMing On 2019-12-07
  **/
-@Slf4j
 public class CommandDispatcher {
+
+    private static final Logger log = LoggerFactory.getLogger(CommandDispatcher.class);
 
     public static void dispatch(ChannelHandlerContext ctx, int messageId, byte[] messageBytes) throws Exception {
 

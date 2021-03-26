@@ -7,7 +7,8 @@ import co.wangming.nsb.netty.client.CommandTemplate;
 import co.wangming.nsb.samples.protobuf.Search;
 import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
@@ -15,14 +16,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created By WangMing On 2019-12-07
  **/
-@Slf4j
 @CommandController
 public class SimpleCommand {
+
+    private static final Logger log = LoggerFactory.getLogger(SimpleCommand.class);
 
     @Autowired
     private SimpleService simpleService;
 
-    @CommandSender(host = "localhost", port = 7800)
+    @CommandSender(host = "localip", port = 7800)
     private CommandTemplate<GeneratedMessageV3> commandTemplate;
 
     @CommandMapping(requestId = 1)

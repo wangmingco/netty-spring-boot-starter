@@ -5,7 +5,6 @@ import co.wangming.nsb.context.ContextCache;
 import co.wangming.nsb.context.ContextWrapper;
 import co.wangming.nsb.springboot.register.CommonScannerRegistrar;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 
 import java.lang.reflect.Method;
@@ -18,7 +17,6 @@ import java.util.Map;
  *
  * Created By WangMing On 2019-12-20
  **/
-@Slf4j
 public class UnknowProtocolProcessor implements ProtocolProcessor<byte[], Object> {
 
     private Class parameterType;

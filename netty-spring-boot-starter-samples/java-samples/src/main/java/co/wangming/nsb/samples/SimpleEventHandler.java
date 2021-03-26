@@ -1,14 +1,16 @@
 package co.wangming.nsb.samples;
 
 import co.wangming.nsb.event.*;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created By WangMing On 2019-12-20
  **/
 @EventRegister
-@Slf4j
 public class SimpleEventHandler extends EventHandlerAdaptor<User> {
+
+    private static final Logger log = LoggerFactory.getLogger(SimpleEventHandler.class);
 
     @Override
     public User fireChannelActiveEvent(ChannelActiveEvent channelActiveEvent) {

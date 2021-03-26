@@ -2,7 +2,8 @@ package co.wangming.nsb.springboot;
 
 import co.wangming.nsb.command.CommandController;
 import co.wangming.nsb.command.CommandMapping;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;
@@ -10,8 +11,9 @@ import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 /**
  * Created By WangMing On 2019-12-07
  **/
-@Slf4j
 public class CommandNameGenerator extends AnnotationBeanNameGenerator {
+
+    private static final Logger log = LoggerFactory.getLogger(CommandNameGenerator.class);
 
     @Override
     public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
