@@ -1,14 +1,12 @@
 package co.wangming.nsb.command;
 
 import co.wangming.nsb.processors.ProtocolProcessor;
-import lombok.Data;
 
 import java.util.List;
 
 /**
  * Created By WangMing On 2019-12-11
  **/
-@Data
 public abstract class CommandProxy {
 
     public static final String PARAMETER_PROCESSORS = "parameterProtocolProcessors";
@@ -24,4 +22,16 @@ public abstract class CommandProxy {
     private ProtocolProcessor returnProtocolProcessor;
 
     public abstract Object invoke(List paramters);
+
+    public List<ProtocolProcessor> getParameterProtocolProcessors() {
+        return parameterProtocolProcessors;
+    }
+
+    public ProtocolProcessor getReturnProtocolProcessor() {
+        return returnProtocolProcessor;
+    }
+
+    public int getResponseId() {
+        return responseId;
+    }
 }

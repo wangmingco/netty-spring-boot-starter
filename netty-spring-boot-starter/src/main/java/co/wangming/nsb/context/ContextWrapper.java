@@ -1,13 +1,27 @@
 package co.wangming.nsb.context;
 
-import lombok.Data;
 
 /**
  * Created By WangMing On 2019-12-22
  **/
-@Data
 public class ContextWrapper {
 
     private Class contextType;
     private Object context;
+
+    public Class getContextType() {
+        return contextType;
+    }
+
+    public void setContextType(Class contextType) {
+        this.contextType = contextType;
+    }
+
+    public Object getContext() {
+        return context;
+    }
+
+    public void setContext(Object context) {
+        this.context = context;
+    }
 }

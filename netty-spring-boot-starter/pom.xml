@@ -14,7 +14,6 @@
 		<netty.version>4.0.56.Final</netty.version>
 		<protobuf.version>3.11.1</protobuf.version>
 		<javassist.version>3.26.0-GA</javassist.version>
-		<lombok.version>1.18.10</lombok.version>
 		<commons.lang3.version>3.9</commons.lang3.version>
 	</properties>
 
@@ -66,12 +65,6 @@
 			<artifactId>spring-boot-loader</artifactId>
 			<version>${spring.boot.version}</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
 		</dependency>
 
 		<dependency>
@@ -133,7 +126,9 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>

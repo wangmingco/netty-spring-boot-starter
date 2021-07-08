@@ -6,11 +6,12 @@ import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.ClassFile;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.annotation.Annotation;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,10 +25,11 @@ import java.util.stream.Collectors;
 /**
  * Created By WangMing On 2019-12-11
  **/
-@Slf4j
 public enum CommandProxyMaker {
 
     INSTANCE;
+
+    private static final Logger log = LoggerFactory.getLogger(CommandProxyMaker.class);
 
     private ClassPool classPool;
     private Object lock = new Object();
@@ -57,7 +59,6 @@ public enum CommandProxyMaker {
         }
     }
 
-    @Slf4j
     private static class SpringClassPath implements ClassPath {
 
         @Override
@@ -165,7 +166,7 @@ public enum CommandProxyMaker {
 
         CtField beanField = CtField.make(type, proxyClass);
 
-        AnnotationsAttribute attr = getAnnotationsAttribute(proxyClass, Resource.class.getCanonicalName());
+        AnnotationsAttribute attr = getAnnotationsAttribute(proxyClass, Autowired.class.getCanonicalName());
         beanField.getFieldInfo().addAttribute(attr);
 
         proxyClass.addField(beanField);

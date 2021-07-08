@@ -2,9 +2,9 @@ import co.wangming.nsb.command.CommandProxy;
 import co.wangming.nsb.util.CommandProxyMaker;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -49,7 +49,7 @@ public class CommandProxyMakerTest {
         Assert.assertEquals(targetClass, testClassField.getType());
         Assert.assertEquals("testClass", testClassField.getName());
         Assert.assertEquals(1, testClassField.getAnnotations().length);
-        Assert.assertEquals(Resource.class, testClassField.getAnnotations()[0].annotationType());
+        Assert.assertEquals(Autowired.class, testClassField.getAnnotations()[0].annotationType());
     }
 
     @Test

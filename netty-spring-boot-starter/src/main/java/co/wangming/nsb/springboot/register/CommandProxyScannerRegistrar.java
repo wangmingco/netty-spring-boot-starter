@@ -7,7 +7,8 @@ import co.wangming.nsb.processors.ProtocolProcessor;
 import co.wangming.nsb.processors.ProtocolProcessorRegister;
 import co.wangming.nsb.processors.UnknowProtocolProcessor;
 import co.wangming.nsb.util.CommandProxyMaker;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -22,8 +23,9 @@ import java.util.*;
  * <p>
  * Created By WangMing On 2019-12-06
  **/
-@Slf4j
 public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistrar {
+
+    private static final Logger log = LoggerFactory.getLogger(CommandProxyScannerRegistrar.class);
 
     private static List<Class> classes = new ArrayList() {{
         add(CommandController.class);

@@ -1,7 +1,8 @@
 package co.wangming.nsb.springboot.register;
 
 import co.wangming.nsb.event.EventRegister;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,9 @@ import java.util.List;
  * <p>
  * Created By WangMing On 2019-12-06
  **/
-@Slf4j
 public class CommonScannerRegistrar extends AbstractCommandScannerRegistrar {
+
+    private static final Logger log = LoggerFactory.getLogger(CommonScannerRegistrar.class);
 
     private static List<Class> classes = new ArrayList() {{
         add(EventRegister.class);

@@ -1,14 +1,17 @@
 package co.wangming.nsb.processors;
 
+import co.wangming.nsb.command.CommandDispatcher;
 import co.wangming.nsb.context.ContextCache;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created By WangMing On 2019-12-20
  **/
-@Slf4j
 public class ContextProtocolProcessor implements ProtocolProcessor<byte[], Object> {
+
+    private static final Logger log = LoggerFactory.getLogger(CommandDispatcher.class);
 
     @Override
     public void setParameterType(Class parameterType) {

@@ -6,15 +6,17 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.timeout.IdleStateEvent;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 /**
  * Created By WangMing On 2019-12-06
  **/
-@Slf4j
 public class NettyReciveHandler extends ByteToMessageDecoder {
+
+    private static final Logger log = LoggerFactory.getLogger(NettyReciveHandler.class);
 
     private static final int MIN_PACKAGE_SIZE = 8;
 

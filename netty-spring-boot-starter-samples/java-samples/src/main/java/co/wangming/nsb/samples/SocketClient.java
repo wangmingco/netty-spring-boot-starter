@@ -1,7 +1,8 @@
 package co.wangming.nsb.samples;
 
 import co.wangming.nsb.samples.protobuf.Search;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +14,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created By WangMing On 2019-12-08
  **/
-@Slf4j
 public class SocketClient {
+
+    private static final Logger log = LoggerFactory.getLogger(SocketClient.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
 

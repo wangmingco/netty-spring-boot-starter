@@ -13,9 +13,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
-import lombok.Builder;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -25,10 +24,9 @@ import java.util.Enumeration;
 /**
  * Created By WangMing On 2019-12-06
  **/
-@Data
-@Builder
-@Slf4j
 public class NettyServer {
+
+    private static final Logger log = LoggerFactory.getLogger(NettyServer.class);
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;

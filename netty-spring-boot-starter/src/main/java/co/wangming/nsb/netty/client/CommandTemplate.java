@@ -7,17 +7,17 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
 /**
  * Created By WangMing On 2020-01-02
  **/
-@Data
-@Slf4j
 public class CommandTemplate<T> {
+
+    private static final Logger log = LoggerFactory.getLogger(CommandTemplate.class);
 
     private Class tClass;
 
@@ -90,5 +90,45 @@ public class CommandTemplate<T> {
                 log.error("数据发送失败", future.cause());
             }
         });
+    }
+
+    public Class gettClass() {
+        return tClass;
+    }
+
+    public void settClass(Class tClass) {
+        this.tClass = tClass;
+    }
+
+    public Bootstrap getB() {
+        return b;
+    }
+
+    public void setB(Bootstrap b) {
+        this.b = b;
+    }
+
+    public Channel getConnectChannel() {
+        return connectChannel;
+    }
+
+    public void setConnectChannel(Channel connectChannel) {
+        this.connectChannel = connectChannel;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
     }
 }

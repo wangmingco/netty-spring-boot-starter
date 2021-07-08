@@ -2,8 +2,9 @@ package co.wangming.nsb.springboot.BeanPostProcessor;
 
 import co.wangming.nsb.command.CommandSender;
 import co.wangming.nsb.netty.client.CommandTemplate;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -15,9 +16,10 @@ import java.lang.reflect.Type;
 /**
  * Created By WangMing On 2020-01-02
  **/
-@Slf4j
 @Component
 public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(CommandSenderBeanPostProcessor.class);
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -60,7 +62,7 @@ public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
 
             try {
                 Class<?> genericType = Class.forName(args[0].getTypeName());
-                commandTemplate.setTClass(genericType);
+                commandTemplate.settClass(genericType);
             } catch (ClassNotFoundException e) {
                 log.error("", e);
             }
