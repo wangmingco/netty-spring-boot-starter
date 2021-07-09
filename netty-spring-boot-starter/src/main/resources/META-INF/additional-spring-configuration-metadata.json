@@ -1,199 +1,199 @@
 {
   "properties": [
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.ADDRESS",
       "description": "",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.PORT",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.readerIdleTimeSeconds",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.writerIdleTimeSeconds",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.allIdleTimeSeconds",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.bossGroupThreadSize",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.workGroupThreadSize",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.nettyServerHandler",
       "description": "",
       "type": "java.lang.String"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.allocator",
       "description": "",
       "type": "java.lang.Class<? extends io.netty.buffer.ByteBufAllocator>"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.rcvbufAllocator",
       "description": "",
       "type": "java.lang.Class<? extends io.netty.channel.RecvByteBufAllocator>"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.messageSizeEstimator",
       "description": "",
       "type": "java.lang.Class<? extends io.netty.channel.MessageSizeEstimator>"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.connectTimeoutMillis",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.maxMessagesPerRead",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.writeSpinCount",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.writeBufferHighWaterMark",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.writeBufferLowWaterMark",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.allowHalfClosure",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.autoRead",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soBroadcast",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soKeepalive",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soSndbuf",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soRcvbuf",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soReuseaddr",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soLinger",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soBacklog",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.soTimeout",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.ipTos",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.ipMulticastAddr",
       "description": "",
       "type": "java.net.InetAddress"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.ipMulticastIf",
       "description": "",
       "type": "java.net.NetworkInterface"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.ipMulticastTtl",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.ipMulticastLoopDisabled",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.tcpNodelay",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
-      "sourceType": "co.wangming.nsb.springboot.SpringBootNettyProperties",
+      "sourceType": "co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties",
       "name": "spring.boot.netty.singleEventexecutorPerGroup",
       "description": "",
       "type": "java.lang.Boolean"

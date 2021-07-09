@@ -1,6 +1,6 @@
 package co.wangming.nsb.samples;
 
-import co.wangming.nsb.springboot.CommandScan;
+import co.wangming.nsb.server.spring.CommandScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

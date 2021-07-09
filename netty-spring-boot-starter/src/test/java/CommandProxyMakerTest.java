@@ -1,5 +1,5 @@
-import co.wangming.nsb.command.CommandProxy;
-import co.wangming.nsb.util.CommandProxyMaker;
+import co.wangming.nsb.server.command.CommandProxy;
+import co.wangming.nsb.server.command.CommandProxyMaker;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

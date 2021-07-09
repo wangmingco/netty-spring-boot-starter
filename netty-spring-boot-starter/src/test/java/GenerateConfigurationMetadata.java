@@ -1,4 +1,4 @@
-import co.wangming.nsb.springboot.SpringBootNettyProperties;
+import co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

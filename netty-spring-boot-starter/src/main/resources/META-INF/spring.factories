@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=co.wangming.nsb.springboot.SpringBootNettyConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=co.wangming.nsb.server.spring.springboot.SpringBootNettyConfiguration

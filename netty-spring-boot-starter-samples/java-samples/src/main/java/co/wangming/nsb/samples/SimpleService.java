@@ -1,6 +1,6 @@
 package co.wangming.nsb.samples;
 
-import co.wangming.nsb.springboot.register.CommandProxyScannerRegistrar;
+import co.wangming.nsb.server.spring.CommandProxyScannerRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
