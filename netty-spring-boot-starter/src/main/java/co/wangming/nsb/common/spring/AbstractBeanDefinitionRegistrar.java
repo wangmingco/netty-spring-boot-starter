@@ -1,6 +1,5 @@
 package co.wangming.nsb.common.spring;
 
-import co.wangming.nsb.server.command.CommandScan;
 import co.wangming.nsb.server.exception.RegisterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +42,7 @@ public abstract class AbstractBeanDefinitionRegistrar implements ResourceLoaderA
      */
     protected String[] getScanPackages(AnnotationMetadata annotationMetadata) {
         //获取所有注解的属性和值
-        AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(CommandScan.class.getName()));
+        AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(RegistrarScan.class.getName()));
         //获取到basePackage的值
         String[] basePackages = annoAttrs.getStringArray("basePackage");
         //如果没有设置basePackage 扫描路径,就扫描对应包下面的值

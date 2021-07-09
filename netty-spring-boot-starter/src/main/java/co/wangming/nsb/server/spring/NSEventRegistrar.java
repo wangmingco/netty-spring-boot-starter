@@ -9,7 +9,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -22,9 +22,10 @@ public class NSEventRegistrar extends AbstractBeanDefinitionRegistrar {
 
     private static final Logger log = LoggerFactory.getLogger(NSEventRegistrar.class);
 
-    private static List<Class> classes = new ArrayList() {{
-        add(NSEvent.class);
-    }};
+    @Override
+    public List<Class> getAnnotationTypeFilterClass() {
+        return Arrays.asList(NSEvent.class);
+    }
 
     @Override
     public BeanNameGenerator beanNameGenerator() {
@@ -33,11 +34,8 @@ public class NSEventRegistrar extends AbstractBeanDefinitionRegistrar {
 
     @Override
     public void process(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
+        log.info("注册 NSEvent");
         // non-impl
-    }
-
-    public List<Class> getAnnotationTypeFilterClass() {
-        return classes;
     }
 
 }

@@ -1,5 +1,6 @@
-package co.wangming.nsb.server.processors;
+package co.wangming.nsb.server.processors.protobuf;
 
+import co.wangming.nsb.server.processors.ProtocolProcessor;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.Parser;
 import io.netty.channel.ChannelHandlerContext;
@@ -11,7 +12,6 @@ import java.lang.reflect.Field;
 /**
  * Created By WangMing On 2019-12-20
  **/
-@ProtocolProcessorRegister(messageType = GeneratedMessageV3.class)
 public class GeneratedMessageV3Processor implements ProtocolProcessor<byte[], GeneratedMessageV3> {
 
     private static final Logger log = LoggerFactory.getLogger(GeneratedMessageV3Processor.class);

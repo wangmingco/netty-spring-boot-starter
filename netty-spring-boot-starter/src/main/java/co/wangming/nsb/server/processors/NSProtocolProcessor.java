@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 @ScannedCommand
-public @interface ProtocolProcessorRegister {
+public @interface NSProtocolProcessor {
 
     Class messageType();
 }
