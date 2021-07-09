@@ -1,8 +1,7 @@
 package co.wangming.nsb.client.spring;
 
 import co.wangming.nsb.client.command.CommandSender;
-import co.wangming.nsb.client.netty.CommandTemplate;
-import org.apache.commons.lang3.StringUtils;
+import co.wangming.nsb.client.command.CommandTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -34,6 +33,7 @@ public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
             if (commandSender == null) {
                 continue;
             }
+
             CommandTemplate commandTemplate = null;
             try {
                 field.setAccessible(true);
@@ -43,7 +43,7 @@ public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
                 log.error("", e);
             }
 
-            setHostAndPort(commandSender, commandTemplate);
+            commandTemplate.connect(commandSender.host(), commandSender.port());
 
             setGenericType(field, commandTemplate);
         }
@@ -70,13 +70,4 @@ public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
 
     }
 
-    private void setHostAndPort(CommandSender commandSender, CommandTemplate commandTemplate) {
-        String host = commandSender.host();
-        int port = commandSender.port();
-
-        if (StringUtils.isNotEmpty(host) && port > 0) {
-            commandTemplate.setHost(host);
-            commandTemplate.setPort(port);
-        }
-    }
 }

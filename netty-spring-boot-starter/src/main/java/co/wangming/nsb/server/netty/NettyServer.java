@@ -45,7 +45,7 @@ public class NettyServer {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline()
-                                    .addLast(new NettyReciveHandler())
+                                    .addLast(new NettyServerHandler())
                                     .addLast(new IdleStateHandler(
                                             springBootNettyProperties.getReaderIdleTimeSeconds(),
                                             springBootNettyProperties.getWriterIdleTimeSeconds(),
@@ -80,6 +80,10 @@ public class NettyServer {
     }
 
     public static String getServerIp() {
+        if (1 == 1) {
+            return "0.0.0.0";
+        }
+
         String localip = null;// 本地IP，如果没有配置外网IP则返回它
         String netip = null;// 外网IP
         try {

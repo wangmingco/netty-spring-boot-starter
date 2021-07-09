@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created By WangMing On 2019-12-06
  **/
-public class NettyReciveHandler extends ByteToMessageDecoder {
+public class NettyServerHandler extends ByteToMessageDecoder {
 
-    private static final Logger log = LoggerFactory.getLogger(NettyReciveHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(NettyServerHandler.class);
 
     private static final int MIN_PACKAGE_SIZE = 8;
 

@@ -1,7 +1,7 @@
 package co.wangming.nsb.samples;
 
 import co.wangming.nsb.client.command.CommandSender;
-import co.wangming.nsb.client.netty.CommandTemplate;
+import co.wangming.nsb.client.command.CommandTemplate;
 import co.wangming.nsb.samples.protobuf.Search;
 import co.wangming.nsb.server.command.CommandController;
 import co.wangming.nsb.server.command.CommandMapping;

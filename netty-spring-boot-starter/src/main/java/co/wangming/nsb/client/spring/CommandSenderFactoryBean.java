@@ -1,7 +1,7 @@
 package co.wangming.nsb.client.spring;
 
-import co.wangming.nsb.client.netty.CommandTemplate;
-import co.wangming.nsb.client.netty.CommandTemplateFactory;
+import co.wangming.nsb.client.command.CommandTemplate;
+import co.wangming.nsb.client.netty.NettyClient;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -13,7 +13,7 @@ public class CommandSenderFactoryBean implements FactoryBean<CommandTemplate>, I
 
     @Override
     public CommandTemplate getObject() {
-        return CommandTemplateFactory.INSTANCE.instance();
+        return new CommandTemplate();
     }
 
     @Override
@@ -28,11 +28,11 @@ public class CommandSenderFactoryBean implements FactoryBean<CommandTemplate>, I
 
     @Override
     public void destroy() throws Exception {
-        CommandTemplateFactory.INSTANCE.destroy();
+        NettyClient.INSTANCE.destroy();
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        CommandTemplateFactory.INSTANCE.init();
+        NettyClient.INSTANCE.init();
     }
 }
