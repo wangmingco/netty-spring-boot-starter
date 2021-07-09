@@ -23,6 +23,26 @@ public abstract class CommandProxy {
 
     public abstract Object invoke(List paramters);
 
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
+    public void setResponseId(int responseId) {
+        this.responseId = responseId;
+    }
+
+    public void setParameterProtocolProcessors(List<ProtocolProcessor> parameterProtocolProcessors) {
+        this.parameterProtocolProcessors = parameterProtocolProcessors;
+    }
+
+    public void setReturnProtocolProcessor(ProtocolProcessor returnProtocolProcessor) {
+        this.returnProtocolProcessor = returnProtocolProcessor;
+    }
+
     public List<ProtocolProcessor> getParameterProtocolProcessors() {
         return parameterProtocolProcessors;
     }
