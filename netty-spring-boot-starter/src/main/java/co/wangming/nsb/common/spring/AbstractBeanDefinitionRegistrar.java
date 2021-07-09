@@ -1,4 +1,4 @@
-package co.wangming.nsb.common;
+package co.wangming.nsb.common.spring;
 
 import co.wangming.nsb.server.command.CommandScan;
 import co.wangming.nsb.server.exception.RegisterException;

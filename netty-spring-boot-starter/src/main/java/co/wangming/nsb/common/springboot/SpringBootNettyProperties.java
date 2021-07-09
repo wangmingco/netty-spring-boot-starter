@@ -1,4 +1,4 @@
-package co.wangming.nsb.server.spring.springboot;
+package co.wangming.nsb.common.springboot;
 
 import io.netty.channel.ChannelOption;
 import org.springframework.boot.context.properties.ConfigurationProperties;

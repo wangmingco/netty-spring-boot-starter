@@ -1,6 +1,6 @@
 package co.wangming.nsb.server.spring;
 
-import co.wangming.nsb.common.AbstractBeanDefinitionRegistrar;
+import co.wangming.nsb.common.spring.AbstractBeanDefinitionRegistrar;
 import co.wangming.nsb.server.command.CommandController;
 import co.wangming.nsb.server.command.CommandMapping;
 import co.wangming.nsb.server.command.CommandProxy;

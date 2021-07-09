@@ -1,6 +1,6 @@
 package co.wangming.nsb.server.netty;
 
-import co.wangming.nsb.server.spring.springboot.SpringBootNettyProperties;
+import co.wangming.nsb.common.springboot.SpringBootNettyProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;

@@ -1,6 +1,6 @@
 package co.wangming.nsb.server.spring;
 
-import co.wangming.nsb.common.AbstractBeanDefinitionRegistrar;
+import co.wangming.nsb.common.spring.AbstractBeanDefinitionRegistrar;
 import co.wangming.nsb.server.event.NSEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

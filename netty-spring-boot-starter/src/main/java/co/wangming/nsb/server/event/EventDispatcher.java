@@ -1,6 +1,6 @@
 package co.wangming.nsb.server.event;
 
-import co.wangming.nsb.common.SpringContext;
+import co.wangming.nsb.common.spring.SpringContext;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.Map;

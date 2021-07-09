@@ -1,8 +1,8 @@
-package co.wangming.nsb.server.spring.springboot;
+package co.wangming.nsb.common.springboot;
 
 import co.wangming.nsb.client.spring.CommandSenderBeanPostProcessor;
 import co.wangming.nsb.client.spring.CommandSenderFactoryBean;
-import co.wangming.nsb.common.SpringContext;
+import co.wangming.nsb.common.spring.SpringContext;
 import co.wangming.nsb.server.netty.NettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

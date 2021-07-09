@@ -1,7 +1,7 @@
 package co.wangming.nsb.client.command;
 
 import co.wangming.nsb.client.netty.ChannelProxy;
-import co.wangming.nsb.common.SpringContext;
+import co.wangming.nsb.common.spring.SpringContext;
 import co.wangming.nsb.server.processors.ProtocolProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

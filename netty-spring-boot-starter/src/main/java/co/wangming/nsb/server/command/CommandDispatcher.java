@@ -1,6 +1,6 @@
 package co.wangming.nsb.server.command;
 
-import co.wangming.nsb.common.SpringContext;
+import co.wangming.nsb.common.spring.SpringContext;
 import co.wangming.nsb.server.processors.ProtocolProcessor;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;

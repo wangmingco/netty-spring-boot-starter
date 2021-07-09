@@ -1,4 +1,4 @@
-package co.wangming.nsb.common;
+package co.wangming.nsb.common.spring;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
