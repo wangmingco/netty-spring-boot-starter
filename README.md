@@ -155,6 +155,7 @@ public class SimpleEventHandler implements EventHandler<String> {
 }
 ```
 通过注解EventRegister和实现EventHandler接口, 即可自定义一个事件处理器, 当前支持
+
 * 连接接入事件
 * 连接断开事件
 * 异常事件
@@ -163,9 +164,13 @@ public class SimpleEventHandler implements EventHandler<String> {
 * 读写超时时间
 
 ## 架构图
+
 ![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture.jpg)
 
+![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture1.jpg)
+
 ## TODO
+
 * 性能优化, 在收发消息时避免申请堆内内存
 * 支持其他消息编码([thrift](https://thrift.apache.org/) 等)
 
