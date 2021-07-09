@@ -24,7 +24,7 @@ public class SimpleCommand {
     @Autowired
     private SimpleService simpleService;
 
-    @CommandSender(host = "localhost", port = 7800)
+    @CommandSender(host = "localip", port = 7800)
     private CommandTemplate<GeneratedMessageV3> commandTemplate;
 
     @CommandMapping(requestId = 1)
