@@ -1,10 +1,12 @@
-package co.wangming.nsb.server.spring;
+package co.wangming.nsb.common;
 
+import co.wangming.nsb.server.command.CommandScan;
 import co.wangming.nsb.server.exception.RegisterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -22,9 +24,9 @@ import java.util.Set;
 /**
  * Created By WangMing On 2020-01-02
  **/
-public abstract class AbstractCommandScannerRegistrar implements ResourceLoaderAware, ImportBeanDefinitionRegistrar {
+public abstract class AbstractBeanDefinitionRegistrar implements ResourceLoaderAware, ImportBeanDefinitionRegistrar {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractCommandScannerRegistrar.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractBeanDefinitionRegistrar.class);
 
     protected ResourceLoader resourceLoader;
 
@@ -76,7 +78,7 @@ public abstract class AbstractCommandScannerRegistrar implements ResourceLoaderA
         }
 
         //这里实现的是根据名称来注入
-        commandClassPathScanner.setBeanNameGenerator(new CommandNameGenerator());
+        commandClassPathScanner.setBeanNameGenerator(beanNameGenerator());
 
         //扫描指定路径下的接口
         Set<BeanDefinitionHolder> beanDefinitionHolders = commandClassPathScanner.doScan(scanPackages);
@@ -86,10 +88,6 @@ public abstract class AbstractCommandScannerRegistrar implements ResourceLoaderA
         } catch (final Exception e) {
             throw new RegisterException(e);
         }
-    }
-
-    public void process(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
-
     }
 
     public class AbstractClassPathScanner extends ClassPathBeanDefinitionScanner {
@@ -105,8 +103,11 @@ public abstract class AbstractCommandScannerRegistrar implements ResourceLoaderA
             }
             return super.doScan(basePackages);
         }
-
     }
+
+    public abstract BeanNameGenerator beanNameGenerator();
+
+    public abstract void process(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception;
 
     public abstract List<Class> getAnnotationTypeFilterClass();
 }

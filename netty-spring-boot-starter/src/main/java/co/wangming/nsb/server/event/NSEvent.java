@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 @ScannedCommand
-public @interface EventRegister {
+public @interface NSEvent {
 
 }

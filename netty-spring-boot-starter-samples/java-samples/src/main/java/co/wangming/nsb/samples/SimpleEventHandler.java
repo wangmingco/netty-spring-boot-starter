@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created By WangMing On 2019-12-20
  **/
-@EventRegister
+@NSEvent
 public class SimpleEventHandler extends EventHandlerAdaptor<User> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleEventHandler.class);

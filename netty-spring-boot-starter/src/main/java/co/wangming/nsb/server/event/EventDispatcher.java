@@ -11,7 +11,7 @@ import java.util.Map;
 public class EventDispatcher {
 
     public static void dispatchChannelActiveEvent(ChannelHandlerContext ctx) {
-        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(NSEvent.class);
         for (Object value : eventHandlers.values()) {
             EventHandler eventHandler = (EventHandler) value;
 
@@ -22,7 +22,7 @@ public class EventDispatcher {
     }
 
     public static void dispatchChannelInactiveEvent(ChannelHandlerContext ctx) {
-        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(NSEvent.class);
         for (Object value : eventHandlers.values()) {
             EventHandler eventHandler = (EventHandler) value;
             ChannelInactiveEvent channelActiveEvent = new ChannelInactiveEvent();
@@ -32,7 +32,7 @@ public class EventDispatcher {
     }
 
     public static void dispatchExceptionEvent(ChannelHandlerContext ctx, Throwable cause) {
-        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(NSEvent.class);
         for (Object value : eventHandlers.values()) {
             EventHandler eventHandler = (EventHandler) value;
 
@@ -44,7 +44,7 @@ public class EventDispatcher {
     }
 
     public static void dispatchReaderIdleEvent(ChannelHandlerContext ctx) {
-        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(NSEvent.class);
         for (Object value : eventHandlers.values()) {
             EventHandler eventHandler = (EventHandler) value;
 
@@ -55,7 +55,7 @@ public class EventDispatcher {
     }
 
     public static void dispatchWriterIdleEvent(ChannelHandlerContext ctx) {
-        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(NSEvent.class);
         for (Object value : eventHandlers.values()) {
             EventHandler eventHandler = (EventHandler) value;
 
@@ -66,7 +66,7 @@ public class EventDispatcher {
     }
 
     public static void dispatchAllIdleEvent(ChannelHandlerContext ctx) {
-        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(NSEvent.class);
         for (Object value : eventHandlers.values()) {
             EventHandler eventHandler = (EventHandler) value;
 
@@ -77,7 +77,7 @@ public class EventDispatcher {
     }
 
     public static void dispatchUnknowEvent(ChannelHandlerContext ctx) {
-        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(EventRegister.class);
+        Map<String, Object> eventHandlers = SpringContext.getBeansWithAnnotation(NSEvent.class);
         for (Object value : eventHandlers.values()) {
             EventHandler eventHandler = (EventHandler) value;
 

@@ -1,5 +1,6 @@
 package co.wangming.nsb.server.spring;
 
+import co.wangming.nsb.common.AbstractBeanDefinitionRegistrar;
 import co.wangming.nsb.server.command.CommandController;
 import co.wangming.nsb.server.command.CommandMapping;
 import co.wangming.nsb.server.command.CommandProxy;
@@ -10,10 +11,13 @@ import co.wangming.nsb.server.processors.UnknowProtocolProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanNameGenerator;
+import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -23,9 +27,9 @@ import java.util.*;
  * <p>
  * Created By WangMing On 2019-12-06
  **/
-public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistrar {
+public class CommandControllerRegistrar extends AbstractBeanDefinitionRegistrar {
 
-    private static final Logger log = LoggerFactory.getLogger(CommandProxyScannerRegistrar.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandControllerRegistrar.class);
 
     private static List<Class> classes = new ArrayList() {{
         add(CommandController.class);
@@ -49,6 +53,40 @@ public class CommandProxyScannerRegistrar extends AbstractCommandScannerRegistra
             this.beanClass = beanClass;
             this.beanDefinitionHolder = beanDefinitionHolder;
         }
+    }
+
+    @Override
+    public BeanNameGenerator beanNameGenerator() {
+        return new CommandNameGenerator();
+    }
+
+    public static class CommandNameGenerator extends AnnotationBeanNameGenerator {
+
+        private static final Logger log = LoggerFactory.getLogger(CommandNameGenerator.class);
+
+        @Override
+        public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
+            String beanClassName = definition.getBeanClassName();
+            try {
+                Class<?> aClass = Class.forName(beanClassName);
+                CommandController commandController = aClass.getAnnotation(CommandController.class);
+                if (commandController != null) {
+                    String className = aClass.getSimpleName();
+                    className = className.substring(0, 1).toLowerCase() + className.substring(1);
+                    return className;
+                }
+                CommandMapping commandMapping = aClass.getAnnotation(CommandMapping.class);
+                if (commandMapping != null) {
+                    return beanClassName;
+                }
+                return super.generateBeanName(definition, registry);
+            } catch (ClassNotFoundException e) {
+                log.error("getNameByServiceFindAnntation error:{}", beanClassName, e);
+                //走父类的方法
+                return super.generateBeanName(definition, registry);
+            }
+        }
+
     }
 
     /**
