@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Map;
  * <p>
  * Created By WangMing On 2019-12-20
  **/
-public class UnknowProtocolProcessor implements ProtocolProcessor<byte[], Object> {
+public class UnknowProtocolProcessor implements ProtocolProcessor<ByteBuffer, Object> {
 
     private static final Logger log = LoggerFactory.getLogger(UnknowProtocolProcessor.class);
 
@@ -31,7 +32,7 @@ public class UnknowProtocolProcessor implements ProtocolProcessor<byte[], Object
     }
 
     @Override
-    public Object deserialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
+    public Object deserialize(ChannelHandlerContext ctx, ByteBuffer bytes) throws Exception {
         ContextWrapper contextWrapper = ContextCache.get(ctx);
         if (parameterType.isAssignableFrom(contextWrapper.getContextType())) {
             return contextWrapper.getContext();

@@ -8,11 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 
 /**
  * Created By WangMing On 2019-12-20
  **/
-public class GeneratedMessageV3Processor implements ProtocolProcessor<byte[], GeneratedMessageV3> {
+public class GeneratedMessageV3Processor implements ProtocolProcessor<ByteBuffer, GeneratedMessageV3> {
 
     private static final Logger log = LoggerFactory.getLogger(GeneratedMessageV3Processor.class);
 
@@ -34,7 +35,7 @@ public class GeneratedMessageV3Processor implements ProtocolProcessor<byte[], Ge
     }
 
     @Override
-    public GeneratedMessageV3 deserialize(ChannelHandlerContext ctx, byte[] bytes) throws Exception {
+    public GeneratedMessageV3 deserialize(ChannelHandlerContext ctx, ByteBuffer bytes) throws Exception {
         return (GeneratedMessageV3) parser.parseFrom(bytes);
     }
 

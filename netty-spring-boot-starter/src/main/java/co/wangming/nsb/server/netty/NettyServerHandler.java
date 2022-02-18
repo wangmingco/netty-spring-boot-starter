@@ -9,6 +9,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
@@ -29,10 +30,10 @@ public class NettyServerHandler extends ByteToMessageDecoder {
 
         in.markReaderIndex();
 
-        // TODO 改成INT
         int messageId = in.readByte();
         int messageSize = in.readByte();
         int readableBytes = in.readableBytes();
+        int readerIndex = in.readerIndex();
 
         log.debug("接收到远端[{}]消息. messageSize:{}, readableBytes:{}", ctx.channel().remoteAddress(), messageSize, readableBytes);
         if (readableBytes < messageSize) {
@@ -40,13 +41,13 @@ public class NettyServerHandler extends ByteToMessageDecoder {
             return;
         }
 
-        log.debug("处理远端[{}]消息", ctx.channel().remoteAddress());
+        log.debug("处理远端[{}]消息, messageId:{}, readerIndex:{}, messageSize:{}", ctx.channel().remoteAddress(), messageId, readerIndex, messageSize);
 
-        // TODO 优化, 每次都分配一块内存很浪费资源
-        byte[] messageBytes = new byte[messageSize];
-        in.readBytes(messageBytes);
+        ByteBuf message = in.slice(readerIndex, messageSize);
+        in.readerIndex(readerIndex + messageSize);
+        ByteBuffer byteBuffer = message.nioBuffer();
 
-        CommandDispatcher.dispatch(ctx, messageId, messageBytes);
+        CommandDispatcher.dispatch(ctx, messageId, byteBuffer);
     }
 
     @Override

@@ -8,6 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class CommandDispatcher {
 
     private static final Logger log = LoggerFactory.getLogger(CommandDispatcher.class);
 
-    public static void dispatch(ChannelHandlerContext ctx, int messageId, byte[] messageBytes) throws Exception {
+    public static void dispatch(ChannelHandlerContext ctx, int messageId, ByteBuffer messageBytes) throws Exception {
 
         String proxyBeanName = CommandProxy.class.getSimpleName() + "$$" + messageId;
         CommandProxy commandProxy = (CommandProxy) SpringContext.getBean(proxyBeanName);
@@ -41,7 +42,7 @@ public class CommandDispatcher {
      * @param commandProxy
      * @return
      */
-    private static List getParameters(ChannelHandlerContext ctx, byte[] messageBytes, CommandProxy commandProxy) throws Exception {
+    private static List getParameters(ChannelHandlerContext ctx, ByteBuffer messageBytes, CommandProxy commandProxy) throws Exception {
 
         List<ProtocolProcessor> protocolProcessors = commandProxy.getParameterProtocolProcessors();
         List paramters = new ArrayList();
