@@ -3,6 +3,8 @@
 
 ![](https://github.com/wangmingco/netty-spring-boot-starter/blob/master/docs/nsbs.gif?raw=true)
 
+> 当前只支持Java 8
+
 ## 介绍
 * 支持TCP长连接消息转发到Spring容器
 * 支持自定义消息枚举类(`CommandController`, `CommandMapping`)
@@ -171,6 +173,6 @@ public class SimpleEventHandler implements EventHandler<String> {
 
 ## TODO
 
-* 性能优化, 在收发消息时避免申请堆内内存
+* 支持UDP
 * 支持其他消息编码([thrift](https://thrift.apache.org/) 等)
 
