@@ -15,7 +15,7 @@ public class CommandTemplate<T> {
 
     private ChannelProxy channelProxy;
 
-    private Class tClass;
+    private ProtocolProcessor<Void, T> protocolProcessor;
 
     public CommandTemplate() {
     }
@@ -24,12 +24,10 @@ public class CommandTemplate<T> {
         if (!channelProxy.isConnected()) {
             channelProxy.connect();
         }
-        if (tClass == null) {
+        if (protocolProcessor == null) {
             return;
         }
-        // TODO 抽象出能够自动识别多种协议
-        String protocolProcessorName = tClass.getSimpleName() + "ProtocolProcessor";
-        ProtocolProcessor<Void, T> protocolProcessor = (ProtocolProcessor) SpringContext.getBean(protocolProcessorName);
+
         byte[] bytearray = null;
         try {
             bytearray = protocolProcessor.serialize(null, msg);
@@ -39,12 +37,14 @@ public class CommandTemplate<T> {
         channelProxy.syncWrite(messageId, bytearray);
     }
 
-    public Class gettClass() {
-        return tClass;
-    }
-
     public void settClass(Class tClass) {
-        this.tClass = tClass;
+        // TODO 抽象出能够自动识别多种协议
+        String protocolProcessorName = tClass.getSimpleName() + "Processor";
+        try {
+            protocolProcessor = (ProtocolProcessor) SpringContext.getBean(protocolProcessorName);
+        } catch (Exception e) {
+            log.error("从Spring中找不到发送端的Processor: {}", protocolProcessorName, e);
+        }
     }
 
 
