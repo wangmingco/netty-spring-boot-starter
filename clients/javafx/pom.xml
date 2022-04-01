@@ -15,6 +15,7 @@
         <javafx.version>17.0.1</javafx.version>
         <javafx.maven.version>0.0.8</javafx.maven.version>
         <junit.version>5.8.1</junit.version>
+        <metrics.version>4.2.9</metrics.version>
     </properties>
 
     <dependencies>
@@ -46,6 +47,12 @@
             <groupId>co.wangming</groupId>
             <artifactId>netty-spring-boot-starter</artifactId>
             <version>0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${metrics.version}</version>
         </dependency>
 
     </dependencies>

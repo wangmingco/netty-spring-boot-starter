@@ -7,26 +7,29 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.wangming.nsb.javafx.MainController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.wangming.nsb.javafx.MainController">
    <children>
       <Pane prefHeight="600.0" prefWidth="165.0">
          <children>
             <Button fx:id="startBtn" layoutY="-1.0" mnemonicParsing="false" onMouseClicked="#onStartButtonClick" prefHeight="43.0" prefWidth="165.0" text="开始" />
             <Button fx:id="endBtn" layoutY="42.0" mnemonicParsing="false" onMouseClicked="#onEndButtonClick" prefHeight="43.0" prefWidth="165.0" text="结束" />
             <Label layoutY="85.0" prefHeight="35.0" prefWidth="43.0" text="线程数" />
-            <TextField fx:id="threadNum" layoutY="114.0" prefHeight="26.0" prefWidth="165.0" text="1" />
-            <Label layoutY="149.0" prefHeight="35.0" prefWidth="65.0" text="循环次数" />
-            <TextField fx:id="cycleNum" layoutY="176.0" prefHeight="26.0" prefWidth="165.0" text="1" />
+            <TextField fx:id="threadNumField" layoutY="114.0" prefHeight="26.0" prefWidth="165.0" text="9" />
+            <Label layoutY="149.0" prefHeight="35.0" prefWidth="65.0" text="任务数" />
+            <TextField fx:id="taskNumField" layoutY="176.0" prefHeight="26.0" prefWidth="165.0" text="1000" />
             <Label layoutY="213.0" prefHeight="35.0" prefWidth="87.0" text="单次沉睡毫秒" />
-            <TextField fx:id="sleepNum" layoutX="-1.0" layoutY="241.0" prefHeight="26.0" prefWidth="165.0" text="0" />
+            <TextField fx:id="sleepNumField" layoutX="-1.0" layoutY="241.0" prefHeight="26.0" prefWidth="165.0" text="0" />
             <Label layoutY="274.0" prefHeight="35.0" prefWidth="43.0" text="IP" />
-            <TextField fx:id="host" layoutX="-1.0" layoutY="299.0" prefHeight="26.0" prefWidth="165.0" text="127.0.0.1" />
+            <TextField fx:id="hostField" layoutX="-1.0" layoutY="299.0" prefHeight="26.0" prefWidth="165.0" text="127.0.0.1" />
             <Label layoutX="3.0" layoutY="330.0" prefHeight="35.0" prefWidth="43.0" text="端口" />
-            <TextField fx:id="port" layoutX="-1.0" layoutY="357.0" prefHeight="26.0" prefWidth="165.0" text="7800" />
+            <TextField fx:id="portField" layoutX="-1.0" layoutY="357.0" prefHeight="26.0" prefWidth="165.0" text="7800" />
             <Label layoutX="3.0" layoutY="389.0" prefHeight="35.0" prefWidth="132.0" text="重建连接间隔次数" />
-            <TextField fx:id="rebuildNum" layoutX="-1.0" layoutY="415.0" prefHeight="26.0" prefWidth="165.0" text="0" />
+            <TextField fx:id="rebuildNumField" layoutX="-1.0" layoutY="415.0" prefHeight="26.0" prefWidth="165.0" text="0" />
          </children>
       </Pane>
-      <ListView fx:id="listView" layoutX="165.0" layoutY="-1.0" prefHeight="600.0" prefWidth="635.0" />
+      <ListView fx:id="listView" layoutX="165.0" layoutY="89.0" prefHeight="711.0" prefWidth="1034.0" />
+      <Label layoutX="165.0" layoutY="61.0" prefHeight="35.0" prefWidth="65.0" text="任务信息" />
+      <Label layoutX="165.0" layoutY="1.0" prefHeight="35.0" prefWidth="65.0" text="线程池信息" />
+      <TextField fx:id="threadPoolField" layoutX="165.0" layoutY="29.0" prefHeight="26.0" prefWidth="1034.0" />
    </children>
 </AnchorPane>
