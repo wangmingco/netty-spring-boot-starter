@@ -1,9 +1,18 @@
 # netty-spring-boot-starter
-基于Netty的Spring Boot Starter工程.
 
-![](https://github.com/wangmingco/netty-spring-boot-starter/blob/master/docs/nsbs.gif?raw=true)
+将Netty嵌入到Spring Boot 环境中，可以在Spring环境中收发Socket原生消息，支持自定义消息解析，派发扩展。
 
-> 当前只支持Java 8
+## 架构图
+
+![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture.jpg)
+
+![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture1.jpg)
+
+## 运行demo视频
+
+![运行demo视频](https://github.com/wangmingco/netty-spring-boot-starter/blob/master/docs/nsbs.gif?raw=true)
+
+> 当前只支持Java 8. (视频托管在GitHub可能加载有些慢)
 
 ## 介绍
 * 支持TCP长连接消息转发到Spring容器
@@ -164,12 +173,6 @@ public class SimpleEventHandler implements EventHandler<String> {
 * 读超时时间
 * 写超时时间
 * 读写超时时间
-
-## 架构图
-
-![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture.jpg)
-
-![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture1.jpg)
 
 ## TODO
 
