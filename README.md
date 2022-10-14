@@ -4,9 +4,9 @@
 
 ## 架构图
 
-![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture.jpg)
+![](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture.jpg)
 
-![image](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture1.jpg)
+![](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture1.jpg)
 
 ## 运行demo视频
 
