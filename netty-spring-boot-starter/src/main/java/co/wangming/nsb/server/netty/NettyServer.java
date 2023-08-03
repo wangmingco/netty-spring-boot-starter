@@ -1,7 +1,7 @@
 package co.wangming.nsb.server.netty;
 
-import co.wangming.nsb.client.command.CommandSenderExecutor;
 import co.wangming.nsb.common.springboot.SpringBootNettyProperties;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -9,6 +9,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -28,12 +29,19 @@ public class NettyServer {
 
     private static final Logger log = LoggerFactory.getLogger(NettyServer.class);
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
+    private EventLoopGroup tcpBossGroup;
+    private EventLoopGroup tcpWorkerGroup;
+    private EventLoopGroup udpBossGroup;
+    private EventLoopGroup udpWorkerGroup;
 
-    public void start(SpringBootNettyProperties springBootNettyProperties) {
+    public void startTCP(SpringBootNettyProperties springBootNettyProperties) {
+        int port = springBootNettyProperties.getPort();
+        if (port == 0) {
+            log.info("Netty TCP Server Stopped");
+            return;
+        }
 
-        log.info("Netty Server starting...");
+        log.info("Netty TCP Server Starting...");
 
         try {
             EventLoopGroup bossGroup = new NioEventLoopGroup(springBootNettyProperties.getBossGroupThreadSize());
@@ -46,7 +54,7 @@ public class NettyServer {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline()
-                                    .addLast(new NettyServerHandler())
+                                    .addLast(new NettyServerTCPHandler())
                                     .addLast(new IdleStateHandler(
                                             springBootNettyProperties.getReaderIdleTimeSeconds(),
                                             springBootNettyProperties.getWriterIdleTimeSeconds(),
@@ -56,8 +64,6 @@ public class NettyServer {
                     });
 
             setOption(b, springBootNettyProperties);
-
-            int port = springBootNettyProperties.getPort();
 
             String ip = "0.0.0.0";
             if (springBootNettyProperties.getAddress() != null) {
@@ -69,12 +75,69 @@ public class NettyServer {
             ChannelFuture bindChannelFuture = null;
             bindChannelFuture = b.bind(ip, port).sync();
             bindChannelFuture.sync();
-            log.info("Netty Server listening at[{}:{}]", ip, port);
+            log.info("Netty TCP Server Listening At [{}:{}]", ip, port);
 
-            this.bossGroup = bossGroup;
-            this.workerGroup = workerGroup;
+            this.tcpBossGroup = bossGroup;
+            this.tcpWorkerGroup = workerGroup;
 
-            CommandSenderExecutor.sendCommands();
+        } catch (InterruptedException e) {
+            log.error("", e);
+            stop();
+        }
+    }
+
+    public void startUDP(SpringBootNettyProperties springBootNettyProperties) {
+        int port = springBootNettyProperties.getPort();
+        if (port == 0) {
+            log.info("Netty UDP Server Stopped");
+            return;
+        }
+
+        log.info("Netty UDP Server Starting...");
+
+        try {
+            EventLoopGroup bossGroup = new NioEventLoopGroup(springBootNettyProperties.getBossGroupThreadSize());
+
+            Bootstrap b = new Bootstrap();
+            b.group(bossGroup)
+                    .channel(NioDatagramChannel.class)
+//                    .option(ChannelOption.SO_BROADCAST, true)
+                    .handler(new NettyServerUDPHandler());
+
+//            ServerBootstrap  b = new ServerBootstrap();
+//            b.group(bossGroup, workerGroup)
+//                    .channel(NioServerSocketChannel.class)
+//                    .option(ChannelOption.SO_BROADCAST, true) // 广播模式
+//                    .handler(new LoggingHandler(LogLevel.DEBUG))
+//                    .childHandler(new ChannelInitializer<SocketChannel>() {
+//                        @Override
+//                        public void initChannel(SocketChannel ch) {
+//                            ch.pipeline()
+//                                    .addLast(new NettyServerHandler())
+//                                    .addLast(new IdleStateHandler(
+//                                            springBootNettyProperties.getReaderIdleTimeSeconds(),
+//                                            springBootNettyProperties.getWriterIdleTimeSeconds(),
+//                                            springBootNettyProperties.getAllIdleTimeSeconds()))
+//                            ;
+//                        }
+//                    });
+//
+//            setOption(b, springBootNettyProperties);
+
+            String ip = "0.0.0.0";
+            if (springBootNettyProperties.getAddress() != null) {
+                ip = springBootNettyProperties.getAddress();
+            } else {
+                ip = getServerIp();
+            }
+
+            ChannelFuture bindChannelFuture = null;
+            bindChannelFuture = b.bind(ip, port).sync();
+            bindChannelFuture.sync();
+            log.info("Netty UDP Server Listening At [{}:{}]", ip, port);
+
+            this.udpBossGroup = bossGroup;
+
         } catch (InterruptedException e) {
             log.error("", e);
             stop();
@@ -152,7 +215,8 @@ public class NettyServer {
     }
 
     public void stop() {
-        bossGroup.shutdownGracefully();
-        workerGroup.shutdownGracefully();
+        tcpBossGroup.shutdownGracefully();
+        tcpWorkerGroup.shutdownGracefully();
+        udpBossGroup.shutdownGracefully();
     }
 }

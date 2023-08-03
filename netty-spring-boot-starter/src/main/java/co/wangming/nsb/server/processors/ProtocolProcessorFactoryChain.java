@@ -19,11 +19,13 @@ public enum ProtocolProcessorFactoryChain {
     }
 
     public ProtocolProcessor getProtocolProcessor(Class type) {
-        ProtocolProcessorFactory protocolProcessorFactory = factoryMap.get(type);
-        if (protocolProcessorFactory == null) {
-            return null;
+        for (Map.Entry<Class, ProtocolProcessorFactory> entry : factoryMap.entrySet()) {
+            Class aClass = entry.getKey();
+            ProtocolProcessorFactory factory = entry.getValue();
+            if (aClass.isAssignableFrom(type)) {
+                return factory.getProtocolProcessor(type);
+            }
         }
-
-        return protocolProcessorFactory.getProtocolProcessor(type);
+        return null;
     }
 }

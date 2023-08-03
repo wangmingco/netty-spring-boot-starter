@@ -14,6 +14,7 @@ import java.lang.annotation.*;
 @Autowired
 public @interface CommandSender {
 
+    String protocol() default "tcp";
     String host() default "";
 
     int port() default -1;

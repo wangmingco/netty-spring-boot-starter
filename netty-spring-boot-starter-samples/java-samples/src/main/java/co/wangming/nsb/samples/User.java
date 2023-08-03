@@ -16,4 +16,9 @@ public class User {
     public ChannelHandlerContext getChannelHandlerContext() {
         return channelHandlerContext;
     }
+
+    @Override
+    public String toString() {
+        return "User Address:" + channelHandlerContext.channel().remoteAddress();
+    }
 }

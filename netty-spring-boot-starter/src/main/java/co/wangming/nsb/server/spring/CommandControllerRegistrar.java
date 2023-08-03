@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用于扫描 #{@link CommandController} 注解
@@ -125,21 +126,30 @@ public class CommandControllerRegistrar extends AbstractBeanDefinitionRegistrar 
         }
 
         String beanName = beanDefinitionHolder.getBeanName();
-
         String commandProxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.requestId();
-        log.info("开始注册消息接口. beanName:{}, 代理类名:{}, 消息接口方法名称:{}", beanName, commandProxyClassName, method.getName());
 
-        /**
-         * 生成 #{@link CommandProxy} 实现类
-         */
-        Class commandProxyClass = CommandProxyMaker.INSTANCE.make(beanName, commandProxyClassName, beanClass, method);
+        try{
+            /**
+             * 生成 #{@link CommandProxy} 实现类
+             */
+            Class commandProxyClass = CommandProxyMaker.INSTANCE.make(beanName, commandProxyClassName, beanClass, method);
 
-        BeanDefinitionBuilder commandProxyBuilder = BeanDefinitionBuilder.genericBeanDefinition(commandProxyClass);
-        AbstractBeanDefinition commandProxyBeanDefinition = commandProxyBuilder.getBeanDefinition();
+            BeanDefinitionBuilder commandProxyBuilder = BeanDefinitionBuilder.genericBeanDefinition(commandProxyClass);
+            AbstractBeanDefinition commandProxyBeanDefinition = commandProxyBuilder.getBeanDefinition();
+            MutablePropertyValues propertyValues = commandProxyFields(commandMappingAnnotation, method);
+            commandProxyBeanDefinition.setPropertyValues(propertyValues);
+            beanDefinitionRegistry.registerBeanDefinition(commandProxyClassName, commandProxyBeanDefinition);
 
-        commandProxyBeanDefinition.setPropertyValues(commandProxyFields(commandMappingAnnotation, method));
+            List<ProtocolProcessor> protocolProcessors = (List<ProtocolProcessor>)propertyValues.getPropertyValue(CommandProxy.PARAMETER_PROCESSORS).getValue();
+            String collect = protocolProcessors.stream().map(p -> p.getClass().getSimpleName()).collect(Collectors.joining(", "));
+            log.info("注册消息接口完成. \n**************************\n  beanName: {}, \n  代理类: {}, \n  消息接口方法: {}, \n  目标类: {}, \n  处理器: {}\n**************************",
+                    beanName, commandProxyClassName, method.getName(), beanClass.getSimpleName(), collect);
+        } catch (Exception e) {
+            log.error("注册消息接口失败. \n**************************\n  beanName: {}, \n  代理类: {}, \n  消息接口方法: {}, \n  目标类: {}\n**************************",
+                    beanName, commandProxyClassName, method.getName(), beanClass.getSimpleName(), e);
+            throw e;
+        }
 
-        beanDefinitionRegistry.registerBeanDefinition(commandProxyClassName, commandProxyBeanDefinition);
     }
 
     private MutablePropertyValues commandProxyFields(CommandMapping commandMappingAnnotation, Method method) {

@@ -19,7 +19,7 @@ public class CommandDispatcher {
 
     private static final Logger log = LoggerFactory.getLogger(CommandDispatcher.class);
 
-    public static void dispatch(ChannelHandlerContext ctx, int messageId, ByteBuffer messageBytes) throws Exception {
+    public static ByteBuf dispatch(ChannelHandlerContext ctx, int messageId, ByteBuffer messageBytes) throws Exception {
 
         String proxyBeanName = CommandProxy.class.getSimpleName() + "$$" + messageId;
         CommandProxy commandProxy = (CommandProxy) SpringContext.getBean(proxyBeanName);
@@ -29,9 +29,11 @@ public class CommandDispatcher {
 
         // 调用方法
         Object result = invoke(commandProxy, paramters);
-
+        if (result == null) {
+            return null;
+        }
         // 调用方法后可能产生应答, 将应答返回给前端
-        response(commandProxy, ctx, result);
+        return response(commandProxy, ctx, result);
     }
 
     /**
@@ -70,27 +72,21 @@ public class CommandDispatcher {
      *
      * @param ctx
      * @param result
+     * @return
      */
-    private static void response(CommandProxy commandProxy, ChannelHandlerContext ctx, Object result) throws Exception {
+    private static ByteBuf response(CommandProxy commandProxy, ChannelHandlerContext ctx, Object result) throws Exception {
         if (result == null) {
-            return;
+            return null;
         }
 
         ProtocolProcessor parser = commandProxy.getReturnProtocolProcessor();
         byte[] bytearray = parser.serialize(ctx, result);
 
         // TODO 优化, 避免每次都分配一块内存
-        ByteBuf response = ByteBufAllocator.DEFAULT.heapBuffer(bytearray.length)
+        return ByteBufAllocator.DEFAULT.heapBuffer(bytearray.length)
                 .writeByte(commandProxy.getResponseId())
                 .writeByte(bytearray.length)
                 .writeBytes(bytearray);
-        ctx.writeAndFlush(response).addListener(listener -> {
-            if (listener.isSuccess()) {
-                log.debug("消息发送成功");
-            } else {
-                log.info("消息发送失败", listener.cause());
-            }
-        });
     }
 
 

@@ -9,15 +9,13 @@ import java.net.NetworkInterface;
 /**
  * Created By WangMing On 2019-12-06
  **/
-@ConfigurationProperties(prefix = "spring.boot.netty")
-public class SpringBootNettyProperties {
+public abstract class SpringBootNettyProperties {
 
     /********************************************************************
      ***********************Netty 服务配置参数*****************************
      ********************************************************************/
     // Netty启动端口
     private String address;
-    private Integer port = 7001;
     private Integer readerIdleTimeSeconds = 5;
     private Integer writerIdleTimeSeconds = 5;
     private Integer allIdleTimeSeconds = 5;
@@ -161,13 +159,9 @@ public class SpringBootNettyProperties {
         this.address = address;
     }
 
-    public Integer getPort() {
-        return port;
-    }
+    public abstract Integer getPort();
 
-    public void setPort(Integer port) {
-        this.port = port;
-    }
+    public abstract void setPort(Integer port);
 
     public Integer getReaderIdleTimeSeconds() {
         return readerIdleTimeSeconds;

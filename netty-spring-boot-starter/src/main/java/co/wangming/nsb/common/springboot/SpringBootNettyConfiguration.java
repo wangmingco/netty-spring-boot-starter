@@ -1,5 +1,6 @@
 package co.wangming.nsb.common.springboot;
 
+import co.wangming.nsb.client.command.CommandSenderExecutor;
 import co.wangming.nsb.client.spring.CommandSenderBeanPostProcessor;
 import co.wangming.nsb.client.spring.CommandSenderFactoryBean;
 import co.wangming.nsb.common.spring.SpringContext;
@@ -20,13 +21,10 @@ import org.springframework.stereotype.Component;
  * Created By WangMing On 2019-12-06
  **/
 @Configuration
-@EnableConfigurationProperties(SpringBootNettyProperties.class)
+@EnableConfigurationProperties({SpringBootNettyTCPProperties.class, SpringBootNettyUDPProperties.class})
 public class SpringBootNettyConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(SpringBootNettyConfiguration.class);
-
-    @Autowired
-    private SpringBootNettyProperties springBootNettyProperties;
 
     /**
      * springboot 启动时自动加载NettyStarter, 例如CommandLineRunner 启动netty服务器.
@@ -61,7 +59,10 @@ public class SpringBootNettyConfiguration {
     public static class NettyStarter implements InitializingBean, DisposableBean {
 
         @Autowired
-        private SpringBootNettyProperties springBootNettyProperties;
+        private SpringBootNettyTCPProperties springBootNettyTCPProperties;
+
+        @Autowired
+        private SpringBootNettyUDPProperties springBootNettyUDPProperties;
 
         private NettyServer nettyServer;
 
@@ -71,10 +72,13 @@ public class SpringBootNettyConfiguration {
 
             NettyServer nettyServer = new NettyServer();
 
-            nettyServer.start(springBootNettyProperties);
+            nettyServer.startTCP(springBootNettyTCPProperties);
+            nettyServer.startUDP(springBootNettyUDPProperties);
 
             this.nettyServer = nettyServer;
             log.info("Started The Netty Server");
+
+            CommandSenderExecutor.sendCommands();
         }
 
         @Override

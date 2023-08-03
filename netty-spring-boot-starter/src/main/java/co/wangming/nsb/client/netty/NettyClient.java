@@ -1,6 +1,6 @@
 package co.wangming.nsb.client.netty;
 
-import co.wangming.nsb.server.netty.NettyServerHandler;
+import co.wangming.nsb.server.netty.NettyServerTCPHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -32,7 +32,7 @@ public enum NettyClient {
 
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline p = ch.pipeline();
-                        p.addLast(new NettyServerHandler());
+                        p.addLast(new NettyServerTCPHandler());
                     }
                 });
 

@@ -34,6 +34,9 @@ public class UnknowProtocolProcessor implements ProtocolProcessor<ByteBuffer, Ob
     @Override
     public Object deserialize(ChannelHandlerContext ctx, ByteBuffer bytes) throws Exception {
         ContextWrapper contextWrapper = ContextCache.get(ctx);
+        if (contextWrapper == null) {
+            return null;
+        }
         if (parameterType.isAssignableFrom(contextWrapper.getContextType())) {
             return contextWrapper.getContext();
         }

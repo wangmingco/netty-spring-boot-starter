@@ -94,8 +94,6 @@ public enum CommandProxyMaker {
     public Class make(String targetBeanName, String proxyClassName, Class targetClass, Method targetMethod) throws Exception {
         init();
 
-        log.info("[代理类生成] 生成代理类名称:{}, 目标bean名称:{}, 目标方法名称:{}, 目标类名称:{}", proxyClassName, targetBeanName, targetMethod.getName(), targetClass.getCanonicalName());
-
         // 1. 获取到接口定义
         CtClass proxyClass = null;
         try {

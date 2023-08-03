@@ -39,7 +39,6 @@ public class CommandTemplate<T> {
     }
 
     public void settClass(Class tClass) {
-        // TODO 抽象出能够自动识别多种协议
         try {
             protocolProcessor = ProtocolProcessorFactoryChain.INSTANCE.getProtocolProcessor(tClass);
         } catch (Exception e) {
@@ -47,13 +46,8 @@ public class CommandTemplate<T> {
         }
     }
 
-
-    public ChannelProxy<T> getChannelProxy() {
-        return channelProxy;
-    }
-
-    public void connect(String host, Integer port) throws InterruptedException {
-        this.channelProxy = new ChannelProxy(host, port);
+    public void connect(String protocol, String host, Integer port) throws InterruptedException {
+        this.channelProxy = new ChannelProxy(protocol, host, port);
         this.channelProxy.connect();
     }
 }

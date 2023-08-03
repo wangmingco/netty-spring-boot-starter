@@ -41,7 +41,7 @@ public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
                 field.setAccessible(false);
                 CommandSenderExecutor.addCommand(() -> {
                     try {
-                        commandTemplate.connect(commandSender.host(), commandSender.port());
+                        commandTemplate.connect(commandSender.protocol(), commandSender.host(), commandSender.port());
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

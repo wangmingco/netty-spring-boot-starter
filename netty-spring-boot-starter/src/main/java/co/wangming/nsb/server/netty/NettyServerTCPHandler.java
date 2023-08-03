@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Created By WangMing On 2019-12-06
  **/
-public class NettyServerHandler extends ByteToMessageDecoder {
+public class NettyServerTCPHandler extends ByteToMessageDecoder {
 
-    private static final Logger log = LoggerFactory.getLogger(NettyServerHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(NettyServerTCPHandler.class);
 
     private static final int MIN_PACKAGE_SIZE = 8;
 
@@ -47,7 +47,18 @@ public class NettyServerHandler extends ByteToMessageDecoder {
         in.readerIndex(readerIndex + messageSize);
         ByteBuffer byteBuffer = message.nioBuffer();
 
-        CommandDispatcher.dispatch(ctx, messageId, byteBuffer);
+        ByteBuf response = CommandDispatcher.dispatch(ctx, messageId, byteBuffer);
+        if (response == null) {
+            return;
+        }
+
+        ctx.writeAndFlush(response).addListener(listener -> {
+            if (listener.isSuccess()) {
+                log.debug("消息发送成功");
+            } else {
+                log.error("消息发送失败", listener.cause());
+            }
+        });
     }
 
     @Override

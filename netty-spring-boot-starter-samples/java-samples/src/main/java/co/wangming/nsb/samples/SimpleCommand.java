@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,23 +58,23 @@ public class SimpleCommand {
 
     @CommandMapping(requestId = 5)
     public void justSearch5(Search.SearchRequest searchRequest, ChannelHandlerContext ctx) {
-        log.info("收到SearchRequest 5 --> {}, {}", ctx.channel().remoteAddress(), searchRequest.getQuery());
+        log.info("收到SearchRequest 5 --> {}, {}", getSocketAddress(ctx), searchRequest.getQuery());
     }
 
     @CommandMapping(requestId = 6)
     public void justSearch6(Search.SearchRequest searchRequest, ChannelHandlerContext ctx) {
-        log.info("收到SearchRequest 6 --> {}, {}", ctx.channel().remoteAddress());
+        log.info("收到SearchRequest 6 --> {}, {}", getSocketAddress(ctx));
         throw new RuntimeException();
     }
 
     @CommandMapping(requestId = 7)
     public void justSearch7(Search.SearchRequest searchRequest, User user) {
-        log.info("收到SearchRequest 7 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
+        log.info("收到SearchRequest 7 --> {}", user);
     }
 
     @CommandMapping(requestId = 8)
     public void justSearch8(Search.SearchRequest searchRequest, User user) {
-        log.info("收到SearchRequest 8 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
+        log.info("收到SearchRequest 8 --> {}", user);
 
         try {
             commandTemplate.syncWrite(9, searchRequest);
@@ -85,7 +86,14 @@ public class SimpleCommand {
 
     @CommandMapping(requestId = 9)
     public void justSearch9(Search.SearchRequest searchRequest, User user) {
-        log.info("收到SearchRequest 9 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
+        log.info("收到SearchRequest 9 --> {}", user);
 
+    }
+
+    private SocketAddress getSocketAddress(ChannelHandlerContext ctx) {
+        if (ctx == null || ctx.channel() == null) {
+            return null;
+        }
+        return ctx.channel().remoteAddress();
     }
 }
