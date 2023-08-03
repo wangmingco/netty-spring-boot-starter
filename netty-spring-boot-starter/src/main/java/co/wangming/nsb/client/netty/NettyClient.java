@@ -38,7 +38,7 @@ public enum NettyClient {
 
     }
 
-    public Channel connect(String host, Integer port) {
+    public Channel connect(String host, Integer port) throws InterruptedException {
 
         InetSocketAddress target = new InetSocketAddress(host, port);
 
@@ -48,7 +48,7 @@ public enum NettyClient {
             Channel connectChannel = c.channel();
             return connectChannel;
         } catch (Exception e) {
-            return null;
+            throw e;
         }
     }
 }

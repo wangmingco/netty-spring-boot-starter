@@ -1,5 +1,6 @@
 package co.wangming.nsb.server.netty;
 
+import co.wangming.nsb.client.command.CommandSenderExecutor;
 import co.wangming.nsb.common.springboot.SpringBootNettyProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -73,6 +74,7 @@ public class NettyServer {
             this.bossGroup = bossGroup;
             this.workerGroup = workerGroup;
 
+            CommandSenderExecutor.sendCommands();
         } catch (InterruptedException e) {
             log.error("", e);
             stop();

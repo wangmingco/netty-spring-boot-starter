@@ -25,7 +25,7 @@ public class SimpleCommand {
     private SimpleService simpleService;
 
     @CommandSender(host = "localhost", port = 7800)
-    private CommandTemplate<GeneratedMessageV3> commandTemplate;
+    private CommandTemplate<Search.SearchRequest> commandTemplate;
 
     @CommandMapping(requestId = 1)
     public Search.SearchResponse search(Search.SearchRequest searchRequest) {
@@ -75,11 +75,10 @@ public class SimpleCommand {
     public void justSearch8(Search.SearchRequest searchRequest, User user) {
         log.info("收到SearchRequest 8 --> {}", user.getChannelHandlerContext().channel().remoteAddress());
 
-        commandTemplate.syncWrite(9, searchRequest);
-
         try {
+            commandTemplate.syncWrite(9, searchRequest);
             TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

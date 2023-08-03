@@ -1,27 +1,29 @@
 package co.wangming.nsb.server.processors;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public enum ProtocolProcessorFactoryChain {
 
     INSTANCE;
 
-    private List<ProtocolProcessorFactory> factoryList = new ArrayList<>();
+    private static final Logger log = LoggerFactory.getLogger(ProtocolProcessorFactoryChain.class);
+
+    private Map<Class, ProtocolProcessorFactory> factoryMap = new HashMap<>();
 
     public void addProtocolProcessorFactory(ProtocolProcessorFactory factory) {
-        factoryList.add(factory);
+        Class messageType = factory.getClass().getAnnotation(NSProtocolProcessor.class).messageType();
+        factoryMap.put(messageType, factory);
     }
 
     public ProtocolProcessor getProtocolProcessor(Class type) {
-        for (ProtocolProcessorFactory protocolProcessorFactory : factoryList) {
-            ProtocolProcessor processor = protocolProcessorFactory.getProtocolProcessor(type);
-            if (processor == null) {
-                continue;
-            }
-            return processor;
+        ProtocolProcessorFactory protocolProcessorFactory = factoryMap.get(type);
+        if (protocolProcessorFactory == null) {
+            return null;
         }
 
-        return null;
+        return protocolProcessorFactory.getProtocolProcessor(type);
     }
 }

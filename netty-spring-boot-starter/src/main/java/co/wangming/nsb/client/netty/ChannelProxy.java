@@ -15,18 +15,20 @@ public class ChannelProxy<T> {
 
     private Channel connectChannel;
 
-    private String host;
-    private Integer port;
+    private final String host;
+    private final Integer port;
 
     public ChannelProxy(String host, Integer port) {
         this.host = host;
         this.port = port;
     }
 
-    public void connect() {
+    public void connect() throws InterruptedException {
         this.connectChannel = NettyClient.INSTANCE.connect(host, port);
         if (this.connectChannel == null) {
             log.error("连接失败:[{}:{}]", host, port);
+        } else {
+            log.info("连接成功:[{}:{}]", host, port);
         }
     }
 
@@ -42,13 +44,13 @@ public class ChannelProxy<T> {
 
         if (!isConnected()) {
             for (int i = 0; i < 5; i++) {
-                connect();
-                if (!isConnected()) {
-                    try {
+                try {
+                    connect();
+                    if (!isConnected()) {
                         TimeUnit.SECONDS.sleep(i + 1);
-                    } catch (InterruptedException e) {
-                        log.error("", e);
                     }
+                } catch (Exception e) {
+                    log.error("", e);
                 }
             }
         }

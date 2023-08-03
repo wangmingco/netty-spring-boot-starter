@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,7 +29,12 @@ public class SpringContext implements ApplicationContextAware {
     }
 
     public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> requiredType) throws BeansException {
-        return context.getBeansWithAnnotation(requiredType);
+        try{
+            return context.getBeansWithAnnotation(requiredType);
+        } catch (Exception e) {
+            // TODO
+            return new HashMap<>();
+        }
     }
 
     public static Object getBean(String name) {

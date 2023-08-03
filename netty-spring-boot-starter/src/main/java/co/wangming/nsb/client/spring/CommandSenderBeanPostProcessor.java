@@ -1,6 +1,7 @@
 package co.wangming.nsb.client.spring;
 
 import co.wangming.nsb.client.command.CommandSender;
+import co.wangming.nsb.client.command.CommandSenderExecutor;
 import co.wangming.nsb.client.command.CommandTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,18 +35,21 @@ public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
                 continue;
             }
 
-            CommandTemplate commandTemplate = null;
             try {
                 field.setAccessible(true);
-                commandTemplate = (CommandTemplate) field.get(bean);
+                CommandTemplate commandTemplate = (CommandTemplate) field.get(bean);
                 field.setAccessible(false);
-            } catch (IllegalAccessException e) {
+                CommandSenderExecutor.addCommand(() -> {
+                    try {
+                        commandTemplate.connect(commandSender.host(), commandSender.port());
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                setGenericType(field, commandTemplate);
+            } catch (Exception e) {
                 log.error("", e);
             }
-
-            commandTemplate.connect(commandSender.host(), commandSender.port());
-
-            setGenericType(field, commandTemplate);
         }
 
         return bean;
@@ -64,7 +68,7 @@ public class CommandSenderBeanPostProcessor implements BeanPostProcessor {
                 Class<?> genericType = Class.forName(args[0].getTypeName());
                 commandTemplate.settClass(genericType);
             } catch (ClassNotFoundException e) {
-                log.error("", e);
+                log.error("CommandTemplate 设置类型信息, 找不到类: {}", args[0].getTypeName(), e);
             }
         }
 

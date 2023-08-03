@@ -5,10 +5,13 @@ import co.wangming.nsb.server.event.NSEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -34,8 +37,23 @@ public class NSEventRegistrar extends AbstractBeanDefinitionRegistrar {
 
     @Override
     public void process(BeanDefinitionRegistry beanDefinitionRegistry, Set<BeanDefinitionHolder> beanDefinitionHolders) throws Exception {
-        log.info("注册 NSEvent");
-        // non-impl
+//        log.info("注册 NSEvent");
+//
+//        for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
+//            try {
+//                Class<?> beanClass = Class.forName(beanDefinitionHolder.getBeanDefinition().getBeanClassName());
+//
+//                if (beanClass.getAnnotation(NSEvent.class) == null) {
+//                    continue;
+//                }
+//
+//                BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(beanClass);
+//                beanDefinitionRegistry.registerBeanDefinition(beanClass.getSimpleName(), builder.getBeanDefinition());
+//            } catch (ClassNotFoundException e) {
+//                log.error("寻找BeanDefinitionHolder时, 找不到类:{}", beanDefinitionHolder.getBeanDefinition().getBeanClassName(), e);
+//                throw e;
+//            }
+//        }
     }
 
 }
