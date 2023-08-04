@@ -3,7 +3,7 @@
   "ProjectReferences": [],
   "MetadataReferences": [
     {
-      "FilePath": "/Users/finup/mystation/coding/labspace/github/netty-spring-boot-starter/clients/csharp-client/packages/Google.Protobuf.3.11.2/lib/net45/Google.Protobuf.dll",
+      "FilePath": "/Users/finup/mystation/coding/labspace/github/netty-spring-boot-starter/clients/csharp-client/packages/Google.Protobuf.3.15.0/lib/net45/Google.Protobuf.dll",
       "Aliases": [],
       "Framework": null
     },
