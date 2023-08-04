@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package co.wangming.nsb.samples.protobuf;
+
+message SearchRequest {
+    string query = 1;
+    int32 page_number = 2;
+    int32 result_per_page = 3;
+}
+
+message SearchResponse {
+    string result = 1;
+}
+
+service SearchService {
+    rpc Search(SearchRequest) returns (SearchResponse) {}
+}
