@@ -6,11 +6,13 @@
 
     <groupId>co.wangming.netty-spring-boot-starter</groupId>
     <artifactId>java-samples</artifactId>
-    <version>0.1</version>
+    <version>8.1</version>
+
+    <description>JDK8 适配版本</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.4.4</spring.boot.version>
+        <spring.boot.version>2.5.9</spring.boot.version>
         <junit.version>4.13.2</junit.version>
     </properties>
 
@@ -19,13 +21,13 @@
         <dependency>
             <groupId>co.wangming</groupId>
             <artifactId>netty-spring-boot-starter</artifactId>
-            <version>0.1</version>
+            <version>8.1</version>
         </dependency>
 
         <dependency>
             <groupId>co.wangming.netty-spring-boot-starter.samples</groupId>
             <artifactId>protobuf</artifactId>
-            <version>0.1</version>
+            <version>8.1</version>
         </dependency>
 
         <dependency>

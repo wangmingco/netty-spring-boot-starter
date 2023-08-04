@@ -6,11 +6,13 @@
 
     <groupId>co.wangming.netty-spring-boot-starter.samples</groupId>
     <artifactId>protobuf</artifactId>
-    <version>0.1</version>
+    <version>8.1</version>
+
+    <description>JDK8 适配版本</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring.boot.version>1.5.19.RELEASE</spring.boot.version>
+        <maven.compiler.plugin.version>3.10.0</maven.compiler.plugin.version>
     </properties>
 
     <dependencies>
@@ -18,7 +20,7 @@
         <dependency>
             <groupId>co.wangming</groupId>
             <artifactId>netty-spring-boot-starter</artifactId>
-            <version>0.1</version>
+            <version>8.1</version>
         </dependency>
 
     </dependencies>
@@ -26,10 +28,12 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <compilerArguments>
                         <extdirs>${project.basedir}/src/main/resources/lib</extdirs>
                     </compilerArguments>

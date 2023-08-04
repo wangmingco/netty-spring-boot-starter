@@ -6,7 +6,9 @@
 
 	<groupId>co.wangming</groupId>
 	<artifactId>netty-spring-boot-starter</artifactId>
-	<version>0.1</version>
+	<version>8.1</version>
+
+	<description>JDK8 适配版本</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -114,8 +116,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -15,7 +15,7 @@ public class ProtobufTest {
 
     @Test
     public void getProtobufParser() throws Exception {
-        Class clazz = Search.SearchRequest.class.getSuperclass();
+        Class clazz = Search.SearchRequest.class;
         Field parserField = clazz.getDeclaredField("PARSER");
         parserField.setAccessible(true);
         Parser parser = (Parser) parserField.get(clazz);
