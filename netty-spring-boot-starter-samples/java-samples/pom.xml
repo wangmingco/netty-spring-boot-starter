@@ -6,15 +6,19 @@
 
     <groupId>co.wangming.netty-spring-boot-starter</groupId>
     <artifactId>java-samples</artifactId>
-    <version>8.1</version>
+    <version>17.1</version>
 
-    <description>JDK8 适配版本</description>
+    <description>JDK17 适配版本</description>
 
     <properties>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <spring.boot.version>2.7.14</spring.boot.version>
+        <java.version>17</java.version>
+        <source.level>17</source.level>
+        <target.level>17</target.level>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <nsb.version>17.1</nsb.version>
+        <spring.boot.version>3.1.2</spring.boot.version>
         <junit.version>4.13.2</junit.version>
     </properties>
 
@@ -23,13 +27,13 @@
         <dependency>
             <groupId>co.wangming</groupId>
             <artifactId>netty-spring-boot-starter</artifactId>
-            <version>8.1</version>
+            <version>${nsb.version}</version>
         </dependency>
 
         <dependency>
             <groupId>co.wangming.netty-spring-boot-starter.samples</groupId>
             <artifactId>protobuf</artifactId>
-            <version>8.1</version>
+            <version>${nsb.version}</version>
         </dependency>
 
         <dependency>
@@ -55,6 +59,16 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

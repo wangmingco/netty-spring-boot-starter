@@ -21,7 +21,7 @@ public class CommandDispatcher {
 
     public static ByteBuf dispatch(ChannelHandlerContext ctx, int messageId, ByteBuffer messageBytes) throws Exception {
 
-        String proxyBeanName = CommandProxy.class.getSimpleName() + "$$" + messageId;
+        String proxyBeanName = CommandProxy.class.getCanonicalName() + "$$" + messageId;
         CommandProxy commandProxy = (CommandProxy) SpringContext.getBean(proxyBeanName);
 
         // 生成调用方法参数

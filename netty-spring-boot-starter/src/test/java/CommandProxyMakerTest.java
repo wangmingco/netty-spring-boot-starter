@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -20,19 +21,19 @@ public class CommandProxyMakerTest {
         Class targetClass = TestClass.class;
         Method printMethod = targetClass.getMethod("print1");
 
-        Class proxyClass = makeClass(targetClass, printMethod);
+        Class proxyClass = makeClass(targetClass, printMethod, TestClass.lookup());
 
         Assert.assertEquals(0, proxyClass.getInterfaces().length);
         Assert.assertEquals(CommandProxy.class.getCanonicalName(), proxyClass.getSuperclass().getTypeName());
         Assert.assertNotNull(proxyClass.getAnnotation(Component.class));
     }
 
-    private Class makeClass(Class targetClass, Method printMethod) throws Exception {
+    private Class makeClass(Class targetClass, Method printMethod, MethodHandles.Lookup lookup) throws Exception {
         String beanName = "testClass";
         String commandMappingName = beanName + "$$" + CommandProxy.class.getSimpleName() + "$$" + System.currentTimeMillis() + ThreadLocalRandom.current().nextInt();
 
         try {
-            return CommandProxyMaker.INSTANCE.make(beanName, commandMappingName, targetClass, printMethod);
+            return CommandProxyMaker.INSTANCE.make(beanName, commandMappingName, lookup, targetClass, printMethod);
         } catch (Exception e) {
             return null;
         }
@@ -43,7 +44,7 @@ public class CommandProxyMakerTest {
         Class targetClass = TestClass.class;
         Method printMethod = targetClass.getMethod("print1");
 
-        Class proxyClass = makeClass(targetClass, printMethod);
+        Class proxyClass = makeClass(targetClass, printMethod, TestClass.lookup());
 
         Field testClassField = proxyClass.getDeclaredField("testClass");
         Assert.assertEquals(targetClass, testClassField.getType());
@@ -57,7 +58,7 @@ public class CommandProxyMakerTest {
         Class targetClass = TestClass.class;
         Method printMethod = targetClass.getMethod("print1");
 
-        Class proxyClass = makeClass(targetClass, printMethod);
+        Class proxyClass = makeClass(targetClass, printMethod, TestClass.lookup());
 
         Method print1Method = proxyClass.getMethod("invoke", List.class);
         Assert.assertNotNull(print1Method);
@@ -79,6 +80,10 @@ public class CommandProxyMakerTest {
 
         public String print4(String args) {
             return args;
+        }
+
+        public static MethodHandles.Lookup lookup() {
+            return MethodHandles.lookup();
         }
     }
 }

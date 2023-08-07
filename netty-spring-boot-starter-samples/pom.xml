@@ -6,20 +6,37 @@
 
 	<groupId>co.wangming.netty-spring-boot-starter</groupId>
 	<artifactId>netty-spring-boot-starter-samples</artifactId>
-	<version>8.1</version>
+	<version>17.1</version>
 	<packaging>pom</packaging>
 
-	<description>JDK8 适配版本</description>
+	<description>JDK17 适配版本</description>
 
 	<modules>
-		<module>java-samples</module>
 		<module>protobuf</module>
+		<module>java-samples</module>
 	</modules>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.version>17</java.version>
+		<source.level>17</source.level>
+		<target.level>17</target.level>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
 	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

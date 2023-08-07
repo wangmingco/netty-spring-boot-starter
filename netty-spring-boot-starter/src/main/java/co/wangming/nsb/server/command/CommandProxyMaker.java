@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URL;
@@ -91,7 +92,7 @@ public enum CommandProxyMaker {
         }
     }
 
-    public Class make(String targetBeanName, String proxyClassName, Class targetClass, Method targetMethod) throws Exception {
+    public Class make(String targetBeanName, String proxyClassName, MethodHandles.Lookup lookup, Class targetClass, Method targetMethod) throws Exception {
         init();
 
         // 1. 获取到接口定义
@@ -123,7 +124,7 @@ public enum CommandProxyMaker {
         try {
             log.debug("[代理类生成] 代理类生成完成:{}", proxyClass.toString());
 
-            return proxyClass.toClass();
+            return proxyClass.toClass(lookup);
         } catch (final Exception e) {
             log.error("生成代理类失败", e);
             return null;

@@ -6,16 +6,16 @@
 
     <groupId>co.wangming.netty-spring-boot-starter.samples</groupId>
     <artifactId>protobuf</artifactId>
-    <version>8.1</version>
+    <version>17.1</version>
 
-    <description>JDK8 适配版本</description>
+    <description>JDK17 适配版本</description>
 
     <properties>
-        <java.version>1.8</java.version>
-        <source.level>1.8</source.level>
-        <target.level>1.8</target.level>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>17</java.version>
+        <source.level>17</source.level>
+        <target.level>17</target.level>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-failsafe-plugin.version>3.1.2</maven-failsafe-plugin.version>
         <protoc.version>3.23.4</protoc.version>
@@ -34,12 +34,6 @@
 
         <dependency>
             <groupId>io.grpc</groupId>
-            <artifactId>grpc-netty-shaded</artifactId>
-            <version>${grpc.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.grpc</groupId>
             <artifactId>grpc-all</artifactId>
             <version>${grpc.version}</version>
             <exclusions>
@@ -47,7 +41,18 @@
                     <artifactId>grpc-netty</artifactId>
                     <groupId>io.grpc</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency> <!-- necessary for Java 9+ fix grpc javax.annotation.Generated unfounded-->
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>annotations-api</artifactId>
+            <version>6.0.53</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

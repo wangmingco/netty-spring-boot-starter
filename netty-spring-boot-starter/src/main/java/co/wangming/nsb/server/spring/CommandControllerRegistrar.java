@@ -126,13 +126,13 @@ public class CommandControllerRegistrar extends AbstractBeanDefinitionRegistrar 
         }
 
         String beanName = beanDefinitionHolder.getBeanName();
-        String commandProxyClassName = CommandProxy.class.getSimpleName() + "$$" + commandMappingAnnotation.requestId();
+        String commandProxyClassName = CommandProxy.class.getCanonicalName() + "$$" + commandMappingAnnotation.requestId();
 
         try{
             /**
              * 生成 #{@link CommandProxy} 实现类
              */
-            Class commandProxyClass = CommandProxyMaker.INSTANCE.make(beanName, commandProxyClassName, beanClass, method);
+            Class commandProxyClass = CommandProxyMaker.INSTANCE.make(beanName, commandProxyClassName, CommandProxy.lookup(), beanClass, method);
 
             BeanDefinitionBuilder commandProxyBuilder = BeanDefinitionBuilder.genericBeanDefinition(commandProxyClass);
             AbstractBeanDefinition commandProxyBeanDefinition = commandProxyBuilder.getBeanDefinition();
@@ -143,7 +143,7 @@ public class CommandControllerRegistrar extends AbstractBeanDefinitionRegistrar 
             List<ProtocolProcessor> protocolProcessors = (List<ProtocolProcessor>)propertyValues.getPropertyValue(CommandProxy.PARAMETER_PROCESSORS).getValue();
             String collect = protocolProcessors.stream().map(p -> p.getClass().getSimpleName()).collect(Collectors.joining(", "));
             log.info("注册消息接口完成. \n**************************\n  beanName: {}, \n  代理类: {}, \n  消息接口方法: {}, \n  目标类: {}, \n  处理器: {}\n**************************",
-                    beanName, commandProxyClassName, method.getName(), beanClass.getSimpleName(), collect);
+                    beanName, commandProxyClassName, method.getName(), beanClass.getCanonicalName(), collect);
         } catch (Exception e) {
             log.error("注册消息接口失败. \n**************************\n  beanName: {}, \n  代理类: {}, \n  消息接口方法: {}, \n  目标类: {}\n**************************",
                     beanName, commandProxyClassName, method.getName(), beanClass.getSimpleName(), e);

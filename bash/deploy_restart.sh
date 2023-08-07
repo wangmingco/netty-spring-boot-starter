@@ -31,7 +31,7 @@ function install_mariadb() {
 function install_jdk() {
   echo "安装jdk"
 
-  yum install -y java-1.8.0-openjdk-devel.x86_64
+  yum install -y java-17-openjdk-devel.x86_64
 }
 
 function install_git() {
@@ -77,7 +77,7 @@ function build() {
 function start() {
     echo "开始启动服务"
     cd ~/${REPO_NAME}/
-    nohup java -jar ./netty-spring-boot-starter-samples/java-samples/target/java-samples-0.1-exec.jar >server.log 2>&1 &
+    nohup java -jar ./netty-spring-boot-starter-samples/java-samples/target/java-samples-17.1-exec.jar >server.log 2>&1 &
     jps -l | grep "netty-spring-boot-starter" | awk '{print $1}' > server.pid
     jps -l | grep "netty-spring-boot-starter"
     echo "启动服务完成"
