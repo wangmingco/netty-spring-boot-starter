@@ -5,8 +5,8 @@ package co.wangming.nsb.common.spring;
  **/
 
 import co.wangming.nsb.server.spring.CommandControllerRegistrar;
-import co.wangming.nsb.server.spring.NSEventRegistrar;
-import co.wangming.nsb.server.spring.NSProtocolProcessorRegistrar;
+import co.wangming.nsb.server.spring.EventRegistrar;
+import co.wangming.nsb.server.spring.ProtocolProcessorRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@Import({NSEventRegistrar.class, NSProtocolProcessorRegistrar.class, CommandControllerRegistrar.class})
+@Import({EventRegistrar.class, ProtocolProcessorRegistrar.class, CommandControllerRegistrar.class})
 @Documented
 public @interface RegistrarScan {
 

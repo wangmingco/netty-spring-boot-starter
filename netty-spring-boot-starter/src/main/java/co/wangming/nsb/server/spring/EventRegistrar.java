@@ -1,33 +1,30 @@
 package co.wangming.nsb.server.spring;
 
 import co.wangming.nsb.common.spring.AbstractBeanDefinitionRegistrar;
-import co.wangming.nsb.server.event.NSEvent;
+import co.wangming.nsb.server.event.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 /**
- * 用于扫描 #{@link NSEvent} 注解
+ * 用于扫描 #{@link Event} 注解
  * <p>
  * Created By WangMing On 2019-12-06
  **/
-public class NSEventRegistrar extends AbstractBeanDefinitionRegistrar {
+public class EventRegistrar extends AbstractBeanDefinitionRegistrar {
 
-    private static final Logger log = LoggerFactory.getLogger(NSEventRegistrar.class);
+    private static final Logger log = LoggerFactory.getLogger(EventRegistrar.class);
 
     @Override
     public List<Class> getAnnotationTypeFilterClass() {
-        return Arrays.asList(NSEvent.class);
+        return Arrays.asList(Event.class);
     }
 
     @Override

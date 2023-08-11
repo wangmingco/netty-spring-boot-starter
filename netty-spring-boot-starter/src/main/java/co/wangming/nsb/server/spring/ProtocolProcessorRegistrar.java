@@ -1,7 +1,7 @@
 package co.wangming.nsb.server.spring;
 
 import co.wangming.nsb.common.spring.AbstractBeanDefinitionRegistrar;
-import co.wangming.nsb.server.processors.NSProtocolProcessor;
+import co.wangming.nsb.server.processors.ProtocolProcess;
 import co.wangming.nsb.server.processors.ProtocolProcessorFactory;
 import co.wangming.nsb.server.processors.ProtocolProcessorFactoryChain;
 import org.slf4j.Logger;
@@ -16,16 +16,16 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 用于扫描 #{@link NSProtocolProcessor} 注解
+ * 用于扫描 #{@link ProtocolProcess} 注解
  * <p>
  * Created By WangMing On 2019-12-06
  **/
-public class NSProtocolProcessorRegistrar extends AbstractBeanDefinitionRegistrar {
+public class ProtocolProcessorRegistrar extends AbstractBeanDefinitionRegistrar {
 
-    private static final Logger log = LoggerFactory.getLogger(NSProtocolProcessorRegistrar.class);
+    private static final Logger log = LoggerFactory.getLogger(ProtocolProcessorRegistrar.class);
 
     public List<Class> getAnnotationTypeFilterClass() {
-        return Arrays.asList(NSProtocolProcessor.class);
+        return Arrays.asList(ProtocolProcess.class);
     }
 
     @Override
@@ -49,8 +49,8 @@ public class NSProtocolProcessorRegistrar extends AbstractBeanDefinitionRegistra
             try {
                 Class<?> beanClass = Class.forName(beanDefinitionHolder.getBeanDefinition().getBeanClassName());
 
-                NSProtocolProcessor NSProtocolProcessor = beanClass.getAnnotation(NSProtocolProcessor.class);
-                if (NSProtocolProcessor == null) {
+                ProtocolProcess ProtocolProcess = beanClass.getAnnotation(ProtocolProcess.class);
+                if (ProtocolProcess == null) {
                     continue;
                 }
 
