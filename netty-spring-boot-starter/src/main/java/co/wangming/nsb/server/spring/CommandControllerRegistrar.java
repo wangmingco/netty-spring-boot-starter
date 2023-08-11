@@ -137,6 +137,8 @@ public class CommandControllerRegistrar extends AbstractBeanDefinitionRegistrar 
             BeanDefinitionBuilder commandProxyBuilder = BeanDefinitionBuilder.genericBeanDefinition(commandProxyClass);
             AbstractBeanDefinition commandProxyBeanDefinition = commandProxyBuilder.getBeanDefinition();
             MutablePropertyValues propertyValues = commandProxyFields(commandMappingAnnotation, method);
+            propertyValues.add(CommandProxy.TARGET_CLASS, beanClass);
+            propertyValues.add(CommandProxy.TARGET_METHOD, method);
             commandProxyBeanDefinition.setPropertyValues(propertyValues);
             beanDefinitionRegistry.registerBeanDefinition(commandProxyClassName, commandProxyBeanDefinition);
 
