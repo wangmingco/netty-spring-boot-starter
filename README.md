@@ -2,6 +2,8 @@
 
 将Netty嵌入到Spring Boot 环境中，可以在Spring环境中收发Socket原生消息，支持自定义消息解析，派发扩展。
 
+> 目前有2个适配版本，分别为JDK8和JDK17，都在各自的开发分支上
+
 ## 架构图
 
 ![](https://raw.githubusercontent.com/wangmingco/netty-spring-boot-starter/master/docs/architecture.jpg)
