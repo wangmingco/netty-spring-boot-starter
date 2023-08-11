@@ -1,11 +1,11 @@
 package co.wangming.nsb.server.processors.protobuf;
 
-import co.wangming.nsb.server.processors.NSProtocolProcessor;
+import co.wangming.nsb.server.processors.ProtocolProcess;
 import co.wangming.nsb.server.processors.ProtocolProcessor;
 import co.wangming.nsb.server.processors.ProtocolProcessorFactory;
 import com.google.protobuf.GeneratedMessageV3;
 
-@NSProtocolProcessor(messageType = GeneratedMessageV3.class)
+@ProtocolProcess(messageType = GeneratedMessageV3.class)
 public class ProtobufProtocolProcessorFactory implements ProtocolProcessorFactory {
 
     @Override

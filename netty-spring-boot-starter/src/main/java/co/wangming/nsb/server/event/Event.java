@@ -1,4 +1,4 @@
-package co.wangming.nsb.server.processors;
+package co.wangming.nsb.server.event;
 
 import co.wangming.nsb.server.command.ScannedCommand;
 
@@ -12,7 +12,6 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 @ScannedCommand
-public @interface NSProtocolProcessor {
+public @interface Event {
 
-    Class messageType();
 }

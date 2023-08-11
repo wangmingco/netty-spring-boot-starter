@@ -14,7 +14,7 @@ public enum ProtocolProcessorFactoryChain {
     private Map<Class, ProtocolProcessorFactory> factoryMap = new HashMap<>();
 
     public void addProtocolProcessorFactory(ProtocolProcessorFactory factory) {
-        Class messageType = factory.getClass().getAnnotation(NSProtocolProcessor.class).messageType();
+        Class messageType = factory.getClass().getAnnotation(ProtocolProcess.class).messageType();
         factoryMap.put(messageType, factory);
     }
 
