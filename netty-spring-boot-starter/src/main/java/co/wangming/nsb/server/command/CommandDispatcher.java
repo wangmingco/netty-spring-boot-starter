@@ -34,21 +34,45 @@ public class CommandDispatcher {
         filterContextHolder.setFilterContext(FilterContext.continueFilter());
 
         try{
-            String proxyBeanName = CommandProxy.class.getSimpleName() + "$$" + messageId;
+            String proxyBeanName = CommandProxy.class.getCanonicalName() + "$$" + messageId;
             commandProxy = (CommandProxy) SpringContext.getBean(proxyBeanName);
             targetClass = commandProxy.getTargetClass();
             targetMethod = commandProxy.getTargetMethod();
 
-        // 生成调用方法参数
-        List paramters = getParameters(ctx, messageBytes, commandProxy);
+            // 生成调用方法参数
+            paramters = getParameters(ctx, messageBytes, commandProxy);
+        } catch (Throwable throwable) {
+            FilterChain.INSTANCE.onSystemException(filterContextHolder, targetClass, targetMethod, paramters, throwable);
+            throw throwable;
+        }
 
-        // 调用方法
-        Object result = invoke(commandProxy, paramters);
-        if (result == null) {
+        FilterChain.INSTANCE.onBefore(filterContextHolder, targetClass, targetMethod, paramters);
+
+        if (!filterContextHolder.getFilterContext().isInvokeContinue()) {
             return null;
         }
-        // 调用方法后可能产生应答, 将应答返回给前端
-        return response(commandProxy, ctx, result);
+
+        Object result = null;
+        try{
+            // 调用方法
+            result = invoke(commandProxy, paramters);
+            FilterChain.INSTANCE.onAfter(filterContextHolder, targetClass, targetMethod, paramters, result);
+            if (result == null) {
+                return null;
+            }
+        } catch (Throwable throwable) {
+            FilterChain.INSTANCE.onUserException(filterContextHolder, targetClass, targetMethod, paramters, throwable);
+            throw throwable;
+        }
+
+        try{
+            // 调用方法后可能产生应答, 将应答返回给前端
+            return response(commandProxy, ctx, result);
+        } catch (Throwable throwable) {
+            FilterChain.INSTANCE.onSystemException(filterContextHolder, targetClass, targetMethod, paramters, throwable);
+            throw throwable;
+        }
+
     }
 
     /**

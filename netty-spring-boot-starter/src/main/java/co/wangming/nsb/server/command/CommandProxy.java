@@ -2,6 +2,7 @@ package co.wangming.nsb.server.command;
 
 import co.wangming.nsb.server.processors.ProtocolProcessor;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public abstract class CommandProxy {
         return returnProtocolProcessor;
     }
 
-    public int getResponseId() {
-        return responseId;
+    public static MethodHandles.Lookup lookup() {
+        return MethodHandles.lookup();
     }
 }
