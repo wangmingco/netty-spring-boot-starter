@@ -1,6 +1,7 @@
 package co.wangming.nsb.server.netty;
 
 import co.wangming.nsb.common.springboot.SpringBootNettyProperties;
+import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -104,25 +105,7 @@ public class NettyServer {
 //                    .option(ChannelOption.SO_BROADCAST, true)
                     .handler(new NettyServerUDPHandler());
 
-//            ServerBootstrap  b = new ServerBootstrap();
-//            b.group(bossGroup, workerGroup)
-//                    .channel(NioServerSocketChannel.class)
-//                    .option(ChannelOption.SO_BROADCAST, true) // 广播模式
-//                    .handler(new LoggingHandler(LogLevel.DEBUG))
-//                    .childHandler(new ChannelInitializer<SocketChannel>() {
-//                        @Override
-//                        public void initChannel(SocketChannel ch) {
-//                            ch.pipeline()
-//                                    .addLast(new NettyServerHandler())
-//                                    .addLast(new IdleStateHandler(
-//                                            springBootNettyProperties.getReaderIdleTimeSeconds(),
-//                                            springBootNettyProperties.getWriterIdleTimeSeconds(),
-//                                            springBootNettyProperties.getAllIdleTimeSeconds()))
-//                            ;
-//                        }
-//                    });
-//
-//            setOption(b, springBootNettyProperties);
+            setOption(b, springBootNettyProperties);
 
             String ip = "0.0.0.0";
             if (springBootNettyProperties.getAddress() != null) {
@@ -180,10 +163,10 @@ public class NettyServer {
         }
     }
 
-    private void setOption(ServerBootstrap b, SpringBootNettyProperties springBootNettyProperties) {
-//        setOption(b, ChannelOption.ALLOCATOR, springBootNettyProperties.getAllocator());
-//        setOption(b, ChannelOption.RCVBUF_ALLOCATOR, springBootNettyProperties.getRcvbufAllocator());
-//        setOption(b, ChannelOption.MESSAGE_SIZE_ESTIMATOR, springBootNettyProperties.getMessageSizeEstimator());
+    private void setOption(AbstractBootstrap b, SpringBootNettyProperties springBootNettyProperties) {
+        setOption(b, ChannelOption.ALLOCATOR, springBootNettyProperties.getAllocator());
+        setOption(b, ChannelOption.RCVBUF_ALLOCATOR, springBootNettyProperties.getRcvbufAllocator());
+        setOption(b, ChannelOption.MESSAGE_SIZE_ESTIMATOR, springBootNettyProperties.getMessageSizeEstimator());
         setOption(b, ChannelOption.CONNECT_TIMEOUT_MILLIS, springBootNettyProperties.getConnectTimeoutMillis());
         setOption(b, ChannelOption.MAX_MESSAGES_PER_READ, springBootNettyProperties.getMaxMessagesPerRead());
         setOption(b, ChannelOption.WRITE_SPIN_COUNT, springBootNettyProperties.getWriteSpinCount());
@@ -208,7 +191,7 @@ public class NettyServer {
         setOption(b, ChannelOption.SO_TIMEOUT, springBootNettyProperties.getSoTimeout());
     }
 
-    private void setOption(ServerBootstrap b, ChannelOption option, Object value) {
+    private void setOption(AbstractBootstrap b, ChannelOption option, Object value) {
         if (value != null) {
             b.option(option, value);
         }

@@ -1,10 +1,15 @@
 package co.wangming.nsb.common.springboot;
 
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.MessageSizeEstimator;
+import io.netty.channel.RecvByteBufAllocator;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 /**
  * Created By WangMing On 2019-12-06
@@ -14,14 +19,12 @@ public abstract class SpringBootNettyProperties {
     /********************************************************************
      ***********************Netty 服务配置参数*****************************
      ********************************************************************/
-    // Netty启动端口
     private String address;
     private Integer readerIdleTimeSeconds = 5;
     private Integer writerIdleTimeSeconds = 5;
     private Integer allIdleTimeSeconds = 5;
     private Integer bossGroupThreadSize = 1;
     private Integer workGroupThreadSize = 1;
-//    private ChannelInboundHandler nettyServerHandler;
 
     /********************************************************************
      **************Netty #{@link ChannelOption} 配置参数******************
@@ -29,17 +32,17 @@ public abstract class SpringBootNettyProperties {
     /**
      * #{@link ChannelOption#ALLOCATOR}
      */
-//    private ByteBufAllocator allocator = null;
+    private ByteBufAllocator allocator = null;
 
     /**
      * #{@link ChannelOption#RCVBUF_ALLOCATOR}
      */
-//    private RecvByteBufAllocator rcvbufAllocator = null;
+    private RecvByteBufAllocator rcvbufAllocator = null;
 
     /**
      * #{@link ChannelOption#MESSAGE_SIZE_ESTIMATOR}
      */
-//    private MessageSizeEstimator messageSizeEstimator = null;
+    private MessageSizeEstimator messageSizeEstimator = null;
 
     /**
      * #{@link ChannelOption#CONNECT_TIMEOUT_MILLIS}
@@ -150,6 +153,33 @@ public abstract class SpringBootNettyProperties {
      * #{@link ChannelOption#SINGLE_EVENTEXECUTOR_PER_GROUP}
      */
     private Boolean singleEventexecutorPerGroup = null;
+
+    public ByteBufAllocator getAllocator() {
+        return allocator;
+    }
+
+    public void setAllocator(String allocator) {
+        // TODO
+//        this.allocator = allocator;
+    }
+
+    public RecvByteBufAllocator getRcvbufAllocator() {
+        return rcvbufAllocator;
+    }
+
+    public void setRcvbufAllocator(String rcvbufAllocator) {
+        // TODO
+//        this.rcvbufAllocator = rcvbufAllocator;
+    }
+
+    public MessageSizeEstimator getMessageSizeEstimator() {
+        return messageSizeEstimator;
+    }
+
+    public void setMessageSizeEstimator(String messageSizeEstimator) {
+        // TODO
+//        this.messageSizeEstimator = messageSizeEstimator;
+    }
 
     public String getAddress() {
         return address;
@@ -335,16 +365,16 @@ public abstract class SpringBootNettyProperties {
         return ipMulticastAddr;
     }
 
-    public void setIpMulticastAddr(InetAddress ipMulticastAddr) {
-        this.ipMulticastAddr = ipMulticastAddr;
+    public void setIpMulticastAddr(String ipMulticastAddr) throws UnknownHostException {
+        this.ipMulticastAddr = InetAddress.getByName(ipMulticastAddr);
     }
 
     public NetworkInterface getIpMulticastIf() {
         return ipMulticastIf;
     }
 
-    public void setIpMulticastIf(NetworkInterface ipMulticastIf) {
-        this.ipMulticastIf = ipMulticastIf;
+    public void setIpMulticastIf(String ipMulticastIf) throws SocketException {
+        this.ipMulticastIf = NetworkInterface.getByName(ipMulticastIf);;
     }
 
     public Integer getIpMulticastTtl() {

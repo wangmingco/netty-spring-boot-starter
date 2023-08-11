@@ -2,199 +2,385 @@
   "properties": [
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.ADDRESS",
-      "description": "",
+      "name": "spring.boot.netty.tcp.ADDRESS",
+      "description": "服务绑定地址",
       "type": "java.lang.String"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.PORT",
-      "description": "",
+      "name": "spring.boot.netty.tcp.PORT",
+      "description": "服务绑定端口",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.readerIdleTimeSeconds",
-      "description": "",
+      "name": "spring.boot.netty.tcp.readerIdleTimeSeconds",
+      "description": "读超时时间(单位秒)",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.writerIdleTimeSeconds",
-      "description": "",
+      "name": "spring.boot.netty.tcp.writerIdleTimeSeconds",
+      "description": "写超时时间(单位秒)",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.allIdleTimeSeconds",
-      "description": "",
+      "name": "spring.boot.netty.tcp.allIdleTimeSeconds",
+      "description": "读写双超时时间(单位秒)",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.bossGroupThreadSize",
-      "description": "",
+      "name": "spring.boot.netty.tcp.bossGroupThreadSize",
+      "description": "主工作组线程数",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.workGroupThreadSize",
-      "description": "",
+      "name": "spring.boot.netty.tcp.workGroupThreadSize",
+      "description": "从工作组线程数",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.nettyServerHandler",
-      "description": "",
+      "name": "spring.boot.netty.tcp.allocator",
+      "description": "ByteBufAllocator 类型的对象名称(从Spring中加载)",
       "type": "java.lang.String"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.allocator",
-      "description": "",
-      "type": "java.lang.Class<? extends io.netty.buffer.ByteBufAllocator>"
+      "name": "spring.boot.netty.tcp.rcvbufAllocator",
+      "description": "RecvByteBufAllocator 类型的对象名称(从Spring中加载)",
+      "type": "java.lang.String"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.rcvbufAllocator",
-      "description": "",
-      "type": "java.lang.Class<? extends io.netty.channel.RecvByteBufAllocator>"
+      "name": "spring.boot.netty.tcp.messageSizeEstimator",
+      "description": "MessageSizeEstimator 类型的对象名称(从Spring中加载)",
+      "type": "java.lang.String"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.messageSizeEstimator",
-      "description": "",
-      "type": "java.lang.Class<? extends io.netty.channel.MessageSizeEstimator>"
+      "name": "spring.boot.netty.tcp.connectTimeoutMillis",
+      "description": "在建立连接过程中等待连接完成的最大时间，以毫秒为单位",
+      "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.connectTimeoutMillis",
+      "name": "spring.boot.netty.tcp.maxMessagesPerRead",
+      "description": "Netty通过将多个消息组合成批次来进行读取操作，以提高性能和效率，MAX_MESSAGES_PER_READ选项可以用于控制每次读取操作处理的消息数量（默认值16）",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.writeSpinCount",
+      "description": "Netty使用一种称为'自旋等待'（spin-waiting）的技术来提高写入操作的性能和效率。在写入数据时，如果底层的网络缓冲区已满或不可用，Netty会尝试自旋等待，等待缓冲区可写，以避免线程上下文的切换开销。WRITE_SPIN_COUNT选项可以用于控制自旋等待的次数",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.writeBufferHighWaterMark",
+      "description": "设置Channel的写缓冲区高水位标记（High Water Mark）。它表示当写缓冲区的字节大小达到该值时，Netty会停止从应用程序写入更多数据，以避免写缓冲区溢出。\n\n写缓冲区是Netty在进行写操作时使用的内存区域，用于临时存储待发送的数据。当应用程序调用写操作将数据写入Channel时，数据会被暂时存储在写缓冲区中，然后由Netty异步地写入到底层的Socket。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.writeBufferLowWaterMark",
+      "description": "设置Channel的写缓冲区低水位标记（Low Water Mark）。它表示当写缓冲区的字节大小降低到该标记以下时，Netty会恢复从应用程序写入更多数据。写缓冲区是Netty在进行写操作时使用的内存区域，用于临时存储待发送的数据。当应用程序调用写操作将数据写入Channel时，数据会被暂时存储在写缓冲区中，然后由Netty异步地写入到底层的Socket。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.allowHalfClosure",
+      "description": "设置是否允许半关闭（Half Closure）。在TCP协议中，当一个端口的一侧调用close()方法关闭连接时，另一侧仍然可以继续发送数据，直到完成或超时。这种情况称为半关闭。通过设置allowHalfClosure选项，可以控制在Netty中是否允许半关闭。默认情况下，allowHalfClosure被设置为false，即不允许半关闭。当allowHalfClosure为true时，表示允许半关闭。",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.autoRead",
+      "description": "控制Channel是否自动读取数据。\n\n在Netty中，当一个Channel准备好接收数据时，会触发Channel的可读事件，并通知应用程序进行数据读取操作。这通常由应用程序调用read()方法来实现。\n\n通过设置autoRead选项，可以控制Channel是否自动调用read()方法来读取数据。默认情况下，autoRead被设置为true，即自动读取数据。",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soBroadcast",
+      "description": "套接字选项，设置或获取套接字选项的状态。它适用于协议族为IPv4的套接字。\n\n当SO_BROADCAST被启用时，套接字可以发送广播数据包。广播数据包是一种面向本地网络中的所有主机发送的数据包。",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soKeepalive",
+      "description": "套接字选项，可用于启用或禁用 TCP 连接的保活机制。\n\nTCP连接的保活机制是一种用于检测故障连接的机制。当启用SO_KEEPALIVE选项后，操作系统会定期发送一些特殊的探测数据包（Keep-Alive包）给对端，对端可以根据这些包来判断连接是否仍然有效。",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soSndbuf",
+      "description": "套接字选项，用于设置发送缓冲区的大小。\n\n发送缓冲区是套接字在发送数据时使用的一块内存区域。当应用程序向套接字写入数据时，数据会首先被放入发送缓冲区，然后由操作系统将其发送到网络上。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soRcvbuf",
+      "description": "套接字选项，用于设置接收缓冲区的大小。\n\n接收缓冲区是套接字在接收数据时使用的一块内存区域。当操作系统从网络上接收数据时，数据会首先被放入接收缓冲区，然后应用程序可以从该缓冲区读取数据。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soReuseaddr",
+      "description": "套接字选项，用于设置是否允许在同一端口上重用地址。\n\n当一个TCP连接被关闭时，操作系统会保留一段时间的时间（即TIME_WAIT状态），以确保该连接的所有数据包都被正常接收和处理。在这段时间内，如果有其他应用程序尝试使用相同的源IP地址和端口号来建立新的连接，操作系统通常会阻止它，以避免混淆。\n\n但是，在某些情况下，我们希望能够立即重用相同的源地址和端口，而不必等待TIME_WAIT状态的结束。这时候可以使用SO_REUSEADDR选项。启用SO_REUSEADDR选项后，操作系统允许在同一端口上立即重用地址。",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soLinger",
+      "description": "套接字选项，用于设置当关闭套接字时的延迟行为。\n\n当我们调用套接字的close()方法来关闭连接时，默认情况下，操作系统会尽力确保所有未发送的数据都被发送出去，然后再关闭连接。这意味着close()方法可能会阻塞一段时间，直到所有数据都被发送成功或发生超时。\n\n而使用SO_LINGER选项，我们可以控制关闭连接时的行为。具体来说，SO_LINGER选项允许我们指定一个延迟时间（以秒为单位），如果延迟时间大于0，则在调用close()方法后，套接字将等待一段时间，尝试将未发送的数据发送出去。如果在延迟时间内未能成功发送所有数据，套接字将立即关闭，丢弃未发送的数据。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soBacklog",
+      "description": "套接字选项，用于设置监听套接字的连接队列的最大长度。\n\n在服务器端使用Socket编程时，我们通常会创建一个监听套接字（ServerSocket），用于接收客户端的连接请求。当有多个客户端同时发起连接请求时，操作系统会将这些请求放入一个连接队列中，然后按照先到先服务的原则逐个处理。\n\nSO_BACKLOG选项允许我们设置连接队列的最大长度。超过这个长度的连接请求将被拒绝。具体来说，SO_BACKLOG选项定义了三种可能的情况：\n\n    如果连接队列未满，新的连接请求会被添加到队列中。\n    如果连接队列已满，并且套接字尚未调用accept()方法来接受连接，那么新的连接请求会被拒绝。\n    如果连接队列已满，并且套接字已经调用accept()方法来接受连接，那么新的连接请求由操作系统拒绝，并返回给客户端一个错误。\n",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.soTimeout",
+      "description": "套接字选项，用于设置套接字的读取超时时间（以毫秒为单位）。\n\n在使用Socket编程接收数据时，有时我们希望在一定时间内完成数据的读取操作。如果在指定的时间内没有收到数据，我们可以选择终止读取操作或采取其他处理措施。这就是通过SO_TIMEOUT选项来实现的。\n\n使用SO_TIMEOUT选项，我们可以设置一个超时时间，如果在该时间内没有读取到数据，套接字会抛出一个SocketTimeoutException异常。通过捕获异常，我们可以根据需求进行相应的处理，例如关闭连接或发送错误消息给客户端。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.ipTos",
       "description": "",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.maxMessagesPerRead",
-      "description": "",
+      "name": "spring.boot.netty.tcp.ipMulticastAddr",
+      "description": "用于多播通信的IP地址。\n\n在网络通信中，多播（Multicast）是一种基于UDP协议的数据传输方式，它允许将数据同时发送到多个目标主机。在IPv4网络中，多播地址范围为224.0.0.0至239.255.255.255。其中，前4位固定为1110，后28位可供组织和应用自由使用。\n\nIP_MULTICAST_ADDR可以用于设置套接字的多播地址，使其能够连接到指定的多播组并参与多播通信。",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.ipMulticastIf",
+      "description": "套接字选项，用于设置套接字的多播接口（Multicast Interface）。\n\n在网络通信中，多播是一种将数据同时发送到多个目标主机的通信方式。对于IPv4网络，多播地址范围为224.0.0.0至239.255.255.255。当套接字加入了一个多播组后，它需要指定一个接口来发送和接收多播数据。\n\nIP_MULTICAST_IF选项允许我们设置套接字的多播接口。多播接口可以是本地网络接口的IP地址（IPv4），用于标识数据从哪个接口发送出去。通过设置IP_MULTICAST_IF选项，我们可以控制套接字在多播通信中使用的接口。",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.tcp.ipMulticastTtl",
+      "description": "套接字选项，用于设置套接字的多播TTL（Time-To-Live）值。\n\n在网络通信中，多播是一种将数据同时发送到多个目标主机的通信方式。TTL是一个生存时间的限制值，它指定了一个数据包在网络中可以经过的最大跳数。每当一个路由器转发数据包时，TTL值减1。一旦TTL值达到0，数据包将被丢弃。\n\nIP_MULTICAST_TTL选项允许我们设置套接字发送多播数据时使用的TTL值。通过设置TTL值，我们可以控制多播数据包在网络中的传播范围。",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.writeSpinCount",
-      "description": "",
-      "type": "java.lang.Integer"
+      "name": "spring.boot.netty.tcp.ipMulticastLoopDisabled",
+      "description": "套接字选项，用于控制套接字是否接收自己发送的多播数据包。\n\n在网络通信中，多播是一种将数据同时发送到多个目标主机的通信方式。默认情况下，套接字会接收自身发送的多播数据包。这意味着当套接字发送多播数据时，它也会收到自己发送的数据包。然而，有时候我们可能希望禁止套接字接收自己发送的多播数据包，以避免数据包的重复处理。\n\nIP_MULTICAST_LOOP_DISABLED选项可以用来禁止套接字接收自己发送的多播数据包。当该选项被启用时，套接字将不再接收自己发送的多播数据包。",
+      "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.writeBufferHighWaterMark",
-      "description": "",
-      "type": "java.lang.Integer"
+      "name": "spring.boot.netty.tcp.tcpNodelay",
+      "description": "套接字选项，用于禁用或启用TCP的Nagle算法。\n\nNagle算法是一种用于优化TCP传输性能的算法。它通过将数据缓冲在发送端，然后一次性发送较大的数据块来减少网络中的小数据包数量。这可以提高网络利用率并减少网络拥塞。\n\n然而，在某些特定的应用场景下，延迟（而不是网络利用率）更为重要。例如，对于交互式应用程序或实时通信应用程序，及时地传输数据非常重要。在这些情况下，我们可以禁用Nagle算法以减少数据包发送的延迟。\n\nTCP_NODELAY选项用于控制是否启用Nagle算法。当设置为true时，即禁用Nagle算法，数据将立即发送而不进行缓冲；当设置为false时，即启用Nagle算法，数据将进行缓冲并按照算法决定的时机发送。",
+      "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.writeBufferLowWaterMark",
-      "description": "",
-      "type": "java.lang.Integer"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.allowHalfClosure",
+      "name": "spring.boot.netty.tcp.singleEventexecutorPerGroup",
       "description": "",
       "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.autoRead",
-      "description": "",
+      "name": "spring.boot.netty.udp.ADDRESS",
+      "description": "服务绑定地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.PORT",
+      "description": "服务绑定端口",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.readerIdleTimeSeconds",
+      "description": "读超时时间(单位秒)",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.writerIdleTimeSeconds",
+      "description": "写超时时间(单位秒)",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.allIdleTimeSeconds",
+      "description": "读写双超时时间(单位秒)",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.bossGroupThreadSize",
+      "description": "主工作组线程数",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.workGroupThreadSize",
+      "description": "从工作组线程数",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.allocator",
+      "description": "ByteBufAllocator 类型的对象名称(从Spring中加载)",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.rcvbufAllocator",
+      "description": "RecvByteBufAllocator 类型的对象名称(从Spring中加载)",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.messageSizeEstimator",
+      "description": "MessageSizeEstimator 类型的对象名称(从Spring中加载)",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.connectTimeoutMillis",
+      "description": "在建立连接过程中等待连接完成的最大时间，以毫秒为单位",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.maxMessagesPerRead",
+      "description": "Netty通过将多个消息组合成批次来进行读取操作，以提高性能和效率，MAX_MESSAGES_PER_READ选项可以用于控制每次读取操作处理的消息数量（默认值16）",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.writeSpinCount",
+      "description": "Netty使用一种称为'自旋等待'（spin-waiting）的技术来提高写入操作的性能和效率。在写入数据时，如果底层的网络缓冲区已满或不可用，Netty会尝试自旋等待，等待缓冲区可写，以避免线程上下文的切换开销。WRITE_SPIN_COUNT选项可以用于控制自旋等待的次数",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.writeBufferHighWaterMark",
+      "description": "设置Channel的写缓冲区高水位标记（High Water Mark）。它表示当写缓冲区的字节大小达到该值时，Netty会停止从应用程序写入更多数据，以避免写缓冲区溢出。\n\n写缓冲区是Netty在进行写操作时使用的内存区域，用于临时存储待发送的数据。当应用程序调用写操作将数据写入Channel时，数据会被暂时存储在写缓冲区中，然后由Netty异步地写入到底层的Socket。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.writeBufferLowWaterMark",
+      "description": "设置Channel的写缓冲区低水位标记（Low Water Mark）。它表示当写缓冲区的字节大小降低到该标记以下时，Netty会恢复从应用程序写入更多数据。写缓冲区是Netty在进行写操作时使用的内存区域，用于临时存储待发送的数据。当应用程序调用写操作将数据写入Channel时，数据会被暂时存储在写缓冲区中，然后由Netty异步地写入到底层的Socket。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.allowHalfClosure",
+      "description": "设置是否允许半关闭（Half Closure）。在TCP协议中，当一个端口的一侧调用close()方法关闭连接时，另一侧仍然可以继续发送数据，直到完成或超时。这种情况称为半关闭。通过设置allowHalfClosure选项，可以控制在Netty中是否允许半关闭。默认情况下，allowHalfClosure被设置为false，即不允许半关闭。当allowHalfClosure为true时，表示允许半关闭。",
       "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soBroadcast",
-      "description": "",
+      "name": "spring.boot.netty.udp.autoRead",
+      "description": "控制Channel是否自动读取数据。\n\n在Netty中，当一个Channel准备好接收数据时，会触发Channel的可读事件，并通知应用程序进行数据读取操作。这通常由应用程序调用read()方法来实现。\n\n通过设置autoRead选项，可以控制Channel是否自动调用read()方法来读取数据。默认情况下，autoRead被设置为true，即自动读取数据。",
       "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soKeepalive",
-      "description": "",
+      "name": "spring.boot.netty.udp.soBroadcast",
+      "description": "套接字选项，设置或获取套接字选项的状态。它适用于协议族为IPv4的套接字。\n\n当SO_BROADCAST被启用时，套接字可以发送广播数据包。广播数据包是一种面向本地网络中的所有主机发送的数据包。",
       "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soSndbuf",
-      "description": "",
-      "type": "java.lang.Integer"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soRcvbuf",
-      "description": "",
-      "type": "java.lang.Integer"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soReuseaddr",
-      "description": "",
+      "name": "spring.boot.netty.udp.soKeepalive",
+      "description": "套接字选项，可用于启用或禁用 TCP 连接的保活机制。\n\nTCP连接的保活机制是一种用于检测故障连接的机制。当启用SO_KEEPALIVE选项后，操作系统会定期发送一些特殊的探测数据包（Keep-Alive包）给对端，对端可以根据这些包来判断连接是否仍然有效。",
       "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soLinger",
-      "description": "",
+      "name": "spring.boot.netty.udp.soSndbuf",
+      "description": "套接字选项，用于设置发送缓冲区的大小。\n\n发送缓冲区是套接字在发送数据时使用的一块内存区域。当应用程序向套接字写入数据时，数据会首先被放入发送缓冲区，然后由操作系统将其发送到网络上。",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soBacklog",
-      "description": "",
+      "name": "spring.boot.netty.udp.soRcvbuf",
+      "description": "套接字选项，用于设置接收缓冲区的大小。\n\n接收缓冲区是套接字在接收数据时使用的一块内存区域。当操作系统从网络上接收数据时，数据会首先被放入接收缓冲区，然后应用程序可以从该缓冲区读取数据。",
       "type": "java.lang.Integer"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.soTimeout",
-      "description": "",
-      "type": "java.lang.Integer"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.ipTos",
-      "description": "",
-      "type": "java.lang.Integer"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.ipMulticastAddr",
-      "description": "",
-      "type": "java.net.InetAddress"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.ipMulticastIf",
-      "description": "",
-      "type": "java.net.NetworkInterface"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.ipMulticastTtl",
-      "description": "",
-      "type": "java.lang.Integer"
-    },
-    {
-      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.ipMulticastLoopDisabled",
-      "description": "",
+      "name": "spring.boot.netty.udp.soReuseaddr",
+      "description": "套接字选项，用于设置是否允许在同一端口上重用地址。\n\n当一个TCP连接被关闭时，操作系统会保留一段时间的时间（即TIME_WAIT状态），以确保该连接的所有数据包都被正常接收和处理。在这段时间内，如果有其他应用程序尝试使用相同的源IP地址和端口号来建立新的连接，操作系统通常会阻止它，以避免混淆。\n\n但是，在某些情况下，我们希望能够立即重用相同的源地址和端口，而不必等待TIME_WAIT状态的结束。这时候可以使用SO_REUSEADDR选项。启用SO_REUSEADDR选项后，操作系统允许在同一端口上立即重用地址。",
       "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.tcpNodelay",
+      "name": "spring.boot.netty.udp.soLinger",
+      "description": "套接字选项，用于设置当关闭套接字时的延迟行为。\n\n当我们调用套接字的close()方法来关闭连接时，默认情况下，操作系统会尽力确保所有未发送的数据都被发送出去，然后再关闭连接。这意味着close()方法可能会阻塞一段时间，直到所有数据都被发送成功或发生超时。\n\n而使用SO_LINGER选项，我们可以控制关闭连接时的行为。具体来说，SO_LINGER选项允许我们指定一个延迟时间（以秒为单位），如果延迟时间大于0，则在调用close()方法后，套接字将等待一段时间，尝试将未发送的数据发送出去。如果在延迟时间内未能成功发送所有数据，套接字将立即关闭，丢弃未发送的数据。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.soBacklog",
+      "description": "套接字选项，用于设置监听套接字的连接队列的最大长度。\n\n在服务器端使用Socket编程时，我们通常会创建一个监听套接字（ServerSocket），用于接收客户端的连接请求。当有多个客户端同时发起连接请求时，操作系统会将这些请求放入一个连接队列中，然后按照先到先服务的原则逐个处理。\n\nSO_BACKLOG选项允许我们设置连接队列的最大长度。超过这个长度的连接请求将被拒绝。具体来说，SO_BACKLOG选项定义了三种可能的情况：\n\n    如果连接队列未满，新的连接请求会被添加到队列中。\n    如果连接队列已满，并且套接字尚未调用accept()方法来接受连接，那么新的连接请求会被拒绝。\n    如果连接队列已满，并且套接字已经调用accept()方法来接受连接，那么新的连接请求由操作系统拒绝，并返回给客户端一个错误。\n",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.soTimeout",
+      "description": "套接字选项，用于设置套接字的读取超时时间（以毫秒为单位）。\n\n在使用Socket编程接收数据时，有时我们希望在一定时间内完成数据的读取操作。如果在指定的时间内没有收到数据，我们可以选择终止读取操作或采取其他处理措施。这就是通过SO_TIMEOUT选项来实现的。\n\n使用SO_TIMEOUT选项，我们可以设置一个超时时间，如果在该时间内没有读取到数据，套接字会抛出一个SocketTimeoutException异常。通过捕获异常，我们可以根据需求进行相应的处理，例如关闭连接或发送错误消息给客户端。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.ipTos",
       "description": "",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.ipMulticastAddr",
+      "description": "用于多播通信的IP地址。\n\n在网络通信中，多播（Multicast）是一种基于UDP协议的数据传输方式，它允许将数据同时发送到多个目标主机。在IPv4网络中，多播地址范围为224.0.0.0至239.255.255.255。其中，前4位固定为1110，后28位可供组织和应用自由使用。\n\nIP_MULTICAST_ADDR可以用于设置套接字的多播地址，使其能够连接到指定的多播组并参与多播通信。",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.ipMulticastIf",
+      "description": "套接字选项，用于设置套接字的多播接口（Multicast Interface）。\n\n在网络通信中，多播是一种将数据同时发送到多个目标主机的通信方式。对于IPv4网络，多播地址范围为224.0.0.0至239.255.255.255。当套接字加入了一个多播组后，它需要指定一个接口来发送和接收多播数据。\n\nIP_MULTICAST_IF选项允许我们设置套接字的多播接口。多播接口可以是本地网络接口的IP地址（IPv4），用于标识数据从哪个接口发送出去。通过设置IP_MULTICAST_IF选项，我们可以控制套接字在多播通信中使用的接口。",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.ipMulticastTtl",
+      "description": "套接字选项，用于设置套接字的多播TTL（Time-To-Live）值。\n\n在网络通信中，多播是一种将数据同时发送到多个目标主机的通信方式。TTL是一个生存时间的限制值，它指定了一个数据包在网络中可以经过的最大跳数。每当一个路由器转发数据包时，TTL值减1。一旦TTL值达到0，数据包将被丢弃。\n\nIP_MULTICAST_TTL选项允许我们设置套接字发送多播数据时使用的TTL值。通过设置TTL值，我们可以控制多播数据包在网络中的传播范围。",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.ipMulticastLoopDisabled",
+      "description": "套接字选项，用于控制套接字是否接收自己发送的多播数据包。\n\n在网络通信中，多播是一种将数据同时发送到多个目标主机的通信方式。默认情况下，套接字会接收自身发送的多播数据包。这意味着当套接字发送多播数据时，它也会收到自己发送的数据包。然而，有时候我们可能希望禁止套接字接收自己发送的多播数据包，以避免数据包的重复处理。\n\nIP_MULTICAST_LOOP_DISABLED选项可以用来禁止套接字接收自己发送的多播数据包。当该选项被启用时，套接字将不再接收自己发送的多播数据包。",
       "type": "java.lang.Boolean"
     },
     {
       "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
-      "name": "spring.boot.netty.singleEventexecutorPerGroup",
+      "name": "spring.boot.netty.udp.tcpNodelay",
+      "description": "套接字选项，用于禁用或启用TCP的Nagle算法。\n\nNagle算法是一种用于优化TCP传输性能的算法。它通过将数据缓冲在发送端，然后一次性发送较大的数据块来减少网络中的小数据包数量。这可以提高网络利用率并减少网络拥塞。\n\n然而，在某些特定的应用场景下，延迟（而不是网络利用率）更为重要。例如，对于交互式应用程序或实时通信应用程序，及时地传输数据非常重要。在这些情况下，我们可以禁用Nagle算法以减少数据包发送的延迟。\n\nTCP_NODELAY选项用于控制是否启用Nagle算法。当设置为true时，即禁用Nagle算法，数据将立即发送而不进行缓冲；当设置为false时，即启用Nagle算法，数据将进行缓冲并按照算法决定的时机发送。",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties",
+      "name": "spring.boot.netty.udp.singleEventexecutorPerGroup",
       "description": "",
       "type": "java.lang.Boolean"
     }
