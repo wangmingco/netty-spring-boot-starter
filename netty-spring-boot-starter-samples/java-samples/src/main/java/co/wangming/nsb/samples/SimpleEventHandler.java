@@ -28,22 +28,22 @@ public class SimpleEventHandler extends EventHandlerAdaptor<User> {
 
     @Override
     public void fireExceptionEvent(ExceptionEvent<User> exceptionEvent) {
-        log.info("发生异常:{}", exceptionEvent.getContext(), exceptionEvent.getCause());
+        log.error("发生异常:{}", exceptionEvent.getContext(), exceptionEvent.getCause());
     }
 
     @Override
     public void fireReaderIdleEvent(ReaderIdleEvent<User> readerIdleEvent) {
-        log.info("连接读超时:{}", readerIdleEvent.getContext());
+        log.warn("连接读超时:{}", readerIdleEvent.getContext());
     }
 
     @Override
     public void fireWriterIdleEvent(WriterIdleEvent<User> readerIdleEvent) {
-        log.info("连接写超时:{}", readerIdleEvent.getContext());
+        log.warn("连接写超时:{}", readerIdleEvent.getContext());
     }
 
     @Override
     public void fireAllIdleEvent(AllIdleEvent<User> readerIdleEvent) {
-        log.info("连接读写超时:{}", readerIdleEvent.getContext());
+        log.warn("连接读写超时:{}", readerIdleEvent.getContext());
     }
 
     @Override

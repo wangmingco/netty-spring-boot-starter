@@ -1,5 +1,8 @@
 package co.wangming.nsb.server.command;
 
+import co.wangming.nsb.common.filter.FilterChain;
+import co.wangming.nsb.common.filter.FilterContext;
+import co.wangming.nsb.common.filter.FilterContextHolder;
 import co.wangming.nsb.common.spring.SpringContext;
 import co.wangming.nsb.server.processors.ProtocolProcessor;
 import io.netty.buffer.ByteBuf;
@@ -8,6 +11,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +25,19 @@ public class CommandDispatcher {
 
     public static ByteBuf dispatch(ChannelHandlerContext ctx, int messageId, ByteBuffer messageBytes) throws Exception {
 
-        String proxyBeanName = CommandProxy.class.getCanonicalName() + "$$" + messageId;
-        CommandProxy commandProxy = (CommandProxy) SpringContext.getBean(proxyBeanName);
+        CommandProxy commandProxy = null;
+        Class targetClass = null;
+        Method targetMethod = null;
+        List paramters = null;
+
+        FilterContextHolder filterContextHolder = new FilterContextHolder();
+        filterContextHolder.setFilterContext(FilterContext.continueFilter());
+
+        try{
+            String proxyBeanName = CommandProxy.class.getSimpleName() + "$$" + messageId;
+            commandProxy = (CommandProxy) SpringContext.getBean(proxyBeanName);
+            targetClass = commandProxy.getTargetClass();
+            targetMethod = commandProxy.getTargetMethod();
 
         // 生成调用方法参数
         List paramters = getParameters(ctx, messageBytes, commandProxy);
