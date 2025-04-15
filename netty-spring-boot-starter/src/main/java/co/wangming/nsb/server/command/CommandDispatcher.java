@@ -6,7 +6,7 @@ import co.wangming.nsb.common.filter.FilterContextHolder;
 import co.wangming.nsb.common.spring.SpringContext;
 import co.wangming.nsb.server.processors.ProtocolProcessor;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,8 +121,10 @@ public class CommandDispatcher {
         ProtocolProcessor parser = commandProxy.getReturnProtocolProcessor();
         byte[] bytearray = parser.serialize(ctx, result);
 
-        // TODO 优化, 避免每次都分配一块内存
-        return ByteBufAllocator.DEFAULT.heapBuffer(bytearray.length)
+        /**
+         * 使用池化的直接内存写入消息
+         */
+        return PooledByteBufAllocator.DEFAULT.directBuffer(bytearray.length)
                 .writeByte(commandProxy.getResponseId())
                 .writeByte(bytearray.length)
                 .writeBytes(bytearray);
