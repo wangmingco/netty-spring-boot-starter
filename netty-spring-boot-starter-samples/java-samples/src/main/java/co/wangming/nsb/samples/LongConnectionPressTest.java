@@ -35,14 +35,12 @@ public class LongConnectionPressTest {
 
     private static final Logger log = LoggerFactory.getLogger(LongConnectionPressTest.class);
 
-    private static final int SOCKET_NUM = 128;
+    private static final int SOCKET_NUM = 100;
     private static final int MESSAGE_NUM = 10000;
-    private static final Map<Long, Long> sendStatics = new HashMap<>(1024);
 
     public static void main(String[] args) throws IOException {
 
         CountDownLatch sendLatch = new CountDownLatch(SOCKET_NUM);
-        CountDownLatch receiveLatch = new CountDownLatch(SOCKET_NUM);
 
         List<Socket> sockets = new ArrayList<>();
         for (int i = 0; i < SOCKET_NUM; i++) {
@@ -60,45 +58,23 @@ public class LongConnectionPressTest {
                     for(int j = 1; j <= MESSAGE_NUM; j++) {
                         System.out.println("send " + tId() + " -> " + j);
                         try {
-//                            sendTCPMessage(socket, tcpMessage, 1);
-//                            sendTCPMessage(socket, tcpMessage, 2);
                             sendTCPMessage(socket, tcpMessage, 3);
-//                            sendTCPMessage(socket, tcpMessage, 4);
-//                            sendTCPMessage(socket, tcpMessage, 5);
-//                            sendTCPMessage(socket, tcpMessage, 6, false);
-//                            sendTCPMessage(socket, tcpMessage, 7);
-//                            sendTCPMessage(socket, tcpMessage, 8);
                         } catch (Exception e) {
                             log.error("send error {}", j, e);
                         }
                     }
                     sendLatch.countDown();
                 }).start();
-
-//                new Thread(() -> {
-//                    for(int j = 1; j <= MESSAGE_NUM; j++) {
-//                        System.out.println("receive " + tId() + " -> " + j);
-//                        try {
-//                            receiveTCPMessage(socket);
-//                            receiveTCPMessage(socket);
-//                        } catch (Exception e) {
-//                            log.error("receive error {}", j, e);
-//                        }
-//                    }
-//                    receiveLatch.countDown();
-//                }).start();
         }
 
         try {
             sendLatch.await();
-//            receiveLatch.await();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         for (Socket socket : sockets) {
             socket.close();
         }
-        printSendStatics();
     }
 
     private static long tId() {
@@ -111,45 +87,5 @@ public class LongConnectionPressTest {
         out.write(message.length);
         out.write(message);
         out.flush();
-
-        long seconds = System.currentTimeMillis() / 1000;
-        synchronized (sendStatics) {
-            Long aLong = sendStatics.get(seconds);
-            if (aLong == null) {
-                sendStatics.put(seconds, 1L);
-            } else {
-                sendStatics.put(seconds, aLong + 1);
-            }
-        }
-    }
-
-    private static void receiveTCPMessage(Socket socket) throws Exception {
-        InputStream in = socket.getInputStream();
-        int messageId = in.read();
-        int size = in.read();
-
-        byte[] responseMessage = new byte[size];
-        in.read(responseMessage);
-    }
-
-    private static void printSendStatics() {
-        System.out.println("统计数量: " + sendStatics.size());
-        Map<String, Long> s = new TreeMap<>();
-        for (Map.Entry<Long, Long> entry : sendStatics.entrySet()) {
-            Long key = entry.getKey();
-            Long value = entry.getValue();
-
-            LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(key), ZoneId.systemDefault());
-
-            // 定义日期时间格式
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-            // 格式化日期时间
-            String formattedDate = dateTime.format(formatter);
-            s.put(formattedDate, value);
-        }
-        for (Map.Entry<String, Long> entry : s.entrySet()) {
-            System.out.println("统计结果: " + entry.getKey() + " -> " + entry.getValue());
-        }
     }
 }

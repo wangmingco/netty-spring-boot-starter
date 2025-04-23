@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:dd} %-5p [%t] %c{1}:%L - %m%n" />
+
+    <appender name="myConsole" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="filterMetrics" class="ch.qos.logback.core.FileAppender">
+
+        <file>logs/filter.metrics.%d{yyyy_MM_dd_HH_mm_ss}.log</file>
+        <append>true</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="eventMetrics" class="ch.qos.logback.core.FileAppender">
+
+        <file>logs/event.metrics.%d{yyyy_MM_dd_HH_mm_ss}.log</file>
+        <append>true</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="nsb.filter.metrics" level="INFO" >
+        <appender-ref ref="filterMetrics"/>
+    </logger>
+
+    <logger name="nsb.event.metrics" level="INFO" >
+        <appender-ref ref="eventMetrics"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="myConsole"/>
+    </root>
+
+
+</configuration>
