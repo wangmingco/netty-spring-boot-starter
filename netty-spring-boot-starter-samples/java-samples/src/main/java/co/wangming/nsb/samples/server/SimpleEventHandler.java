@@ -3,6 +3,7 @@ package co.wangming.nsb.samples.server;
 import co.wangming.nsb.samples.User;
 import co.wangming.nsb.server.event.*;
 import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +28,15 @@ public class SimpleEventHandler extends EventHandlerAdaptor<User> {
 
     // 初始化报告器(这里使用SLF4J，你也可以用ConsoleReporter等)
     static {
-        fireChannelActiveEvent = ServerMetric.metrics.meter("fireChannelActiveEvent");
-        fireChannelInactiveEvent = ServerMetric.metrics.meter("fireChannelInactiveEvent");
-        fireExceptionEvent = ServerMetric.metrics.meter("fireExceptionEvent");
-        fireReaderIdleEvent = ServerMetric.metrics.meter("fireReaderIdleEvent");
-        fireWriterIdleEvent = ServerMetric.metrics.meter("fireWriterIdleEvent");
-        fireUnknowEvent = ServerMetric.metrics.meter("fireUnknowEvent");
+        MetricRegistry metrics = new MetricRegistry();
+        fireChannelActiveEvent = metrics.meter("fireChannelActiveEvent");
+        fireChannelInactiveEvent = metrics.meter("fireChannelInactiveEvent");
+        fireExceptionEvent = metrics.meter("fireExceptionEvent");
+        fireReaderIdleEvent = metrics.meter("fireReaderIdleEvent");
+        fireWriterIdleEvent = metrics.meter("fireWriterIdleEvent");
+        fireUnknowEvent = metrics.meter("fireUnknowEvent");
 
-        final Slf4jReporter reporter = Slf4jReporter.forRegistry(ServerMetric.metrics)
+        final Slf4jReporter reporter = Slf4jReporter.forRegistry(metrics)
                 .outputTo(LoggerFactory.getLogger("nsb.event.metrics"))
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)

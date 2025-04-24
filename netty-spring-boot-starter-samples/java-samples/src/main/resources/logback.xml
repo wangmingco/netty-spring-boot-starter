@@ -19,7 +19,7 @@
         <!-- 滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 指定滚动文件的命名模式 -->
-            <fileNamePattern>logs/filter.metrics.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <fileNamePattern>logs/filter.metrics.%d{yyyy_MM_dd-HH:mm:ss}.log</fileNamePattern>
             <!-- 保留最近 1 天的日志文件 -->
             <maxHistory>1</maxHistory>
         </rollingPolicy>
@@ -35,7 +35,7 @@
         <!-- 滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 指定滚动文件的命名模式 -->
-            <fileNamePattern>logs/event.metrics.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <fileNamePattern>logs/event.metrics.%d{yyyy_MM_dd-HH:mm:ss}.log</fileNamePattern>
             <!-- 保留最近 1 天的日志文件 -->
             <maxHistory>1</maxHistory>
         </rollingPolicy>
@@ -51,7 +51,7 @@
         <!-- 滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 指定滚动文件的命名模式 -->
-            <fileNamePattern>logs/netty.metrics.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <fileNamePattern>logs/netty.metrics.%d{yyyy_MM_dd-HH:mm:ss}.log</fileNamePattern>
             <!-- 保留最近 1 天的日志文件 -->
             <maxHistory>1</maxHistory>
         </rollingPolicy>

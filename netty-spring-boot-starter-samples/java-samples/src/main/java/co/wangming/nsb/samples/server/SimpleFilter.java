@@ -4,6 +4,7 @@ import co.wangming.nsb.common.filter.EmptyFilter;
 import co.wangming.nsb.common.filter.Filter;
 import co.wangming.nsb.common.filter.FilterContextHolder;
 import com.codahale.metrics.Meter;
+import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +28,9 @@ public class SimpleFilter extends EmptyFilter {
 
     // 初始化报告器(这里使用SLF4J，你也可以用ConsoleReporter等)
     static {
-        requests = ServerMetric.metrics.meter("每秒钟请求速率");
-        final Slf4jReporter reporter = Slf4jReporter.forRegistry(ServerMetric.metrics)
+        MetricRegistry metrics = new MetricRegistry();
+        requests = metrics.meter("每秒钟请求速率");
+        final Slf4jReporter reporter = Slf4jReporter.forRegistry(metrics)
                 .outputTo(LoggerFactory.getLogger("nsb.filter.metrics"))
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
