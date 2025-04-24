@@ -1,4 +1,4 @@
-package co.wangming.nsb.samples;
+package co.wangming.nsb.samples.server;
 
 import co.wangming.nsb.common.spring.RegistrarScan;
 import org.slf4j.Logger;

@@ -67,7 +67,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
-                    <mainClass>co.wangming.nsb.samples.SocketServer</mainClass>
+                    <mainClass>co.wangming.nsb.samples.server.SocketServer</mainClass>
                 </configuration>
                 <executions>
                     <execution>

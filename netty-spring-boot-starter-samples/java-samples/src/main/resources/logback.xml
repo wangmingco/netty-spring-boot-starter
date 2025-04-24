@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:dd} %-5p [%t] %c{1}:%L - %m%n" />
+    <property name="startupId" value="${bySecond:-yyyyMMdd_HHmmss}" />
 
     <appender name="myConsole" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -8,32 +9,64 @@
         </encoder>
     </appender>
 
-    <appender name="filterMetrics" class="ch.qos.logback.core.FileAppender">
-
-        <file>logs/filter.metrics.%d{yyyy_MM_dd_HH_mm_ss}.log</file>
-        <append>true</append>
-        <immediateFlush>true</immediateFlush>
+    <appender name="filterMetrics" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>${PATTERN}</pattern>
         </encoder>
+
+        <file>logs/filter.metrics.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/filter.metrics.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 1 天的日志文件 -->
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
     </appender>
 
-    <appender name="eventMetrics" class="ch.qos.logback.core.FileAppender">
-
-        <file>logs/event.metrics.%d{yyyy_MM_dd_HH_mm_ss}.log</file>
-        <append>true</append>
-        <immediateFlush>true</immediateFlush>
+    <appender name="eventMetrics" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>${PATTERN}</pattern>
         </encoder>
+
+        <file>logs/event.metrics.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/event.metrics.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 1 天的日志文件 -->
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
     </appender>
 
-    <logger name="nsb.filter.metrics" level="INFO" >
+    <appender name="nettyMetrics" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+
+        <file>logs/netty.metrics.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/netty.metrics.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 1 天的日志文件 -->
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="nsb.filter.metrics" level="INFO" additivity="false">
         <appender-ref ref="filterMetrics"/>
     </logger>
 
-    <logger name="nsb.event.metrics" level="INFO" >
+    <logger name="nsb.event.metrics" level="INFO" additivity="false">
         <appender-ref ref="eventMetrics"/>
+    </logger>
+
+    <logger name="nsb.netty.metrics" level="INFO" additivity="false">
+        <appender-ref ref="nettyMetrics"/>
     </logger>
 
     <root level="INFO">

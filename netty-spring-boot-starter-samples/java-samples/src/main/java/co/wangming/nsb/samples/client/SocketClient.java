@@ -1,9 +1,8 @@
-package co.wangming.nsb.samples;
+package co.wangming.nsb.samples.client;
 
 import co.wangming.nsb.samples.protobuf.Search;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.ByteBufUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

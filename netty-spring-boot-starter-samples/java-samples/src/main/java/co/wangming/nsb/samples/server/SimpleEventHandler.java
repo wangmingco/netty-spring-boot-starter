@@ -1,8 +1,8 @@
-package co.wangming.nsb.samples;
+package co.wangming.nsb.samples.server;
 
+import co.wangming.nsb.samples.User;
 import co.wangming.nsb.server.event.*;
 import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,25 +17,29 @@ public class SimpleEventHandler extends EventHandlerAdaptor<User> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleEventHandler.class);
 
-    // 创建Metric注册表
-    private static final MetricRegistry metrics = new MetricRegistry();
-
     // 创建Meter来统计请求速率
-    private static final Meter fireChannelActiveEvent = metrics.meter("fireChannelActiveEvent");
-    private static final Meter fireChannelInactiveEvent = metrics.meter("fireChannelInactiveEvent");
-    private static final Meter fireExceptionEvent = metrics.meter("fireExceptionEvent");
-    private static final Meter fireReaderIdleEvent = metrics.meter("fireReaderIdleEvent");
-    private static final Meter fireWriterIdleEvent = metrics.meter("fireWriterIdleEvent");
-    private static final Meter fireUnknowEvent = metrics.meter("fireUnknowEvent");
+    private static final Meter fireChannelActiveEvent;
+    private static final Meter fireChannelInactiveEvent;
+    private static final Meter fireExceptionEvent;
+    private static final Meter fireReaderIdleEvent;
+    private static final Meter fireWriterIdleEvent;
+    private static final Meter fireUnknowEvent;
 
     // 初始化报告器(这里使用SLF4J，你也可以用ConsoleReporter等)
     static {
-        final Slf4jReporter reporter = Slf4jReporter.forRegistry(metrics)
+        fireChannelActiveEvent = ServerMetric.metrics.meter("fireChannelActiveEvent");
+        fireChannelInactiveEvent = ServerMetric.metrics.meter("fireChannelInactiveEvent");
+        fireExceptionEvent = ServerMetric.metrics.meter("fireExceptionEvent");
+        fireReaderIdleEvent = ServerMetric.metrics.meter("fireReaderIdleEvent");
+        fireWriterIdleEvent = ServerMetric.metrics.meter("fireWriterIdleEvent");
+        fireUnknowEvent = ServerMetric.metrics.meter("fireUnknowEvent");
+
+        final Slf4jReporter reporter = Slf4jReporter.forRegistry(ServerMetric.metrics)
                 .outputTo(LoggerFactory.getLogger("nsb.event.metrics"))
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build();
-        reporter.start(10, TimeUnit.SECONDS); // 每分钟报告一次
+        reporter.start(1, TimeUnit.MINUTES);
     }
 
     @Override

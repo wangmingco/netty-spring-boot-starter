@@ -1,4 +1,4 @@
-package co.wangming.nsb.samples;
+package co.wangming.nsb.samples.client;
 
 import co.wangming.nsb.samples.protobuf.Search;
 import org.slf4j.Logger;

@@ -1,10 +1,9 @@
 package co.wangming.nsb.common.springboot;
 
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.MessageSizeEstimator;
-import io.netty.channel.RecvByteBufAllocator;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.channel.*;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -158,27 +157,50 @@ public abstract class SpringBootNettyProperties {
         return allocator;
     }
 
-    public void setAllocator(String allocator) {
-        // TODO
-//        this.allocator = allocator;
+    public void setAllocator(String allocatorName) {
+        if (UnpooledByteBufAllocator.class.getCanonicalName().equals(allocatorName) ||
+                UnpooledByteBufAllocator.class.getName().equals(allocatorName)) {
+            this.allocator = UnpooledByteBufAllocator.DEFAULT;
+        } else {
+            this.allocator = PooledByteBufAllocator.DEFAULT;
+        }
     }
 
     public RecvByteBufAllocator getRcvbufAllocator() {
         return rcvbufAllocator;
     }
 
-    public void setRcvbufAllocator(String rcvbufAllocator) {
-        // TODO
-//        this.rcvbufAllocator = rcvbufAllocator;
+    public void setRcvbufAllocator(String rcvbufAllocatorName) {
+        if (AdaptiveRecvByteBufAllocator.class.getCanonicalName().equals(rcvbufAllocatorName) ||
+                AdaptiveRecvByteBufAllocator.class.getName().equals(rcvbufAllocatorName)) {
+            this.rcvbufAllocator = new AdaptiveRecvByteBufAllocator();
+        } else if (DefaultMaxBytesRecvByteBufAllocator.class.getCanonicalName().equals(rcvbufAllocatorName) ||
+                DefaultMaxBytesRecvByteBufAllocator.class.getName().equals(rcvbufAllocatorName)) {
+            this.rcvbufAllocator = new DefaultMaxBytesRecvByteBufAllocator();
+        } else if (FixedRecvByteBufAllocator.class.getCanonicalName().equals(rcvbufAllocatorName) ||
+                FixedRecvByteBufAllocator.class.getName().equals(rcvbufAllocatorName)) {
+            // TODO bufferSize 添加参数
+            this.rcvbufAllocator = new FixedRecvByteBufAllocator(1024);
+        } else if (ServerChannelRecvByteBufAllocator.class.getCanonicalName().equals(rcvbufAllocatorName) ||
+                ServerChannelRecvByteBufAllocator.class.getName().equals(rcvbufAllocatorName)) {
+            this.rcvbufAllocator = new ServerChannelRecvByteBufAllocator();
+        } else {
+            // TODO 添加自定义实现
+        }
     }
 
     public MessageSizeEstimator getMessageSizeEstimator() {
         return messageSizeEstimator;
     }
 
-    public void setMessageSizeEstimator(String messageSizeEstimator) {
-        // TODO
-//        this.messageSizeEstimator = messageSizeEstimator;
+    public void setMessageSizeEstimator(String messageSizeEstimatorName) {
+        if (AdaptiveRecvByteBufAllocator.class.getCanonicalName().equals(messageSizeEstimatorName) ||
+                AdaptiveRecvByteBufAllocator.class.getName().equals(messageSizeEstimatorName)) {
+            // TODO
+            this.messageSizeEstimator = new DefaultMessageSizeEstimator(1024);
+        } else {
+            // TODO 添加自定义实现
+        }
     }
 
     public String getAddress() {

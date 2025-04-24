@@ -1,11 +1,11 @@
-package co.wangming.nsb.samples;
+package co.wangming.nsb.samples.server;
 
 import co.wangming.nsb.client.command.CommandSender;
 import co.wangming.nsb.client.command.CommandTemplate;
+import co.wangming.nsb.samples.User;
 import co.wangming.nsb.samples.protobuf.Search;
 import co.wangming.nsb.server.command.CommandController;
 import co.wangming.nsb.server.command.CommandMapping;
-import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

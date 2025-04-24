@@ -1,4 +1,4 @@
-package co.wangming.nsb.samples;
+package co.wangming.nsb.samples.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
