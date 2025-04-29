@@ -1,4 +1,4 @@
-package co.wangming.nsb.samples.server;
+package co.wangming.nsb.samples.server.metrics;
 
 import co.wangming.nsb.common.springboot.SpringBootNettyTCPProperties;
 import com.codahale.metrics.Gauge;
@@ -21,7 +21,7 @@ import java.util.stream.StreamSupport;
  * @date 2025/4/23
  */
 @Component
-public class ServerMetric implements CommandLineRunner {
+public class NettyMetric implements CommandLineRunner {
 
     @Resource
     private SpringBootNettyTCPProperties springBootNettyTCPProperties;
@@ -42,17 +42,17 @@ public class ServerMetric implements CommandLineRunner {
         PooledByteBufAllocatorMetric metric = allocator.metric();
 
         // 直接内存指标
-        metrics.register(MetricRegistry.name(ServerMetric.class, "direct", "used"),
+        metrics.register(MetricRegistry.name(NettyMetric.class, "direct", "used"),
                 (Gauge<Long>) metric::usedDirectMemory);
 
-        metrics.register(MetricRegistry.name(ServerMetric.class, "direct", "max"),
+        metrics.register(MetricRegistry.name(NettyMetric.class, "direct", "max"),
                 (Gauge<Integer>) metric::numDirectArenas);
 
         // 堆内存指标
-        metrics.register(MetricRegistry.name(ServerMetric.class, "heap", "used"),
+        metrics.register(MetricRegistry.name(NettyMetric.class, "heap", "used"),
                 (Gauge<Long>) metric::usedHeapMemory);
 
-        metrics.register(MetricRegistry.name(ServerMetric.class, "heap", "max"),
+        metrics.register(MetricRegistry.name(NettyMetric.class, "heap", "max"),
                 (Gauge<Integer>) metric::numHeapArenas);
 
         // 更详细的内存池指标
@@ -63,7 +63,7 @@ public class ServerMetric implements CommandLineRunner {
     private void registerArenaMetrics(String type, List<PoolArenaMetric> arenas) {
         for (int i = 0; i < arenas.size(); i++) {
             PoolArenaMetric arena = arenas.get(i);
-            String prefix = MetricRegistry.name(ServerMetric.class, type, "arena" + i);
+            String prefix = MetricRegistry.name(NettyMetric.class, type, "arena" + i);
 
             // 注册各种内存池指标
             metrics.register(prefix + ".numThreadCaches",

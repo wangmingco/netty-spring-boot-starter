@@ -72,6 +72,70 @@
         </rollingPolicy>
     </appender>
 
+    <appender name="gcMetrics" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+
+        <file>logs/jvm.gc.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/jvm.gc.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 3 天的日志文件 -->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="classLoadingMetrics" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+
+        <file>logs/jvm.classLoading.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/jvm.classLoading.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 3 天的日志文件 -->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="memoryUsageMetrics" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+
+        <file>logs/jvm.memoryUsage.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/jvm.memoryUsage.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 3 天的日志文件 -->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="threadStatesMetrics" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+
+        <file>logs/jvm.threadStates.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/jvm.threadStates.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 3 天的日志文件 -->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+    </appender>
+
     <logger name="nsb.filter.metrics" level="INFO" additivity="false">
         <appender-ref ref="filterMetrics"/>
     </logger>
@@ -82,6 +146,22 @@
 
     <logger name="nsb.netty.metrics" level="INFO" additivity="false">
         <appender-ref ref="nettyMetrics"/>
+    </logger>
+
+    <logger name="jvm.gc.metrics" level="INFO" additivity="false">
+        <appender-ref ref="gcMetrics"/>
+    </logger>
+
+    <logger name="jvm.classLoading.metrics" level="INFO" additivity="false">
+        <appender-ref ref="classLoadingMetrics"/>
+    </logger>
+
+    <logger name="jvm.memoryUsage.metrics" level="INFO" additivity="false">
+        <appender-ref ref="memoryUsageMetrics"/>
+    </logger>
+
+    <logger name="jvm.threadStates.metrics" level="INFO" additivity="false">
+        <appender-ref ref="threadStatesMetrics"/>
     </logger>
 
     <root level="INFO">
