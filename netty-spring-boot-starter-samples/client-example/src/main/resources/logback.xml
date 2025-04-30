@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:dd} %-5p [%t] %c{1}:%L - %m%n" />
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="client" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+
+        <file>logs/client.log</file>
+
+        <!-- 滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 指定滚动文件的命名模式 -->
+            <fileNamePattern>logs/client.%d{yyyy_MM_dd}.log</fileNamePattern>
+            <!-- 保留最近 1 天的日志文件 -->
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="client" level="INFO" additivity="false">
+        <appender-ref ref="console"/>
+        <appender-ref ref="client"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="server"/>
+    </root>
+
+
+</configuration>

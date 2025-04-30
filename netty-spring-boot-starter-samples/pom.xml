@@ -12,7 +12,8 @@
 	<description>JDK8 适配版本</description>
 
 	<modules>
-		<module>java-samples</module>
+		<module>server-example</module>
+		<module>client-example</module>
 		<module>protobuf</module>
 	</modules>
 
